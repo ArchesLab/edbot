@@ -1,0 +1,24 @@
+[project]
+name = "edbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Susie Kim", email = "35243112+susiekim101@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "deepagents>=0.7.5",
+    "langchain-core>=1.5.4",
+    "langchain-ollama>=1.1.0",
+    "langchain-text-splitters>=1.1.2",
+    "numpy>=2.5.2",
+    "pypdf>=6.15.0",
+]
+
+[project.scripts]
+edbot = "edbot:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
