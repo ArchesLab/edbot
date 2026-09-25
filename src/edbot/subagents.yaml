@@ -1,4 +1,4 @@
-question-generator:
+understanding-checking-agent:
   description: >
     Generates assessment questions (textbook-style or exam-style problems) that test
     a student's knowledge of a specific topic, using retrieved source material as the
@@ -32,6 +32,9 @@ question-generator:
     - Match the requested difficulty/format if the orchestrator specifies one;
       default to a single medium-difficulty multiple-choice or short-answer
       question if unspecified.
+  response_format: 
+    - OrhcestratorAgentInput
+    - CGAInput
   model: ollama:qwen3:8b
   tools:
     - search_sources

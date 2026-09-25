@@ -1,10 +1,13 @@
 import os
 from pathlib import Path
+from urllib import response
 import yaml
 import tools as tools
+import interface_def as interface_def
 
 from deepagents import create_deep_agent
 from langchain_ollama import ChatOllama
+from langchain.agents.structured_output import ToolStrategy
 
 ROOT_DIR = Path(__file__).parent # src/edbot
 
@@ -40,7 +43,14 @@ def load_subagents(config_path: Path) -> list:
 
     # Map tool names to actual tool objects
     available_tools = {
-        "search_sources": tools.search_sources
+        "search_sources": tools.search_sources,
+        "get_conversation_history": tools.get_conversation_history
+    }
+
+    response_formats = {
+        "OrchestratorAgentModel": interface_def.OrhcestratorAgentInput,
+        "UCAInput": interface_def.UCAInput,
+        "CGAInput": interface_def.CGAInput
     }
 
     # Load in subagents configuration file. Used to modularize subagent config
@@ -52,7 +62,8 @@ def load_subagents(config_path: Path) -> list:
         subagent = {
             "name": name,
             "description": spec["description"],
-            "system_prompt": spec["system_prompt"]
+            "system_prompt": spec["system_prompt"],
+            "response_format": [ response_formats[r] for r in spec["response_format"]]
         }
 
         if "model" in spec:

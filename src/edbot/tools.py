@@ -3,7 +3,9 @@ import uuid
 from typing import Literal
 from pathlib import Path
 from deepagents.backends import FilesystemBackend
-from langchain.tools import tool
+from langchain.tools import tool, ToolRuntime
+from langchain_core.messages import HumanMessage, AIMessage
+from edbot.interface_def import Message
 
 from document_embedding import load_vector_store
 
@@ -44,3 +46,21 @@ def search_sources(query: str) -> list:
         f"Saved {len(saved_paths)} reading chunks:\n"
         + "\n".join(saved_paths)
     )
+
+@tool # Tool called by agents before returning conversation history
+def get_conversation_history(runtime: ToolRuntime) -> list[Message]:
+    """Fetches all conversation messages between user and AI.
+
+    Args:
+        runtime: Agent's runtime information from LangChain
+
+    Returns:
+        Array of Messages between the user and AI
+    """
+    out = []
+    for m in runtime.state["messages"]:
+        if isinstance(m, HumanMessage):
+            out.append(Message(role="student", content=m.text))
+        elif isinstance(m, AIMessage) and m.text and not m.tool_calls:
+            out.append(Message(role="edbot", content=m.text))
+    return out

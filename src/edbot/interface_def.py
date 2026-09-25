@@ -1,3 +1,4 @@
+# Defines the Pydantic models of agent interfaces
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Literal, Optional, Annotated, Union
 
