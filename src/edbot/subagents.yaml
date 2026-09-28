@@ -35,6 +35,6 @@ understanding-checking-agent:
   response_format: 
     - OrchestratorAgentInput
     - CGAInput
-  model: ollama:qwen3:8b
+  model: ollama:qwen3.8:27b
   tools:
     - search_sources

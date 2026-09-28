@@ -5,7 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pypdf import PdfReader
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).parent # src/edbot
+ROOT_DIR = Path(__file__).parent.parent # src/
 DOC_PATHS = [ ROOT_DIR / "readings" ]
 
 def load_langchain_docs(doc_paths: list[str] | None = None) -> list[Document]:
@@ -17,21 +17,21 @@ def load_langchain_docs(doc_paths: list[str] | None = None) -> list[Document]:
             reader = PdfReader(path)
             text = "\n".join(page.extract_text() or "" for page in reader.pages)
             docs.append(Document(page_content=text, metadata={"source": str(path)}))
-    print(f"Loaded {len(docs)} documentation pages")
+    # print(f"Loaded {len(docs)} documentation pages")
     return docs
 
 def split_docs(docs: list[Document]):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     all_splits = text_splitter.split_documents(docs)
-    print(f"Split documentation into {len(all_splits)} chunks.")
+    # print(f"Split documentation into {len(all_splits)} chunks.")
     return all_splits
 
 def embed_chunks(all_splits: list[Document]):
     # https://docs.langchain.com/oss/python/integrations/embeddings/ollama
-    embeddings = OllamaEmbeddings(model="qwen3-embedding:4b")
+    embeddings = OllamaEmbeddings(model="qwen3-embedding:8b")
     vector_store = InMemoryVectorStore(embeddings)
     vector_store.add_documents(documents=all_splits)
-    print(f"Indexed {len(all_splits)} chunks.")
+    # print(f"Indexed {len(all_splits)} chunks.")
     return vector_store
 
 def load_vector_store():
