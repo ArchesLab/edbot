@@ -2,7 +2,7 @@
 
 ## Source material layout
 
-- `src/edbot/readings` — required readings on Operating Systems
+- `src/readings` — required readings on Operating Systems
 
 ## Conventions
 

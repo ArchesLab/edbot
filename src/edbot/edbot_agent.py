@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from urllib import response
+from typing import Union
 import yaml
 import tools as tools
 import interface_def as interface_def
@@ -12,26 +13,30 @@ from langchain.agents.structured_output import ToolStrategy
 ROOT_DIR = Path(__file__).parent # src/edbot
 
 system_prompt = """You are the orchestrator for edbot, an educational content system.
-Your job is to coordinate specialist subagents to produce assessment materials
-for students, grounded strictly in course source material.
-
-## Delegation policy
-- For any request to generate a question, quiz item, or practice problem,
-  delegate to the question-generator subagent via the task() tool. Do not
-  attempt to write questions yourself.
-- Do not fabricate source content — all factual claims must trace back to
-  material retrieved by a subagent's retrieve_sources call.
-
-## Your role
-- Interpret the student's request (topic, difficulty, question count, format)
-  and pass clear, complete instructions to the question-generator subagent.
-- Once the subagent returns its output, relay it to the user exactly as
-  given — the full question text, answer choices, correct answer, and
-  rationale. Do not summarize, critique, grade, or add commentary of your
-  own on top of it.
-- If a request doesn't match any available subagent's capability, say so
-  rather than guessing.
+When a student asks a question, it is your job to answer with your best guess.
+Explicitly say if you don't know the answer. Keep the student engaged.
 """
+# system_prompt = """You are the orchestrator for edbot, an educational content system.
+# Your job is to coordinate specialist subagents to produce assessment materials
+# for students, grounded strictly in course source material.
+
+# ## Delegation policy
+# - For any request to generate a question, quiz item, or practice problem,
+#   delegate to the question-generator subagent via the task() tool. Do not
+#   attempt to write questions yourself.
+# - Do not fabricate source content — all factual claims must trace back to
+#   material retrieved by a subagent's retrieve_sources call.
+
+# ## Your role
+# - Interpret the student's request (topic, difficulty, question count, format)
+#   and pass clear, complete instructions to the question-generator subagent.
+# - Once the subagent returns its output, relay it to the user exactly as
+#   given — the full question text, answer choices, correct answer, and
+#   rationale. Do not summarize, critique, grade, or add commentary of your
+#   own on top of it.
+# - If a request doesn't match any available subagent's capability, say so
+#   rather than guessing.
+# """
 
 def load_subagents(config_path: Path) -> list:
     """Load subagent definitions from YAML and wire up tools.
@@ -48,7 +53,7 @@ def load_subagents(config_path: Path) -> list:
     }
 
     response_formats = {
-        "OrchestratorAgentModel": interface_def.OrhcestratorAgentInput,
+        "OrchestratorAgentInput": interface_def.OrchestratorAgentInput,
         "UCAInput": interface_def.UCAInput,
         "CGAInput": interface_def.CGAInput
     }
@@ -63,7 +68,7 @@ def load_subagents(config_path: Path) -> list:
             "name": name,
             "description": spec["description"],
             "system_prompt": spec["system_prompt"],
-            "response_format": [ response_formats[r] for r in spec["response_format"]]
+            "response_format": ToolStrategy(Union[tuple(response_formats[r] for r in spec["response_format"])])
         }
 
         if "model" in spec:
@@ -83,7 +88,14 @@ def create_edbot_agent():
         subagents=load_subagents(ROOT_DIR / "subagents.yaml"),
         backend=tools.backend,
         system_prompt=system_prompt,
-        model=model
+        model=model,
+        response_format=ToolStrategy(
+            Union[
+                interface_def.ChatBotOutput,
+                interface_def.UCAInput,
+                interface_def.CGAInput,
+            ]
+        )
     )
 
 def main():
@@ -91,10 +103,29 @@ def main():
     agent = create_edbot_agent()
     print("Agent created!")
 
-    result = agent.invoke(
-        {"messages": [{"role": "user", "content": "Ask me a question on CPU scheduling."}]}
-    )
+    # Full conversation history, passed back in each turn so the agent remembers context
+    messages = []
 
-    print(result["messages"][-1].content)
+    while True:
+        try:
+            user_input = input("\nYou: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            break
 
-main()
+        if not user_input:
+            continue
+        if user_input.lower() in ("quit", "exit"):
+            break
+
+        messages.append({"role": "user", "content": user_input})
+        result = agent.invoke({"messages": messages})
+        messages = result["messages"]
+
+        # With response_format set, the parsed output lands in structured_response
+        response = result.get("structured_response")
+        print(f"\nedbot: {response if response is not None else messages[-1].content}")
+
+    print("Goodbye!")
+
+if __name__ == "__main__":
+    main()

@@ -33,7 +33,7 @@ understanding-checking-agent:
       default to a single medium-difficulty multiple-choice or short-answer
       question if unspecified.
   response_format: 
-    - OrhcestratorAgentInput
+    - OrchestratorAgentInput
     - CGAInput
   model: ollama:qwen3:8b
   tools:

@@ -18,7 +18,12 @@ class AnswerSubmission(BaseModel):
     rubric: str
     student_answer: str
 
-class OrhcestratorAgentInput(BaseModel):
+class ChatBotOutput(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    response: str
+
+class OrchestratorAgentInput(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     conversation: list[Message] = Field(
@@ -64,4 +69,4 @@ class ProbeAtTierInput(CGABase):
     mode: Literal["probe_at_tier"] = "probe_at_tier"
 
 
-CGAInput = Annotated[Union[GenerateQuestionInput, ExplainAtTierInput, ProbeAtTierInput], Field(discriminator="mode")]
+CGAInput = Union[GenerateQuestionInput, ExplainAtTierInput, ProbeAtTierInput]
