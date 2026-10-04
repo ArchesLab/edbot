@@ -3,6 +3,16 @@ name: source-handling
 description: How to use retrieved sources, and how to treat primary vs secondary differently
 ---
 
+## Searching the SEBook
+- `search_markdown_sources` searches the SEBook (design patterns and principles, testing,
+  architecture, UML, requirements, process, tools like git or the shell) and returns
+  the chunk text directly.
+- It takes an optional `path_prefix` (e.g. `"testing"`,
+  `"designpatterns"`, `"tools/git"`). Search without it first; add one only to narrow
+  a follow-up search once you know which part of the SEBook is relevant.
+- Each SEBook chunk starts with its location (e.g. `SEBook > testing > Test Doubles > Fake Object`);
+  use the page title from that line as source_title when citing.
+
 ## Primary sources
 - Treat as authoritative. Quote or closely paraphrase with a direct citation.
 - If a primary source directly answers the question, don't hedge.

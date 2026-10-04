@@ -2,7 +2,8 @@
 
 ## Source material layout
 
-- `src/readings` — required readings on Operating Systems
+- SEBook — software engineering textbook, synced from GitHub at startup
+  (searched with `search_markdown_sources`)
 
 ## Conventions
 
@@ -13,6 +14,6 @@
 
 ## Known limitations (be upfront about these)
 
-- retrieve_sources currently does keyword matching, not semantic search —
-  if retrieval seems to miss obviously-relevant material, try rephrasing
-  the query with more literal terms from the source text.
+- `search_markdown_sources` uses semantic search over chunks of about 1000 characters and
+  return the top 4. If retrieval misses obviously-relevant material, rephrase the
+  query using terms the source itself would use, or search a narrower subtopic.

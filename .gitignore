@@ -12,3 +12,6 @@ wheels/
 
 # Retrieved chunks
 retrieved/
+
+# Cached SEBook clone and embeddings
+src/.cache/
