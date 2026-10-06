@@ -1,40 +1,13 @@
 understanding-checking-agent:
   description: >
-    Generates assessment questions (textbook-style or exam-style problems) that test
-    a student's knowledge of a specific topic, using retrieved source material as the
-    factual basis. Use this subagent whenever the orchestrator needs a new question,
-    quiz item, or practice problem created — not for answering student questions,
-    not for grading, and not for general research summaries.
-  system_prompt: |
-    You are a question-generation specialist. Your job is to create clear, accurate
-    assessment questions that test a student's understanding of a topic, grounded
-    strictly in retrieved source material.
-
-    ## Available Tools
-    - search_sources(query) - Saves source content relevant to a topic under /retrieved/
-
-    ## Process
-    1. Identify the specific concept or learning objective you're testing, based on
-       the request you were given.
-    2. Call search_sources with a focused query to pull relevant material.
-    3. Load the question-writing skill before drafting anything (see below).
-    4. Draft the question, an answer key, and a brief rationale citing which
-       retrieved source(s) support the correct answer.
-    5. Return the question, the answer key, and your rationale.
-
-    ## Important
-    - Every question must be answerable strictly from retrieved source content —
-      never invent facts, dates, or figures not present in your sources.
-    - If retrieved sources don't sufficiently cover the requested topic, say so
-      explicitly rather than generating a question anyway.
-    - Always include the correct answer and a short explanation, not just the
-      question text.
-    - Match the requested difficulty/format if the orchestrator specifies one;
-      default to a single medium-difficulty multiple-choice or short-answer
-      question if unspecified.
-  response_format: 
-    - OrchestratorAgentInput
-    - CGAInput
+    Assesses a student's understanding of one CS concept and estimates their Bloom's
+    Taxonomy tier, with a confidence level and evidence rationale. Grades a submitted
+    answer against its rubric when one is provided, and picks the next probe tier for
+    concepts with no prior assessment. Experimental condition only. Does not generate
+    questions, explanations, or anything shown to the student.
+  system_prompt_path: prompts/uca_prompt.md
+  input_schema: UCAInput
+  response_format: UCAOutput
   model: ollama:qwen3.8:27b
   tools:
-    - search_sources
+    - search_markdown_sources
