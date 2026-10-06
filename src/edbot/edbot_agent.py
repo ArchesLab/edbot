@@ -1,19 +1,23 @@
-import os
 from pathlib import Path
-from urllib import response
-from typing import Union
 import yaml
 from pydantic import TypeAdapter
-import tools as tools
+import tools
 import middleware
 import interface_def as interface_def
-from markdown_embedding import load_sebook_store
+from tools.markdown_embedding import load_sebook_store
 
 from deepagents import create_deep_agent
+from deepagents.backends import FilesystemBackend
 from langchain_ollama import ChatOllama
 from langchain.agents.structured_output import ToolStrategy
 
 ROOT_DIR = Path(__file__).parent # src/edbot
+backend = FilesystemBackend(root_dir=ROOT_DIR)
+
+# ollama serve
+# ollama pull <model>
+# ollama list
+# ollama run <name-of-model>
 
 def load_subagents(config_path: Path) -> list:
     """Load subagent definitions from YAML and wire up tools."""
@@ -68,7 +72,7 @@ def create_edbot_agent():
         memory=["./AGENTS.md"],
         skills=["./skills/"],
         subagents=load_subagents(ROOT_DIR / "subagents.yaml"),
-        backend=tools.backend,
+        backend=backend,
         tools=[tools.search_markdown_sources],
         system_prompt=(ROOT_DIR / "prompts" / "system_prompt.md").read_text(), # switch to orchestrator prompt later
         middleware=[middleware.ConversationMiddleware(), middleware.validate_subagent_input],
@@ -105,7 +109,7 @@ def main():
                 messages = data["messages"] # keep the latest full history for the next turn
                 continue
             chunk, metadata = data
-            
+
             # Only the orchestrator's own model calls: skips tool results and middleware model calls
             if metadata.get("langgraph_node") != "model":
                 continue

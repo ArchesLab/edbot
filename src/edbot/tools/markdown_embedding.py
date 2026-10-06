@@ -23,7 +23,7 @@ SEBOOK_SUBDIR = "SEBook"
 DATA_SUBDIRS = ["_data/tutorials", "_data/quizzes", "_data/flashcards"]
 SPARSE_PATHS = [SEBOOK_SUBDIR, *DATA_SUBDIRS] # tracks ony these directories to clone and fetch from
 
-ROOT_DIR = Path(__file__).parent.parent # src/
+ROOT_DIR = Path(__file__).parent.parent.parent # src/
 CACHE_DIR = ROOT_DIR / ".cache" / "sebook" 
 CLONE_DIR = CACHE_DIR / "repo"
 STORE_PATH = CACHE_DIR / "store.json" # dumped InMemoryVectorStore -> saving vector store as JSON from RAM
