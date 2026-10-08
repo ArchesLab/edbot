@@ -17,12 +17,20 @@ def validate_subagent_input(request, handler):
     if call["name"] == "task":
         adapter = SUBAGENT_INPUT_SCHEMAS.get(call["args"].get("subagent_type"))
         if adapter is not None:
+            description = call["args"].get("description", "")
             try:
-                adapter.validate_json(call["args"].get("description", ""))
+                # Some models (e.g. qwen via Ollama) send the description as a JSON object instead of a string
+                if isinstance(description, dict):
+                    validated = adapter.validate_python(description)
+                else:
+                    validated = adapter.validate_json(description)
             except ValidationError as e:
                 return ToolMessage(
                     content=f"Invalid task description for {call['args']['subagent_type']}:\n{e}",
                     tool_call_id=call["id"],
                     status="error",
                 )
+            # Pass the subagent a normalized JSON string: task() expects a string, and defaults get filled in
+            args = {**call["args"], "description": adapter.dump_json(validated).decode()}
+            request = request.override(tool_call={**call, "args": args})
     return handler(request)

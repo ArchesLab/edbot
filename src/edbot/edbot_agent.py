@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv() # before langchain imports, so LANGSMITH_* settings from .env are set when tracing starts
+
 from pathlib import Path
 import yaml
 from pydantic import TypeAdapter
@@ -32,7 +35,8 @@ def load_subagents(config_path: Path) -> list:
         "OrchestratorAgentInput": interface_def.OrchestratorAgentInput,
         "UCAInput": interface_def.UCAInput,
         "UCAOutput": interface_def.UCAOutput,
-        "CGAInput": interface_def.CGAInput
+        "CGAInput": interface_def.CGAInput,
+        "CGAOutput": interface_def.CGAOutput,
     }
 
     # Load in subagents configuration file. Used to modularize subagent config
@@ -74,8 +78,8 @@ def create_edbot_agent():
         subagents=load_subagents(ROOT_DIR / "subagents.yaml"),
         backend=backend,
         tools=[tools.search_markdown_sources],
-        system_prompt=(ROOT_DIR / "prompts" / "system_prompt.md").read_text(), # switch to orchestrator prompt later
-        middleware=[middleware.ConversationMiddleware(), middleware.validate_subagent_input],
+        system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
+        middleware=[middleware.ConversationMiddleware(), middleware.log_subagent_calls, middleware.validate_subagent_input],
         model=model,
     )
 

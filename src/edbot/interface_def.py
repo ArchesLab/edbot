@@ -1,6 +1,5 @@
-# Defines the Pydantic models of agent interfaces
 from pydantic import BaseModel, Field, ConfigDict
-from typing import Literal, Optional, Annotated, Union
+from typing import Literal, Optional, Union
 
 BloomTier = Literal["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"]
 QuestionFormat = Literal["multiple_choice", "short_answer", "code_writing", "code_tracing"]
@@ -72,7 +71,7 @@ class CGABase(BaseModel):
 
 class GenerateQuestionInput(CGABase):
     mode: Literal["generate_question"] = "generate_question"
-    format_contraint: Optional[QuestionFormat] = Field(
+    format_constraint: Optional[QuestionFormat] = Field(
         default=None,
         description="None lets the CGA choose the format"
     )
@@ -88,5 +87,25 @@ class ExplainAtTierInput(CGABase):
 class ProbeAtTierInput(CGABase):
     mode: Literal["probe_at_tier"] = "probe_at_tier"
 
-
 CGAInput = Union[GenerateQuestionInput, ExplainAtTierInput, ProbeAtTierInput]
+
+class CGAOutput(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    mode: Literal["generate_question", "explain_at_tier", "probe_at_tier"]
+    concept: str
+    target_tier: BloomTier
+    content: str = Field(description="Student-facing question, explanation, or probe; never contains the rubric or answer")
+    format: Optional[QuestionFormat] = Field(
+        default=None,
+        description="Set only for generate_question"
+    )
+    rubric: Optional[str] = Field(
+        default=None,
+        description="Set only for generate_question: answer key and grading criteria for the UCA"
+    )
+    concept_tags: Optional[list[str]] = Field(
+        default=None,
+        description="Set only for generate_question: the concept ID plus related sub-concepts the question tests"
+    )
+    sources: list[str] = Field(description="SEBook page titles (and URLs, when returned) the content is based on")
