@@ -33,11 +33,18 @@ class InjectConversationMiddleware(AgentMiddleware):
     """
     state_schema = ConversationState # declares the key so the subagent doesn't drop it
 
-    def wrap_model_call(self, request, handler):
+    def _with_conversation(self, request):
         conversation = request.state.get("conversation")
         if not conversation:
-            return handler(request)
+            return request
         lines = "\n\n".join(f"**{m.role}:** {m.content}" for m in conversation)
         # Added per model call rather than written to state, so it never piles up in messages
         prompt = (request.system_prompt or "") + f"\n\n## Conversation so far (oldest first)\n\n{lines}"
-        return handler(request.override(system_message=SystemMessage(content=prompt)))
+        return request.override(system_message=SystemMessage(content=prompt))
+
+    # Both versions are needed: invoke()/stream() use the sync one, ainvoke()/astream() the async one
+    def wrap_model_call(self, request, handler):
+        return handler(self._with_conversation(request))
+
+    async def awrap_model_call(self, request, handler):
+        return await handler(self._with_conversation(request))
