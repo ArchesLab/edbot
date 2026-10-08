@@ -119,8 +119,6 @@ Example: `{"mode": "explain_at_tier", "concept": "git-rebase", "target_tier": "A
 
 If a `task` call comes back with "Invalid task description", fix the fields named in the error and call it again.
 
-End every turn with exactly one `ChatBotOutput`. Its `response` is the synthesized reply from step 6, an out-of-scope response from step 3, or non-content interaction you handle yourself, and it is the only thing the student sees.
-
 ## Cold start / control condition defaults
 
 - Control condition: target tier for any CGA call is the fixed default `Apply`. Never varies per student, never touches the student model.

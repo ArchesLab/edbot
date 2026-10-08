@@ -2,7 +2,7 @@
 from typing import NotRequired
 from langchain.agents.middleware import AgentMiddleware, AgentState
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from interface_def import Message
+from edbot.interface_def import Message
 
 class ConversationState(AgentState):
     # Student and edbot messages only, oldest first. deepagents copies every state key

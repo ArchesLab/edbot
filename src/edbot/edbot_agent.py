@@ -4,10 +4,8 @@ load_dotenv() # before langchain imports, so LANGSMITH_* settings from .env are 
 from pathlib import Path
 import yaml
 from pydantic import TypeAdapter
-import tools
-import middleware
-import interface_def as interface_def
-from tools.markdown_embedding import load_sebook_store
+from edbot import tools, middleware, interface_def
+from edbot.tools.markdown_embedding import load_sebook_store
 
 from deepagents import create_deep_agent
 from deepagents.backends import FilesystemBackend
