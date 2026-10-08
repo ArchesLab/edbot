@@ -29,18 +29,13 @@ unspecified — pure recall questions are usually too easy to be useful.
   retrieved source content. Do not introduce outside facts, even if you're
   confident they're true.
 - If a source is ambiguous or contradicts another source, prefer the more
-  specific/detailed source, and note the ambiguity in your rationale.
+  specific/detailed source.
 - Never fabricate a citation. If you can't point to which retrieved chunk
   supports an answer, don't include that fact in the question.
 
 ## Output format
 Always include:
 1. **Question** — the question as the student will see it.
-2. **Answer** — the correct answer.
-3. **Rationale** — 1–2 sentences explaining why it's correct, referencing the
-   source used.
-4. (If multiple choice) **Distractor rationale** — briefly note the
-   misconception each wrong answer targets.
 
 ## Common failure modes to avoid
 - Questions answerable from general knowledge without needing the source at all.

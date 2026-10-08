@@ -7,8 +7,7 @@
 
 ## Conventions
 
-- Questions should always include an answer key and rationale, never just
-  the question text.
+- When generating a question for a student, show only the question. Keep the answer key and rational internal, and use them later to grade the student's answer. Never reveal them unless the student has already answered or explicitly gives up
 - Default question difficulty: application-level, not pure recall, unless
   the requester specifies otherwise.
 
