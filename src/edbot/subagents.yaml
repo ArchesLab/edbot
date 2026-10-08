@@ -11,3 +11,17 @@ understanding-checking-agent:
   model: ollama:qwen3.8:27b
   tools:
     - search_markdown_sources
+content-generating-agent:
+  description: >
+    Writes all CS-concept content for the student, calibrated to a given Bloom's
+    Taxonomy tier for one concept. Three modes: generate_question (a practice question
+    with its rubric), explain_at_tier (an explanation or answer to a follow-up), and
+    probe_at_tier (a short conversational probe for a concept with no prior assessment).
+    Used in both conditions. Takes the target tier as given and does not assess the
+    student's understanding.
+  system_prompt_path: prompts/cga_prompt.md
+  input_schema: CGAInput
+  response_format: CGAOutput
+  model: ollama:qwen3.8:27b
+  tools:
+    - search_markdown_sources
