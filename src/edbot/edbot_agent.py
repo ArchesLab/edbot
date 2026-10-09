@@ -13,6 +13,7 @@ from langchain_ollama import ChatOllama
 from langchain.agents.structured_output import ToolStrategy
 
 ROOT_DIR = Path(__file__).parent # src/edbot
+MODEL_NAME = "qwen3.8:27b" # Shared by the orchestrator and all subagents
 backend = FilesystemBackend(root_dir=ROOT_DIR)
 
 # ollama serve
@@ -52,8 +53,6 @@ def load_subagents(config_path: Path) -> list:
             "middleware": [middleware.InjectConversationMiddleware()]
         }
 
-        if "model" in spec:
-            subagent["model"] = spec["model"]
         if "tools" in spec:
             subagent["tools"] = [ available_tools[t] for t in spec["tools"]]
         if "input_schema" in spec:
@@ -64,7 +63,7 @@ def load_subagents(config_path: Path) -> list:
 
 def create_edbot_agent():
     """Create orchestrator agent configured by filesystem files."""
-    model = ChatOllama(model="qwen3.8:27b", num_ctx=32768)
+    model = ChatOllama(model=MODEL_NAME, num_ctx=32768)
     # Sync SEBook and load (or rebuild) its embeddings now, so the first search doesn't wait on it
     load_sebook_store()
 
