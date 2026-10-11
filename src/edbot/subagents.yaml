@@ -1,3 +1,4 @@
+# All subagents inherit the orchestrator's model and context settings.
 understanding-checking-agent:
   description: >
     Assesses a student's understanding of one CS concept and estimates their Bloom's
@@ -8,7 +9,6 @@ understanding-checking-agent:
   system_prompt_path: prompts/uca_prompt.md
   input_schema: UCAInput
   response_format: UCAOutput
-  model: ollama:qwen3.8:27b
   tools:
     - search_markdown_sources
 content-generating-agent:
@@ -22,6 +22,5 @@ content-generating-agent:
   system_prompt_path: prompts/cga_prompt.md
   input_schema: CGAInput
   response_format: CGAOutput
-  model: ollama:qwen3.8:27b
   tools:
     - search_markdown_sources
