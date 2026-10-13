@@ -1,6 +1,9 @@
 from dotenv import load_dotenv
 load_dotenv() # before langchain imports, so LANGSMITH_* settings from .env are set when tracing starts
 
+import argparse
+import asyncio
+import logging
 from pathlib import Path
 import yaml
 from pydantic import TypeAdapter
@@ -14,6 +17,7 @@ from langchain.agents.structured_output import ToolStrategy
 
 ROOT_DIR = Path(__file__).parent # src/edbot
 MODEL_NAME = "qwen3.8:27b" # Shared by the orchestrator and all subagents
+NUM_CTX = 32768 # Ollama context window, in tokens
 backend = FilesystemBackend(root_dir=ROOT_DIR)
 
 # ollama serve
@@ -61,9 +65,14 @@ def load_subagents(config_path: Path) -> list:
         subagents.append(subagent)
     return subagents
 
-def create_edbot_agent():
-    """Create orchestrator agent configured by filesystem files."""
-    model = ChatOllama(model=MODEL_NAME, num_ctx=32768)
+def create_edbot_agent(checkpointer=None):
+    """Create orchestrator agent configured by filesystem files.
+
+    Pass a checkpointer to save conversations between turns (see service.get_agent).
+    """
+    # ChatOllama has no built-in profile, so without max_input_tokens deepagents assumes a
+    # 170k-token window and never summarizes before Ollama silently truncates the prompt
+    model = ChatOllama(model=MODEL_NAME, num_ctx=NUM_CTX, profile={"max_input_tokens": NUM_CTX})
     # Sync SEBook and load (or rebuild) its embeddings now, so the first search doesn't wait on it
     load_sebook_store()
 
@@ -78,60 +87,61 @@ def create_edbot_agent():
         system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
         middleware=[middleware.ConversationMiddleware(), middleware.log_subagent_calls, middleware.validate_subagent_input],
         model=model,
+        checkpointer=checkpointer,
     )
 
-def main():
-    # print("Creating agent...")
-    agent = create_edbot_agent()
-    # print("Agent created!")
+async def run_cli(student_id: str):
+    """Terminal chat. Shows exactly what a student sees in any other interface, via chat_turn()."""
+    from edbot import service # imported here because service imports this module
 
-    # Full conversation history, passed back in each turn so the agent remembers context
-    messages = []
+    saved = await service.saved_message_count(student_id)
+    print(f"Student: {student_id} ({f'continuing, {saved} saved messages' if saved else 'new conversation'})")
 
-    while True:
-        try:
-            user_input = input("\nYou: ").strip()
-        except (EOFError, KeyboardInterrupt):
-            break
+    try:
+        while True:
+            try:
+                # input() blocks, so run it in a thread to keep the event loop free
+                user_input = (await asyncio.to_thread(input, "\nYou: ")).strip()
+            except (EOFError, KeyboardInterrupt):
+                break
 
-        if not user_input:
-            continue
-        if user_input.lower() in ("quit", "exit"):
-            break
-
-        messages.append({"role": "user", "content": user_input})
-        print("\nedbot: ", end="", flush=True)
-        last_message_id = None
-        mid_line = False # Used for formatting newlines
-
-        # "messages" yields LLM tokens as they're generated; "values" yields the full state after each step
-        for mode, data in agent.stream({"messages": messages}, stream_mode=["messages", "values"]):
-            if mode == "values":
-                messages = data["messages"] # keep the latest full history for the next turn
+            if not user_input:
                 continue
-            chunk, metadata = data
+            if user_input.lower() in ("quit", "exit"):
+                break
 
-            # Only the orchestrator's own model calls: skips tool results and middleware model calls
-            if metadata.get("langgraph_node") != "model":
-                continue
-
-            # Tool calls stream in pieces; only the first piece of each call carries the tool name
-            for tool_call in getattr(chunk, "tool_call_chunks", None) or []:
-                if tool_call.get("name") == "search_markdown_sources":
-                    if mid_line:
-                        print()
-                    print("[searching SEBook...]", flush=True)
-                    mid_line = False
-            if not chunk.text:
-                continue
-            if mid_line and chunk.id != last_message_id:
-                print("\n", flush=True) # a new model reply right after earlier reply text
-            last_message_id = chunk.id
-            print(chunk.text, end="", flush=True)
-            mid_line = True
-        print()
+            replying = False # whether "edbot: " has been printed for this turn
+            async for event in service.chat_turn(student_id, user_input):
+                if event.type == "status":
+                    print(f"  ({event.text})", flush=True)
+                elif event.type == "text":
+                    if not replying:
+                        print("\nedbot: ", end="", flush=True)
+                        replying = True
+                    print(event.text, end="", flush=True)
+                elif event.type == "error":
+                    print(f"\nedbot: {event.message}", flush=True)
+            print()
+    finally:
+        await service.close()
 
     print("Goodbye!")
+
+def setup_logging(verbosity: int):
+    """Send logs to stderr. edbot's own loggers get the chosen level; libraries stay at WARNING
+    (httpx alone would log every Ollama request at INFO)."""
+    logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+    level = {0: logging.WARNING, 1: logging.INFO}.get(verbosity, logging.DEBUG)
+    logging.getLogger("edbot").setLevel(level)
+
+def main():
+    parser = argparse.ArgumentParser(description="Chat with edbot in the terminal")
+    parser.add_argument("--student", default="dev-cli", help="student ID; each student has one ongoing conversation")
+    parser.add_argument("-v", "--verbose", action="count", default=0,
+                        help="-v shows subagent calls and timings, -vv also shows subagent inputs")
+    args = parser.parse_args()
+    setup_logging(args.verbose)
+    asyncio.run(run_cli(args.student))
 
 if __name__ == "__main__":
     main()

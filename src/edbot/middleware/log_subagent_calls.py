@@ -1,18 +1,24 @@
+import logging
 import time
 from langchain.agents.middleware import AgentMiddleware
 
-# Prints when the orchestrator calls a subagent through task(), and when it finishes.
-# Listed before validate_subagent_input so calls the validator rejects are printed too.
+# Logs when the orchestrator calls a subagent through task(), and when it finishes.
+# Listed before validate_subagent_input so calls the validator rejects are logged too.
+logger = logging.getLogger(__name__)
 
 def _log_start(call) -> float:
-    print(f"\n[calling subagent {call['args'].get('subagent_type')}...]", flush=True)
-    print(f"[input: {call['args'].get('description', '')}]", flush=True)
+    logger.info("Calling subagent %s", call["args"].get("subagent_type"))
+    # DEBUG, not INFO: a UCA answer_submission input contains the student's answer
+    logger.debug("Subagent input: %s", call["args"].get("description", ""))
     return time.monotonic()
 
 def _log_end(call, result, start: float):
+    name, elapsed = call["args"].get("subagent_type"), time.monotonic() - start
     # The validator returns an error ToolMessage; a real subagent run returns a Command
-    status = "rejected (invalid input)" if getattr(result, "status", None) == "error" else "finished"
-    print(f"[subagent {call['args'].get('subagent_type')} {status} in {time.monotonic() - start:.0f}s]", flush=True)
+    if getattr(result, "status", None) == "error":
+        logger.warning("Subagent %s rejected (invalid input) after %.0fs", name, elapsed)
+    else:
+        logger.info("Subagent %s finished in %.0fs", name, elapsed)
 
 class LogSubagentCalls(AgentMiddleware):
     # Both versions are needed: invoke()/stream() use the sync one, ainvoke()/astream() the async one

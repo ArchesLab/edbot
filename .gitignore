@@ -13,5 +13,8 @@ wheels/
 # Retrieved chunks
 retrieved/
 
-# Cached SEBook clone and embeddings
+# Cached SEBook clone and embeddings, and saved conversations (checkpoints.sqlite)
 src/.cache/
+
+# Conversation history that deepagents offloads when summarizing, one file per student
+src/edbot/conversation_history/

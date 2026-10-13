@@ -109,3 +109,30 @@ class CGAOutput(BaseModel):
         description="Set only for generate_question: the concept ID plus related sub-concepts the question tests"
     )
     sources: list[str] = Field(description="SEBook page titles (and URLs, when returned) the content is based on")
+
+# Events chat_turn() yields to an interface (CLI, Chainlit, later FastAPI). Only these reach the
+# student, so they must never carry tool names, subagent output, tiers, or rubrics
+class Status(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    type: Literal["status"] = "status"
+    text: str = Field(description="Neutral progress note, e.g. 'Looking through course material…'")
+
+class TextDelta(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    type: Literal["text"] = "text"
+    text: str = Field(description="Next piece of edbot's reply")
+
+class Done(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    type: Literal["done"] = "done"
+
+class Error(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    type: Literal["error"] = "error"
+    message: str = Field(description="Student-facing message; details go to the server log")
+
+TurnEvent = Union[Status, TextDelta, Done, Error]
