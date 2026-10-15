@@ -16,5 +16,8 @@ retrieved/
 # Cached SEBook clone and embeddings, and saved conversations (checkpoints.sqlite)
 src/.cache/
 
+# Chainlit's upload folder (created on import, even with uploads off)
+.files/
+
 # Conversation history that deepagents offloads when summarizing, one file per student
 src/edbot/conversation_history/
