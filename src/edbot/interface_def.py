@@ -1,8 +1,29 @@
+from dataclasses import dataclass
+from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Literal, Optional, Union
 
 BloomTier = Literal["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"]
 QuestionFormat = Literal["multiple_choice", "short_answer", "code_writing", "code_tracing"]
+Confidence = Literal["high", "medium", "low"]
+
+# Per-turn runtime context: set once by chat_turn(), handed to every tool (including tools inside
+# subagents) as runtime.context. A dataclass rather than a BaseModel so it's never saved in checkpoints
+@dataclass(frozen=True) # object is read-only, not a Pydantic type, not saved in context
+class EdbotContext:
+    student_id: str # whose turn this is; tools use it to pick the student's namespace in the store
+
+class StudentModelEntry(BaseModel):
+    """One student's assessment for one concept. Written only by the UCA's update_student_model tool."""
+    model_config = ConfigDict(frozen=True)
+
+    concept: str
+    tier: BloomTier
+    confidence: Confidence
+    rationale: str = Field(description="The UCA's evidence for the tier; never shown to the student")
+    assessed_at: datetime = Field(description="Set by code when saved")
+    assessed_at_turn: int = Field(description="Student message count when assessed, for the cadence check")
+    assessment_count: int = Field(description="Times this concept has been assessed, 1 on the first")
 
 class Message(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -52,7 +73,7 @@ class UCAOutput(BaseModel):
         description="Tier from the student model before this assessment, None if never assessed"
     )
     tier: BloomTier
-    confidence: Literal["high", "medium", "low"]
+    confidence: Confidence
     rationale: str = Field(description="1-3 sentences tying the estimate to what the student said")
     answer_judgment: Optional[AnswerJudgment] = Field(
         default=None,

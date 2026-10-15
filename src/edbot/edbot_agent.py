@@ -31,7 +31,9 @@ def load_subagents(config_path: Path) -> list:
     # Map tool names to actual tool objects
     available_tools = {
         "search_markdown_sources": tools.search_markdown_sources,
-        "get_conversation_history": tools.get_conversation_history
+        "get_conversation_history": tools.get_conversation_history,
+        "fetch_student_data": tools.fetch_student_data,
+        "update_student_model": tools.update_student_model, # UCA only: the student model's single writer
     }
 
     schemas = {
@@ -65,10 +67,11 @@ def load_subagents(config_path: Path) -> list:
         subagents.append(subagent)
     return subagents
 
-def create_edbot_agent(checkpointer=None):
+def create_edbot_agent(checkpointer=None, store=None):
     """Create orchestrator agent configured by filesystem files.
 
-    Pass a checkpointer to save conversations between turns (see service.get_agent).
+    Pass a checkpointer to save conversations between turns, and a store for the student model
+    (see service.get_agent). Runs must pass context=EdbotContext(student_id=...).
     """
     # ChatOllama has no built-in profile, so without max_input_tokens deepagents assumes a
     # 170k-token window and never summarizes before Ollama silently truncates the prompt
@@ -83,11 +86,14 @@ def create_edbot_agent(checkpointer=None):
         skills=["./skills/"],
         subagents=load_subagents(ROOT_DIR / "subagents.yaml"),
         backend=backend,
-        tools=[tools.search_markdown_sources],
+        # The orchestrator reads the student model but never writes it
+        tools=[tools.search_markdown_sources, tools.fetch_student_data],
         system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
         middleware=[middleware.ConversationMiddleware(), middleware.log_subagent_calls, middleware.validate_subagent_input],
         model=model,
         checkpointer=checkpointer,
+        store=store,
+        context_schema=interface_def.EdbotContext, # type of runtime.context in every tool
     )
 
 async def run_cli(student_id: str):

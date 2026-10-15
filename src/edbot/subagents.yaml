@@ -11,6 +11,8 @@ understanding-checking-agent:
   response_format: UCAOutput
   tools:
     - search_markdown_sources
+    - fetch_student_data
+    - update_student_model # only the UCA writes the student model
 content-generating-agent:
   description: >
     Writes all CS-concept content for the student, calibrated to a given Bloom's
