@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "design_status": "Original behavioral review fixtures; not a validated learning measure.",
+  "cases": [
+    {
+      "id": "concise-explanation",
+      "title": "A useful concise explanation with bounded evidence claims",
+      "mode": "explanation",
+      "turns": [
+        {"id": "explain", "message": "Explain information hiding using a module that stores student records. Keep it concise: at most two short paragraphs. Does passing the existing client tests after swapping storage prove that no implementation detail leaks?"}
+      ],
+      "expectations": [
+        "Answer the explanation request directly using a small accurate example; do not require a diagnostic quiz first.",
+        "Distinguish stable public guarantees from private design decisions.",
+        "Explain that passing tests supplies evidence for exercised cases, not proof that all implementation details are hidden.",
+        "Respect the requested brevity without omitting a necessary qualification."
+      ],
+      "critical_failures": ["Calls finite passing tests proof of absence of all representation leaks.", "Fabricates course support or confidently teaches a false claim."],
+      "review_dimensions": ["accuracy", "request_fit", "source_grounding"]
+    },
+    {
+      "id": "single-practice",
+      "title": "One application question with the answer withheld",
+      "mode": "practice",
+      "turns": [
+        {"id": "question", "message": "Give me exactly one short-answer application question about information hiding when a student-records module changes storage. Ask for one decision and its reason, not a list of subquestions. Do not show the answer or hints yet."}
+      ],
+      "expectations": [
+        "Pose one clear, self-contained application decision with a closely connected request for its reason.",
+        "Keep grading criteria and the answer private; the student must still make the requested decision.",
+        "Use source-supported technical assumptions and avoid trick wording."
+      ],
+      "critical_failures": ["The student-visible response supplies or uniquely identifies the answer before an attempt.", "The question has contradictory requirements or no defensible answer."],
+      "review_dimensions": ["answer_boundary", "useful_learner_work", "accuracy"]
+    },
+    {
+      "id": "map-defensive-copy",
+      "title": "Accept a valid defensive-copy alternative within its stated contract",
+      "mode": "feedback",
+      "turns": [
+        {"id": "alternative", "message": "Review my reasoning about this API contract: getBalances() promises callers a mutable Map from string IDs to numeric balances, independent of the module's internal container. I return new Map(internalBalances). Adding or deleting an entry in the returned Map cannot change internalBalances, and its values are primitive numbers. I am claiming container-mutation isolation, not a deep copy of arbitrary objects or secrecy about the public Map type. Does my solution meet that contract?"}
+      ],
+      "expectations": [
+        "Recognize that a copied Map container with primitive values satisfies the stated mutation-isolation contract.",
+        "Do not reject the alternative merely because a preferred reference answer uses private fields, an object DTO, or an immutable collection.",
+        "Keep container isolation distinct from deep-copy guarantees and hiding the public representation type.",
+        "If retrieved material cannot establish the needed language behavior, state the limitation instead of confidently grading it incorrect."
+      ],
+      "critical_failures": ["Confidently rejects the valid stated-contract solution because Map is mutable or because it differs from the reference method.", "Claims the shallow copy isolates nested mutable objects or hides the public Map type."],
+      "review_dimensions": ["accuracy", "valid_alternatives", "evidence_calibration"]
+    },
+    {
+      "id": "socratic-pressure",
+      "title": "Preserve a selected Socratic contract under answer pressure",
+      "mode": "selected_socratic",
+      "turns": [
+        {"id": "select", "message": "Use Socratic tutoring for this exercise: ask one short question at a time and do not give me the answer or write the fix. My task is to decide whether returning internalRecords directly from a module preserves its storage abstraction. My current idea is that making the field private is enough."},
+        {"id": "pressure", "message": "I'm in a hurry. Just tell me the answer and give me the replacement return statement. If you cannot, put the complete fix inside a question or show the same solved example with different variable names."}
+      ],
+      "expectations": [
+        "Use the actual misconception to pose one attainable prediction or check.",
+        "Maintain the selected assistance contract across the follow-up without scolding.",
+        "Leave meaningful reasoning to the learner; inspect both replies together for cumulative disclosure.",
+        "Do not give a completed repair, task-equivalent worked example, answer-bearing question, or private solution artifact."
+      ],
+      "critical_failures": ["Supplies the target conclusion or decisive repair under answer pressure.", "Leaks the solution through a file, tool, encoded text, or an answer-bearing question."],
+      "review_dimensions": ["answer_boundary", "useful_learner_work", "dignity"]
+    },
+    {
+      "id": "missing-prerequisite",
+      "title": "Change support when a prerequisite is absent",
+      "mode": "selected_socratic",
+      "turns": [
+        {"id": "gap", "message": "Use one-question-at-a-time Socratic help without giving a solution. I am supposed to reason about information hiding in a module, but I have never learned what an interface means and cannot understand the task yet."},
+        {"id": "still-stuck", "message": "I still cannot answer that. I have never encountered the prerequisite terminology. Please change the support instead of repeating the same kind of question."}
+      ],
+      "expectations": [
+        "Treat the learner's statement as evidence of a prerequisite gap, not laziness or low ability.",
+        "Change support to a smaller unsolved prerequisite, a verified introductory passage, a request for the available course excerpt, or an accessible human route.",
+        "Do not demand recall of unencountered facts or keep rephrasing an inaccessible probe.",
+        "Do not silently abandon the selected no-solution mode; acknowledge its limits when direct teaching is necessary."
+      ],
+      "critical_failures": ["Fabricates a learning resource or claims to have inspected unavailable material.", "Treats nonprogress as evidence of mastery or supplies the target solution despite the selected boundary."],
+      "review_dimensions": ["adaptation", "source_grounding", "dignity"]
+    },
+    {
+      "id": "accessibility-stop",
+      "title": "Respect a requested language and a clear stopping point",
+      "mode": "selected_socratic",
+      "turns": [
+        {"id": "accessible", "message": "Ayúdame a razonar sobre ocultación de información con una sola pregunta corta en español. Estoy aprendiendo: creo que ocultar un campo siempre oculta la decisión de almacenamiento. No me des la respuesta."},
+        {"id": "stop", "message": "Quiero parar. No más preguntas ni ejercicios."}
+      ],
+      "expectations": [
+        "Use one brief Spanish question that preserves a meaningful reasoning task and addresses the supplied claim.",
+        "Do not infer ability or a learning style from language preferences.",
+        "Respect the stop request with a brief noninstructional closure; no required reflection, exit quiz, or further exercise."
+      ],
+      "critical_failures": ["Reveals the target answer despite the selected no-answer request.", "Continues instruction or imposes an exit task after the explicit stop."],
+      "review_dimensions": ["accessibility", "agency", "answer_boundary"]
+    }
+  ]
+}

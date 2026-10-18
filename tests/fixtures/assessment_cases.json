@@ -1,0 +1,587 @@
+{
+  "schema_version": 1,
+  "suite_kind": "uca_component",
+  "review_status": "agent_checked_awaiting_instructor_review",
+  "execution_status": "not_run",
+  "design_status": "Original synthetic assessment vignettes with explicit grading rationales. They are not instructor-approved yet, a validated Bloom instrument, or a learner-outcome measure.",
+  "evidence_report": {
+    "path": "output/profiling/tutoring-baseline-v1.json",
+    "sha256": "27d9ce39502960eaf29315e5cfbee49547ed917003726b7d9763740cb374255d",
+    "course_revision": "24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa"
+  },
+  "execution_contract": {
+    "scope": "Evaluate the production UCA component directly in a disposable synthetic store. These fixtures do not choose or bypass a real student research assignment. No runner is implemented here.",
+    "model_visible_fields": [
+      "uca_input",
+      "conversation"
+    ],
+    "store_seed_field": "prior_entry",
+    "review_only_fields": [
+      "source_snippets",
+      "source_refs",
+      "task_demand",
+      "assistance_provenance",
+      "expectations",
+      "known_representation_limit"
+    ],
+    "source_handling": "Snippets below establish reviewer provenance. They are not fabricated search results and must not silently replace actual tool retrieval. Stipulated facts necessary to grade the tasks are included in question_text.",
+    "isolation": "Use a new synthetic student namespace and disposable checkpoint/store for every vignette and repetition. Never seed or inspect a real student.",
+    "unsupported_claims": [
+      "End-to-end condition gating",
+      "Production routing or active-question handoff",
+      "Psychometric tier calibration",
+      "Independent learning, retention, or broad transfer"
+    ]
+  },
+  "shared_review_criteria": [
+    "Keep quality not_reviewed until an explicit semantic review records actual output and state evidence. Do not score keywords or average critical failures away.",
+    "Check the rubric verdict and criterion-specific explanation separately from the estimated tier and confidence. Accept valid methods within the stated contract.",
+    "These explicit supplied rubrics test criterion application, not autonomous rubric generation or discovery of an assistance policy. Provenance expectations remain reviewer-side; the actual support remains visible in the conversation. The naming-slip vignette covers one identifier typo in conceptual pseudocode, not arbitrary runtime or syntax errors.",
+    "Use only student evidence actually present, with earlier tutor support attributed correctly. Do not infer ability from fluency, brevity, spelling, or confidence of wording.",
+    "Capture prior, exact fetched entry, actual retrieval, update arguments/count, final stored entry, and structured output. Under the current protocol fetch is first, update occurs exactly once, and output tier/confidence/rationale agree with the stored update. Missing observations are not passes.",
+    "No exact Bloom gold labels are imposed for ordinary single answers. Record supported cognitive actions and uncertainty. Prior-only and first-probe expectations test the existing protocol, not endorsement of its research policy.",
+    "A source coverage gap must be reported, not replaced with invented source support. A sound criterion may rest on a task premise or explicit logical counterexample rather than an exact sentence in the retrieved material.",
+    "Record pass, revise, or critical_failure with a quote, tool/state locator, and explanation per dimension. A schema limitation is separately flagged even if the model follows its current protocol.",
+    "Measure total assessment latency, model/tool call counts, and usage under identical observation settings if a runner is later implemented. Repetitions describe observed variation, not learning effectiveness."
+  ],
+  "source_snippets": [
+    {
+      "id": "stable-contract-facts",
+      "baseline_locator": "cases[0].profile.turns[0].metrics.tools[6].output.content",
+      "chunk": 1,
+      "source": "SEBook/designprinciples/informationhiding.md",
+      "url": "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designprinciples/informationhiding.md",
+      "excerpt": "The inverse mistake is hiding information that callers genuinely need. Whether a protocol is stateful, whether a request can be rate-limited, whether an operation can fail with a retryable error, and whether a payment method is offered to users are usually contract facts. Hide implementation details; expose the stable facts clients need to use the module correctly.",
+      "support_scope": "An intentional public data contract can stay stable while a private implementation changes.",
+      "limitations": "Does not establish JavaScript Map constructor semantics or prove that every chosen public contract is appropriate."
+    },
+    {
+      "id": "permission-to-assume",
+      "baseline_locator": "cases[0].profile.turns[0].metrics.tools[6].output.content",
+      "chunk": 2,
+      "source": "SEBook/designprinciples/informationhiding.md",
+      "url": "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designprinciples/informationhiding.md",
+      "excerpt": "An interface does not merely hide code. It gives clients **permission to assume** certain facts. Every public name, type, return shape, exception, ordering guarantee, flag, status code, score scale, and data field tells clients something they may build on. Once clients build on it, that fact is no longer private.",
+      "support_scope": "Public guarantees are intentional dependencies; keeping private storage hidden does not mean hiding the already-promised public type.",
+      "limitations": "Read with stable-contract-facts: an exposed fact is not automatically a design error."
+    },
+    {
+      "id": "domain-contract-example",
+      "baseline_locator": "cases[1].profile.turns[0].metrics.tools[0].output.content",
+      "chunk": 3,
+      "source": "SEBook/designprinciples/informationhiding.md",
+      "url": "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designprinciples/informationhiding.md",
+      "excerpt": "| `DatabaseWrapper.execute_sql(sql)` | The application stores data in SQL tables and lets callers know table and column names | `UserDirectory.find_by_email(email) -> UserProfile`, with storage details hidden |",
+      "support_scope": "A domain operation and UserProfile return type can replace a SQL-shaped client interface.",
+      "limitations": "The safer return type is UserProfile, not sqlite3.Row. Alternative stable domain representations can also meet a stated contract."
+    },
+    {
+      "id": "internal-alias-and-public-list",
+      "baseline_locator": "cases[2].profile.turns[0].metrics.tools[5].output.content",
+      "chunk": 2,
+      "source": "SEBook/designprinciples/informationhiding.md",
+      "url": "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designprinciples/informationhiding.md",
+      "excerpt": "* **Returning the implementation type.** A repository method that returns `MySQLResultSet` instead of `List<Order>`. Every caller now depends on MySQL.\n* **Leaky abstractions.** A \"database-agnostic\" `Repository` interface whose methods accept raw SQL fragments as strings. The interface pretends to hide the database; the parameters say otherwise.\n* **Exposed mutable internals.** Returning a reference to an internal `List` instead of an immutable view. Callers can now mutate the module's state without going through its interface.",
+      "support_scope": "Distinguishes storage-specific results and internal mutable aliases from an intentional domain-facing collection type.",
+      "limitations": "A copied external snapshot is not the internal alias described here. This passage does not specify JavaScript or a universal requirement to use immutable objects."
+    },
+    {
+      "id": "implementation-swap-check",
+      "baseline_locator": "cases[0].profile.turns[0].metrics.tools[0].output.content",
+      "chunk": 2,
+      "source": "SEBook/designprinciples/informationhiding.md",
+      "url": "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designprinciples/informationhiding.md",
+      "excerpt": "Each refactoring step uses an **implementation-swap test** — same client code, two different implementations — as the operational oracle for \"the secret is really hidden.\"",
+      "support_scope": "Establishes the course context for comparing implementations with unchanged clients.",
+      "limitations": "The quoted operational-oracle phrase does not prove universal hiding from finite tests. The bounded inference and alternative bug explanation in these fixtures are explicit reasoning checks, not claims that this source states those qualifications."
+    }
+  ],
+  "cases": [
+    {
+      "id": "valid-map-copy",
+      "title": "Accept a valid alternative under an intentional stable contract",
+      "concept": "information-hiding",
+      "source_refs": [
+        "stable-contract-facts",
+        "permission-to-assume",
+        "internal-alias-and-public-list"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Understand",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Understand. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "answer_submission",
+        "answer_submission": {
+          "question_text": "An API deliberately promises getBalances() returns a mutable Map from string account IDs to numeric balances. It is a detached snapshot: set, delete, or clear on the returned container must not affect module state. For this task, assume built-in JavaScript Map: new Map(existingMap) allocates a separate container and copies its entries; all keys and values here are primitives. Private storage may later change from a Map to SQL, but the public snapshot contract is to stay the same. Does returning new Map(internalBalances) meet the current mutation-isolation contract, and would the later private storage change necessarily require changing clients? Explain both decisions.",
+          "rubric": "Grade the stated contract, not a preferred architecture. Correct: (A) accepts the copied Map for the given primitive-entry container-isolation requirement and explains why returned-container mutation cannot reach the internal container; (B) explains that SQL-backed code can construct the same promised public Map snapshot, so private storage replacement does not inherently require client changes. Do not demand a DTO, an immutable collection, deep copying, or hiding the already-promised Map type. A claim of deep isolation for arbitrary nested objects would be an overclaim. Partially correct: meets one of A/B but misses or contradicts the other. Incorrect: meets neither. The supplied Map semantics are task premises, not a claim about what the course excerpt contains.",
+          "student_answer": "Yes. The constructor gives the caller a different container, so changing its entries cannot mutate internalBalances. The numeric values do not contain nested mutable objects. SQL storage could still be read and converted into the same public Map snapshot, so clients can keep using the promised API. That public Map type is intentionally known; I am not claiming arbitrary nested values would be deeply copied."
+        }
+      },
+      "conversation": [
+        {
+          "role": "edbot",
+          "content": "An API deliberately promises getBalances() returns a mutable Map from string account IDs to numeric balances. It is a detached snapshot: set, delete, or clear on the returned container must not affect module state. For this task, assume built-in JavaScript Map: new Map(existingMap) allocates a separate container and copies its entries; all keys and values here are primitives. Private storage may later change from a Map to SQL, but the public snapshot contract is to stay the same. Does returning new Map(internalBalances) meet the current mutation-isolation contract, and would the later private storage change necessarily require changing clients? Explain both decisions."
+        },
+        {
+          "role": "student",
+          "content": "Yes. The constructor gives the caller a different container, so changing its entries cannot mutate internalBalances. The numeric values do not contain nested mutable objects. SQL storage could still be read and converted into the same public Map snapshot, so clients can keep using the promised API. That public Map type is intentionally known; I am not claiming arbitrary nested values would be deeply copied."
+        }
+      ],
+      "task_demand": "Apply the stipulated copy behavior and justify a design against two explicit contract requirements.",
+      "assistance_provenance": "The recorded vignette contains the task and the student response, with no supplied target answer. This is synthetic evidence, not verified real-world independence.",
+      "expectations": {
+        "answer_judgment": "correct",
+        "met_criteria": [
+          "A: separate container with primitive entries satisfies the specified isolation.",
+          "B: private SQL storage can preserve the intentional public Map snapshot."
+        ],
+        "missed_criteria": [],
+        "evidence_bounds": [
+          "The response supports contract-specific application and reasoning about private replacement.",
+          "It does not demonstrate broad design mastery or the safety of nested mutable values."
+        ],
+        "tier_and_confidence": [
+          "Do not require one exact new Bloom label. Explain the observed reasoning and its limited scope; confidence in this answer is distinct from confidence in general mastery."
+        ],
+        "critical_failures": [
+          "Rejects the copy because Map is mutable, because a DTO is preferred, or because the public Map type is visible.",
+          "Claims a SQL replacement necessarily breaks all Map clients despite preserving the public contract.",
+          "Invents retrieved JavaScript support or claims deep isolation for arbitrary nested objects."
+        ]
+      }
+    },
+    {
+      "id": "conceptual-syntax-slip",
+      "title": "Separate a naming slip from sound abstraction reasoning",
+      "concept": "information-hiding",
+      "source_refs": [
+        "domain-contract-example",
+        "stable-contract-facts"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Understand",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Understand. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "answer_submission",
+        "answer_submission": {
+          "question_text": "The old API is DatabaseWrapper.execute_sql(sql), and clients build SQL strings. The design goal is to hide SQL storage while still letting clients find a user by email. Judge only the proposed interface and conceptual explanation; compilable code is not required, and an isolated spelling error should be noted separately. Assume UserProfile is the defined domain value type and UserProflie is not a defined name. Propose a replacement and explain why it meets the goal.",
+          "rubric": "Correct: proposes a domain operation such as find_by_email(email) returning a stable domain user value, and explains that SQL/table knowledge remains inside the module while clients use domain fields. Equivalent operation names or intentional stable domain records/dictionaries are acceptable. This is conceptual pseudocode: a single misspelling does not invalidate sound interface reasoning, though the assessor may note that it must be fixed to execute. Partially correct: gives the domain interface without explaining the dependency boundary, or describes the boundary while leaving a SQL-shaped public API. Incorrect: retains or endorses client SQL dependence as hidden. Do not infer weak conceptual understanding from spelling or prose style.",
+          "student_answer": "I would expose find_by_email(email) and return a UserProfile with just the user ID and display name. The module runs the SQL internally; a caller no longer names tables or builds a query, so it can use the same operation after a storage change. My pseudocode return is return UserProflie(user_id, display_name)."
+        }
+      },
+      "conversation": [
+        {
+          "role": "edbot",
+          "content": "The old API is DatabaseWrapper.execute_sql(sql), and clients build SQL strings. The design goal is to hide SQL storage while still letting clients find a user by email. Judge only the proposed interface and conceptual explanation; compilable code is not required, and an isolated spelling error should be noted separately. Assume UserProfile is the defined domain value type and UserProflie is not a defined name. Propose a replacement and explain why it meets the goal."
+        },
+        {
+          "role": "student",
+          "content": "I would expose find_by_email(email) and return a UserProfile with just the user ID and display name. The module runs the SQL internally; a caller no longer names tables or builds a query, so it can use the same operation after a storage change. My pseudocode return is return UserProflie(user_id, display_name)."
+        }
+      ],
+      "task_demand": "Apply the public/private dependency distinction; executable syntax is outside the graded objective.",
+      "assistance_provenance": "The recorded vignette contains the task and the student response, with no supplied target answer. This is synthetic evidence, not verified real-world independence.",
+      "expectations": {
+        "answer_judgment": "correct",
+        "met_criteria": [
+          "Domain operation and stable domain data replace the SQL-facing contract.",
+          "The explanation places table/query knowledge inside the module."
+        ],
+        "missed_criteria": [],
+        "evidence_bounds": [
+          "The conceptual criteria are met despite the misspelled constructor.",
+          "A correct conceptual verdict does not assert that the code runs."
+        ],
+        "tier_and_confidence": [
+          "Explain any tier movement using the reasoning, not the spelling error. Do not assert a calibrated mastery tier from one response."
+        ],
+        "critical_failures": [
+          "Marks the conceptual answer incorrect solely for UserProflie.",
+          "Says the shown code is executable without correction.",
+          "Invents extra requirements such as a particular class or immutable representation."
+        ]
+      }
+    },
+    {
+      "id": "partial-test-evidence",
+      "title": "Give targeted partial credit for one sound inference",
+      "concept": "information-hiding",
+      "source_refs": [
+        "implementation-swap-check",
+        "stable-contract-facts"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Understand",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Understand. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "answer_submission",
+        "answer_submission": {
+          "question_text": "A module is changed from SQLite storage to a dictionary while intending to preserve its public behavior. Only the existing finite set of client tests is run. Evaluate two claims: (A) passing those tests proves that no implementation detail leaks to any client; (B) a failure proves that a hidden storage decision leaked. Explain what each result can establish. For diagnosis, ordinary replacement bugs are possible: for example, the new implementation could accidentally return zero for every balance although the public contract requires the stored amount.",
+          "rubric": "There are two equally required conceptual criteria. A: rejects universal proof from a finite passing suite and says that exercised client behavior is supported while untested assumptions can remain. B: rejects a unique leak diagnosis from a failing test and identifies at least one alternative consistent with the task, such as a replacement implementation bug, while recognizing that a real leak is also possible. Correct: meets A and B. Partially correct: meets exactly one. Incorrect: meets neither. Do not require a formal proof, a test count, a particular example, or the words used here. Do not treat the course operational-oracle wording as establishing an unconditional logical implication.",
+          "student_answer": "Passing is useful evidence about the cases we exercised; an untested client might still depend on the storage representation. But if a test fails, that definitely proves the storage secret leaked."
+        }
+      },
+      "conversation": [
+        {
+          "role": "edbot",
+          "content": "A module is changed from SQLite storage to a dictionary while intending to preserve its public behavior. Only the existing finite set of client tests is run. Evaluate two claims: (A) passing those tests proves that no implementation detail leaks to any client; (B) a failure proves that a hidden storage decision leaked. Explain what each result can establish. For diagnosis, ordinary replacement bugs are possible: for example, the new implementation could accidentally return zero for every balance although the public contract requires the stored amount."
+        },
+        {
+          "role": "student",
+          "content": "Passing is useful evidence about the cases we exercised; an untested client might still depend on the storage representation. But if a test fails, that definitely proves the storage secret leaked."
+        }
+      ],
+      "task_demand": "Analyze two different inferences from test results, with an explicit alternative failure cause available.",
+      "assistance_provenance": "The recorded vignette contains the task and the student response, with no supplied target answer. This is synthetic evidence, not verified real-world independence.",
+      "expectations": {
+        "answer_judgment": "partially_correct",
+        "met_criteria": [
+          "A: passing supports only the exercised cases, not every possible client assumption."
+        ],
+        "missed_criteria": [
+          "B: failure may arise from a replacement bug and does not uniquely show a leaked secret."
+        ],
+        "evidence_bounds": [
+          "The first sentence demonstrates bounded reasoning about passing tests.",
+          "The failing-test diagnosis is still false; partial success must not be converted into full correctness.",
+          "Failure on one inference does not establish absence of lower-level knowledge."
+        ],
+        "tier_and_confidence": [
+          "A rationale must preserve both the demonstrated point and the specific misconception. No single gold Bloom tier is imposed."
+        ],
+        "critical_failures": [
+          "Marks both claims correct or endorses the definite-leak diagnosis.",
+          "Calls the entire answer conceptually wrong without acknowledging the supported passing-test qualification."
+        ]
+      }
+    },
+    {
+      "id": "confident-test-overclaim",
+      "title": "Do not reward confident universal test claims",
+      "concept": "information-hiding",
+      "source_refs": [
+        "implementation-swap-check",
+        "stable-contract-facts"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Understand",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Understand. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "answer_submission",
+        "answer_submission": {
+          "question_text": "A module is changed from SQLite storage to a dictionary while intending to preserve its public behavior. Only the existing finite set of client tests is run. Evaluate two claims: (A) passing those tests proves that no implementation detail leaks to any client; (B) a failure proves that a hidden storage decision leaked. Explain what each result can establish. For diagnosis, ordinary replacement bugs are possible: for example, the new implementation could accidentally return zero for every balance although the public contract requires the stored amount.",
+          "rubric": "There are two equally required conceptual criteria. A: rejects universal proof from a finite passing suite and says that exercised client behavior is supported while untested assumptions can remain. B: rejects a unique leak diagnosis from a failing test and identifies at least one alternative consistent with the task, such as a replacement implementation bug, while recognizing that a real leak is also possible. Correct: meets A and B. Partially correct: meets exactly one. Incorrect: meets neither. Do not require a formal proof, a test count, a particular example, or the words used here. Do not treat the course operational-oracle wording as establishing an unconditional logical implication.",
+          "student_answer": "Both claims are true. Once the tests pass, every implementation detail is hidden for all clients. If any test fails, it must be because clients knew the storage representation; a replacement bug cannot explain it."
+        }
+      },
+      "conversation": [
+        {
+          "role": "edbot",
+          "content": "A module is changed from SQLite storage to a dictionary while intending to preserve its public behavior. Only the existing finite set of client tests is run. Evaluate two claims: (A) passing those tests proves that no implementation detail leaks to any client; (B) a failure proves that a hidden storage decision leaked. Explain what each result can establish. For diagnosis, ordinary replacement bugs are possible: for example, the new implementation could accidentally return zero for every balance although the public contract requires the stored amount."
+        },
+        {
+          "role": "student",
+          "content": "Both claims are true. Once the tests pass, every implementation detail is hidden for all clients. If any test fails, it must be because clients knew the storage representation; a replacement bug cannot explain it."
+        }
+      ],
+      "task_demand": "Analyze the same two inferences as partial-test-evidence; confidence of wording is not correctness.",
+      "assistance_provenance": "The recorded vignette contains the task and the student response, with no supplied target answer. This is synthetic evidence, not verified real-world independence.",
+      "expectations": {
+        "answer_judgment": "incorrect",
+        "met_criteria": [],
+        "missed_criteria": [
+          "A: finite passing tests cannot prove that every client assumption is independent of implementation.",
+          "B: the permitted replacement bug is an alternative explanation for failure."
+        ],
+        "evidence_bounds": [
+          "Neither of the two required inferences is justified.",
+          "The stated replacement-bug premise directly contradicts the exclusive failure diagnosis.",
+          "This unsuccessful analysis task alone cannot erase the synthetic prior or establish that no lower-level understanding exists."
+        ],
+        "tier_and_confidence": [
+          "Do not raise the tier or claim high understanding because the answer is fluent or confident. Any change from the prior needs an evidence-specific rationale; no exact resulting Bloom tier is prescribed."
+        ],
+        "critical_failures": [
+          "Grades this response correct or endorses finite-test proof or an exclusive leak diagnosis.",
+          "Infers that all lower-tier understanding is absent solely from this higher-demand error."
+        ]
+      }
+    },
+    {
+      "id": "practice-with-prior",
+      "title": "A request for practice is not new attainment evidence",
+      "concept": "information-hiding",
+      "source_refs": [
+        "stable-contract-facts"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Apply",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Apply. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "practice_request",
+        "answer_submission": null
+      },
+      "conversation": [
+        {
+          "role": "student",
+          "content": "Please give me one practice question about hiding a module's storage implementation."
+        }
+      ],
+      "task_demand": "No scored answer or conceptual assertion is present.",
+      "assistance_provenance": "Only a practice request is recorded; the Apply prior is an explicit synthetic store seed.",
+      "expectations": {
+        "answer_judgment": null,
+        "met_criteria": [],
+        "missed_criteria": [],
+        "evidence_bounds": [
+          "The request by itself supplies no evidence for upgrading or downgrading the concept estimate.",
+          "The prior is available as a prior, not as a fresh demonstration in this conversation."
+        ],
+        "tier_and_confidence": [
+          "Preserve the seeded Apply tier under the current practice_request rule.",
+          "Describe the lack of new evidence; confidence must not increase solely because practice was requested. The cadence-only decay rule is not required here.",
+          "No answer_judgment is appropriate without an answer submission."
+        ],
+        "critical_failures": [
+          "Treats asking for practice as a misconception, low ability, or demonstrated higher mastery.",
+          "Fabricates a student explanation or a scored answer."
+        ]
+      }
+    },
+    {
+      "id": "cold-start-no-evidence",
+      "title": "Make the forced-tier representational limit visible",
+      "concept": "information-hiding",
+      "source_refs": [
+        "stable-contract-facts"
+      ],
+      "prior_entry": null,
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "cold_start",
+        "answer_submission": null
+      },
+      "conversation": [
+        {
+          "role": "student",
+          "content": "I would like to start practicing information hiding. I have not answered a question about it in this conversation."
+        }
+      ],
+      "task_demand": "No probe has been answered; no tier has been demonstrated in the supplied record.",
+      "assistance_provenance": "No prior assessment, submitted answer, or supplied solution exists.",
+      "expectations": {
+        "answer_judgment": null,
+        "met_criteria": [],
+        "missed_criteria": [],
+        "evidence_bounds": [
+          "This record does not demonstrate even recall of the concept. It also does not establish that the student lacks knowledge.",
+          "The mandatory tier field is a provisional routing artifact, not evidence of attained Remember or any other tier."
+        ],
+        "tier_and_confidence": [
+          "Under the current protocol, prior_tier is null, confidence is low, and next_probe_tier is Apply because no probe has been answered.",
+          "Do not demand one gold initial provisional tier: the schema requires a tier but the prompt does not specify the initial provisional value.",
+          "The prompt separately forces Remember after an exhausted sequence with no demonstrated tier; that rule is not reached by this single vignette. Flag the general representational limitation without fabricating such a sequence."
+        ],
+        "critical_failures": [
+          "Claims the student demonstrated Remember or another tier, or claims lack of ability, without supporting student evidence.",
+          "Reports high-confidence attainment or invents a prior assessment."
+        ]
+      },
+      "known_representation_limit": {
+        "status": "current_schema_cannot_express_unassessed_tier",
+        "schema_paths": [
+          "src/edbot/interface_def.py:21",
+          "src/edbot/interface_def.py:75"
+        ],
+        "prompt_paths": [
+          "src/edbot/prompts/uca_prompt.md:90",
+          "src/edbot/prompts/uca_prompt.md:95",
+          "src/edbot/prompts/uca_prompt.md:96"
+        ],
+        "review_rule": "A required provisional label with an honest rationale is not by itself a model failure. It also cannot receive a pedagogical pass as a demonstrated attainment level. Record protocol behavior and the unresolved schema/policy limitation separately."
+      }
+    },
+    {
+      "id": "copied-answer",
+      "title": "Correct text is not an independent demonstration",
+      "concept": "information-hiding",
+      "source_refs": [
+        "domain-contract-example",
+        "stable-contract-facts"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Understand",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Understand. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "answer_submission",
+        "answer_submission": {
+          "question_text": "An API find_by_email(email) returns a domain UserProfile containing only the promised user ID and display name. SQL queries and table names are used only inside the module. If internal storage changes to a dictionary while the same behavior is preserved, must clients change? Explain the dependency boundary.",
+          "rubric": "Correct: says clients need not change solely for this private replacement, because they depend on the stable domain operation and UserProfile fields rather than SQL tables or queries. Partially correct: gives the right decision without explaining that dependency distinction, or explains the distinction without deciding. Incorrect: says private replacement necessarily breaks clients or claims table/query details are still required by this stated API.",
+          "student_answer": "Clients need not change solely because SQL storage is replaced. They use find_by_email and the promised UserProfile fields; table names and queries remain inside the module. A dictionary implementation can preserve that same public behavior."
+        }
+      },
+      "conversation": [
+        {
+          "role": "edbot",
+          "content": "An API find_by_email(email) returns a domain UserProfile containing only the promised user ID and display name. SQL queries and table names are used only inside the module. If internal storage changes to a dictionary while the same behavior is preserved, must clients change? Explain the dependency boundary."
+        },
+        {
+          "role": "student",
+          "content": "Please show the answer. I will paste it back unchanged rather than work it out."
+        },
+        {
+          "role": "edbot",
+          "content": "Clients need not change solely because SQL storage is replaced. They use find_by_email and the promised UserProfile fields; table names and queries remain inside the module. A dictionary implementation can preserve that same public behavior."
+        },
+        {
+          "role": "student",
+          "content": "Clients need not change solely because SQL storage is replaced. They use find_by_email and the promised UserProfile fields; table names and queries remain inside the module. A dictionary implementation can preserve that same public behavior."
+        }
+      ],
+      "task_demand": "The response satisfies a conceptual explanation rubric, but the record shows the tutor supplied it and the student said they would copy it.",
+      "assistance_provenance": "The conversation explicitly records an intention to paste the supplied answer, followed by an identical answer. The copy limitation is observed within the synthetic record, not inferred from writing style.",
+      "expectations": {
+        "answer_judgment": "correct",
+        "met_criteria": [
+          "Decision and dependency explanation meet the answer rubric."
+        ],
+        "missed_criteria": [],
+        "evidence_bounds": [
+          "Content correctness is supported; independent production of that reasoning is not.",
+          "Do not infer that no learning occurred. The record cannot establish either learning or nonlearning from the supplied example.",
+          "Do not quote the tutor's reasoning as if it were new student-generated evidence."
+        ],
+        "tier_and_confidence": [
+          "Preserve the prior rather than upgrading attainment solely for verbatim repetition.",
+          "A correct answer_judgment may coexist with low confidence in new attainment evidence; rationale must disclose the supplied-answer provenance."
+        ],
+        "critical_failures": [
+          "Treats the copied response as an independent demonstration or uses it alone to claim a higher mastery tier.",
+          "Marks substantively correct content incorrect merely because it was copied, contrary to this content rubric.",
+          "Claims the student learned nothing from the example."
+        ]
+      }
+    },
+    {
+      "id": "changed-item-after-support",
+      "title": "Recognize new reasoning on a changed task after support",
+      "concept": "information-hiding",
+      "source_refs": [
+        "stable-contract-facts",
+        "permission-to-assume",
+        "internal-alias-and-public-list"
+      ],
+      "prior_entry": {
+        "concept": "information-hiding",
+        "tier": "Understand",
+        "confidence": "medium",
+        "rationale": "Synthetic fixture prior: an earlier task supplied evidence at Understand. This is an evaluator-owned seed, not an observation from this vignette.",
+        "assessed_at": "2026-10-01T00:00:00+00:00",
+        "assessed_at_turn": 0,
+        "assessment_count": 1
+      },
+      "uca_input": {
+        "concept": "information-hiding",
+        "invocation_context": "answer_submission",
+        "answer_submission": {
+          "question_text": "Now consider a different module. StockDirectory.available_items() promises callers a detached snapshot mapping item IDs to numeric available quantities. The implementation uses a warehouse SQL cursor internally. Assume a helper builds a new plain dictionary from the cursor's current rows. Proposal A returns that new ID-to-quantity dictionary; proposal B returns the live WarehouseSQLCursor and asks clients to issue SQL filters. Clients need the promised IDs and quantities, not SQL or cursor operations. Which proposal can preserve the stated abstraction if storage later moves to an in-memory service? Explain the relevant dependency, and say whether the numeric quantity must be hidden merely because it is data.",
+          "rubric": "Correct: (A) selects proposal A because the intentional domain snapshot can be constructed from either storage implementation while B exposes SQL/cursor dependence; (B) retains available quantity as an intentional contract fact needed by clients rather than classifying all exposed data as a leak. Partially correct: meets exactly one criterion. Incorrect: meets neither. Equivalent terminology is acceptable; a new class, immutable collection, or hiding numeric quantities is not required. Grade only the stated snapshot and dependency guarantees.",
+          "student_answer": "A fits. The helper translates private storage rows into the promised item IDs and quantities, so an in-memory service can build the same snapshot. B makes clients learn SQL and cursor operations and couples them to that implementation. The quantity is a fact clients need under the contract, so hiding it would defeat the API; exposing that domain number does not expose the choice of storage."
+        }
+      },
+      "conversation": [
+        {
+          "role": "edbot",
+          "content": "An API find_by_email(email) returns a domain UserProfile containing only the promised user ID and display name. SQL queries and table names are used only inside the module. If internal storage changes to a dictionary while the same behavior is preserved, must clients change? Explain the dependency boundary."
+        },
+        {
+          "role": "student",
+          "content": "Please show the answer. I will paste it back unchanged rather than work it out."
+        },
+        {
+          "role": "edbot",
+          "content": "Clients need not change solely because SQL storage is replaced. They use find_by_email and the promised UserProfile fields; table names and queries remain inside the module. A dictionary implementation can preserve that same public behavior."
+        },
+        {
+          "role": "student",
+          "content": "Clients need not change solely because SQL storage is replaced. They use find_by_email and the promised UserProfile fields; table names and queries remain inside the module. A dictionary implementation can preserve that same public behavior."
+        },
+        {
+          "role": "edbot",
+          "content": "Now consider a different module. StockDirectory.available_items() promises callers a detached snapshot mapping item IDs to numeric available quantities. The implementation uses a warehouse SQL cursor internally. Assume a helper builds a new plain dictionary from the cursor's current rows. Proposal A returns that new ID-to-quantity dictionary; proposal B returns the live WarehouseSQLCursor and asks clients to issue SQL filters. Clients need the promised IDs and quantities, not SQL or cursor operations. Which proposal can preserve the stated abstraction if storage later moves to an in-memory service? Explain the relevant dependency, and say whether the numeric quantity must be hidden merely because it is data."
+        },
+        {
+          "role": "student",
+          "content": "A fits. The helper translates private storage rows into the promised item IDs and quantities, so an in-memory service can build the same snapshot. B makes clients learn SQL and cursor operations and couples them to that implementation. The quantity is a fact clients need under the contract, so hiding it would defeat the API; exposing that domain number does not expose the choice of storage."
+        }
+      ],
+      "task_demand": "Apply the earlier boundary idea to a changed snapshot/cursor choice and distinguish necessary public data from private storage.",
+      "assistance_provenance": "This case includes the same supplied-answer history as copied-answer and then a different target item. The target response is not supplied by the tutor in the record. This tests response attribution and task-specific reasoning after support, not independence from all prior assistance.",
+      "expectations": {
+        "answer_judgment": "correct",
+        "met_criteria": [
+          "A: the snapshot preserves the intended domain contract while the live SQL cursor leaks storage operations.",
+          "B: numeric quantity is required public domain information, not automatically a private design decision."
+        ],
+        "missed_criteria": [],
+        "evidence_bounds": [
+          "The latest answer adds task-specific reasoning not supplied for this target item in the recorded conversation.",
+          "This is evidence of a changed application after support, stronger than simple repetition on the earlier item.",
+          "It is not verified unaided real-world work, delayed retention, broad transfer, or stable mastery."
+        ],
+        "tier_and_confidence": [
+          "Credit the new criterion-specific reasoning without attributing the earlier tutor explanation to the student.",
+          "No exact Bloom gold label or automatic confidence increase is prescribed. A rationale may support a cautious update from the prior, bounded to this recorded response."
+        ],
+        "critical_failures": [
+          "Rejects proposal A solely because it exposes a dictionary or numeric quantity despite the intended contract.",
+          "Treats proposal B as equally storage-independent although clients issue SQL filters.",
+          "Claims independent mastery, retention, or broad transfer from this one supported episode.",
+          "Attributes the earlier supplied answer to original student reasoning."
+        ]
+      }
+    }
+  ]
+}

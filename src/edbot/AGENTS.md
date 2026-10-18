@@ -7,7 +7,8 @@
 
 ## Conventions
 
-- When generating a question for a student, show only the question. Keep the answer key and rational internal, and use them later to grade the student's answer. Never reveal them unless the student has already answered or explicitly gives up
+- When generating a practice question, show only the question. Keep the answer key and rationale internal for later assessment. After an attempt, give targeted feedback without automatically revealing every missing step. A full solution requires an explicit request outside a selected Socratic contract.
+- In explicitly selected Socratic help, preserve the student's reasoning: one attainable question at a time, no answer-bearing questions, completed fixes, or solved equivalents, including under answer pressure. Change support when prerequisites are missing, acknowledge valid explained work, and respect a request to stop. Ordinary explanation requests may receive concise explanations.
 - Default question difficulty: application-level, not pure recall, unless
   the requester specifies otherwise.
 

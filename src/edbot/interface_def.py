@@ -116,7 +116,7 @@ class CGAOutput(BaseModel):
     mode: Literal["generate_question", "explain_at_tier", "probe_at_tier"]
     concept: str
     target_tier: BloomTier
-    content: str = Field(description="Student-facing question, explanation, or probe; never contains the rubric or answer")
+    content: str = Field(description="Student-facing text; keep rubrics private. When generating a question or probe, withhold its answer. Preserve any selected no-answer contract.")
     format: Optional[QuestionFormat] = Field(
         default=None,
         description="Set only for generate_question"
@@ -130,6 +130,10 @@ class CGAOutput(BaseModel):
         description="Set only for generate_question: the concept ID plus related sub-concepts the question tests"
     )
     sources: list[str] = Field(description="SEBook page titles (and URLs, when returned) the content is based on")
+    coverage_gap: Optional[str] = Field(
+        default=None,
+        description="Missing course evidence that prevents a complete grounded response; otherwise null",
+    )
 
 # Events chat_turn() yields to an interface (CLI, Chainlit, later FastAPI). Only these reach the
 # student, so they must never carry tool names, subagent output, tiers, or rubrics
