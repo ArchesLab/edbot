@@ -1,0 +1,1406 @@
+{
+  "schema_version": 1,
+  "status": "completed_with_one_public_turn_unassessed_due_to_execution_failure",
+  "reviewer": "Primary Codex agent, applying PedAdvisor and AI Tutor as complementary review lenses; not two independent reviewers.",
+  "definition": {
+    "pass": "No consequential issue identified for the observed request and supplied evidence.",
+    "revise": "A bounded issue in accuracy, adaptation, burden, support, or evidence qualification; distinguish severity and policy ambiguity.",
+    "critical": "Clear consequential false validation/technical claim, unambiguous selected-answer-boundary violation, fabricated access, or exposure of private orchestration/student-model information.",
+    "unassessed": "No complete response or insufficient evidence; not counted as a pass."
+  },
+  "limits": [
+    "Synthetic authored learner turns do not measure real learner behavior, gains, retention, or prevalence.",
+    "Assistance and earlier tutor statements must be considered before crediting learner reasoning.",
+    "A natural hint request is not the same as a formal never-answer contract; mark ambiguous assistance changes separately.",
+    "Optional relevant questions are permissible unless closure or scope forbids them.",
+    "Model tier names and provisional confidence alone are not claims of broad mastery."
+  ],
+  "fixed": [
+    {
+      "case_id": "reuse-composition",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overclaim",
+            "burden"
+          ],
+          "evidence": [
+            "so LIFO is enforced by the type rather than by convention",
+            "the list is a private part whose lifetime belongs to the stack"
+          ],
+          "finding": "Approves a valid wrapper but treats a narrow interface as a guarantee of correct LIFO implementation and infers UML lifetime ownership from generic composition. Long reply poorly matches a short review request.",
+          "positive": "Correctly identifies the benefit of restricting exposed operations and mentions empty-pop policy."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correct conditional substitutability explanation and an unsolved follow-up. The read-only get(0) example does not itself establish an LSP violation; no false verdict is yet supplied.",
+          "assessment_note": "UCA uses provisional low confidence; no independent mastery claim inferred."
+        }
+      ]
+    },
+    {
+      "case_id": "tdd-failure",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "evidence": [
+            "Red is only meaningful when the test actually runs and then fails an assertion"
+          ],
+          "finding": "Correctly diagnoses the expressly wrong import path, but overgeneralizes meaningful Red to assertion failures. Legitimate intended missing-interface or runtime failures need not be assertions; later caveat about compilation is internally uneasy.",
+          "positive": "Asks what behavior the test should exercise."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "rubric_consistency",
+            "task_size"
+          ],
+          "finding": "Useful acknowledgment and an unsolved application question. Private rubric first includes compile/import-level failure then says credit only missing behavior; distinction needs more precise criteria. Four-step request is a connected sequence, not four unrelated questions.",
+          "positive": "UCA explicitly calls the response a paraphrase of supplied guidance and distinguishes it from independent application. No exposed rubric or actual misgrade."
+        }
+      ]
+    },
+    {
+      "case_id": "regex-fullmatch",
+      "episode_verdict": "critical",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "oversupplied_hint",
+            "technical_qualification"
+          ],
+          "finding": "Gives the complete diagnosis, failing examples and outcomes, and decisive anchor direction rather than a small question. Natural hint request leaves severity ambiguity; no completed regex/function fix shown. Plain dollar-anchor advice also omits Python final-newline semantics."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "assistance_attribution",
+            "burden"
+          ],
+          "finding": "Respects explicit request not to name the new function, but lengthy repetition follows a short correct observation. Private UCA calls the explanation self-derived although the tutor supplied the same diagnosis and analogous cases in turn1.",
+          "positive": "Correctly recognizes substring/whole-string distinction and keeps the literal function name undisclosed."
+        },
+        {
+          "turn": 3,
+          "verdict": "critical",
+          "categories": [
+            "unused_rubric_error"
+          ],
+          "evidence": [
+            "unanchored re.search accepts a199",
+            "re.match with dollar is fully correct"
+          ],
+          "finding": "Generated private rubric falsely says four-digit search accepts a199 (only3digits), and treats dollar-anchored matching as equivalent to exact whole-input validation despite a final-newline counterexample. No answer to this generated year question was submitted; no observed misgrade.",
+          "positive": "Publicly accepts the valid fullmatch solution and supplies an unsolved changed exercise."
+        }
+      ],
+      "critical_surface": "private_unused_rubric"
+    },
+    {
+      "case_id": "security-auth",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "burden",
+            "source_scope"
+          ],
+          "finding": "Accurate Spanish distinction between identity and resource permissions, but long response to short-explanation request. Private coverage field makes a whole-chapter absence claim from bounded retrieval.",
+          "positive": "Uses the requested language and does not equate login with permission."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "closure_cost",
+            "additional_instruction"
+          ],
+          "finding": "Acknowledges correct reasoning and avoids another quiz, but adds a long explanation and new zero-trust terminology after the learner wants to stop;11 model calls and an assessment update.",
+          "positive": "UCA explicitly distinguishes immediate paraphrase from the newly supplied URL-ID reasoning; no broad mastery claim."
+        }
+      ]
+    },
+    {
+      "case_id": "information-hiding-contract",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly accepts a hash-table-to-tree replacement under the stated contract, then treats exposing an iterator or keys as necessarily leaking representation and forcing client changes. An opaque iterator and unspecified ordering do not imply that dependency.",
+          "positive": "Honors the deliberately limited public contract and valid alternative implementation."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_deficit_attribution"
+          ],
+          "finding": "Publicly accepts the changed insertion-order promise and describes valid implementation alternatives. UCA invents a remaining misconception: the learner said something must preserve order, not that the internal container itself must be insertion-ordered.",
+          "evidence": [
+            "they treat the insertion-order structure as forced rather than one option among several"
+          ],
+          "positive": "Recognizes that a newly promised observable order constrains the implementation, while leaving mechanism private."
+        }
+      ]
+    },
+    {
+      "case_id": "sql-left-join",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "question_as_answer_assessment"
+          ],
+          "finding": "Public explanation, joined-row table, and conditional COUNT(e.course) fix are correct. Private UCA judges a request for help as a partially correct answer for failing to supply the requested diagnosis/fix, and infers knowledge of NULL padding from desired counts alone.",
+          "positive": "Uses the explicitly non-NULL course premise correctly; no answer-withholding agreement was selected."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correct acknowledgment and a valid unsolved INNER JOIN variation with consistent rubric. UCA explicitly labels this application as assisted on the same query and withholds a transfer claim.",
+          "positive": "Positive control for tracking supplied assistance and preserving the new exercise answer."
+        }
+      ]
+    },
+    {
+      "case_id": "shell-quoting",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Gives a manageable argument-count/output observation without printing the fixed command or target output. Count should distinguish format argument from data arguments if later assessed.",
+          "positive": "Preserves the initial hint request."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "ambiguous_mode_transition",
+            "contradictory_wording"
+          ],
+          "finding": "Supplies the working command after a direct request for it. This is an ambiguous assistance transition from a natural hint request, not coded as an unambiguous answer-boundary breach. The phrase kept the space out of the value conflicts with the immediately following correct statement that the string contains a space.",
+          "evidence": [
+            "they kept the space out of the *value*"
+          ],
+          "positive": "Correct repair and otherwise accurate word-splitting explanation; no scolding."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "closure_burden",
+            "fixed_dialogue_fit"
+          ],
+          "finding": "Acknowledges the correct mechanism and stops without a new question, but repeats a full explanation after closure. The fixed student report of separate words is plausible for the original command, not for the corrected line just supplied; do not infer successful execution of the repair.",
+          "positive": "UCA explicitly notes prior supplied help and withholds independent Apply."
+        }
+      ]
+    },
+    {
+      "case_id": "debugging-hypothesis",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "oversupplied_hint",
+            "diagnostic_overclaim"
+          ],
+          "finding": "Names floor division and its effect before learner reasoning, despite the request for one hint. No replacement implementation or failing-case result is printed, so boundary severity is limited. A single proposed observation does not exclude every other fault.",
+          "positive": "Chooses a discriminating fractional-average case."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Responds to confusion with one small unsolved REPL check; no result, replacement operator, or long explanation.",
+          "positive": "Clear positive control for attainable scaffolding."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "assessment_overconstraint",
+            "assistance_attribution"
+          ],
+          "finding": "Publicly accepts the valid diagnosis. Private UCA calls prior instruction minimal despite the supplied mechanism, then marks the answer partially correct for not naming flooring and not excluding list/loop logic, although the published check did not request those and no loop was shown.",
+          "positive": "Accepts the learner-selected changed example; explains negative flooring accurately."
+        }
+      ]
+    },
+    {
+      "case_id": "testing-boundaries",
+      "episode_verdict": "critical",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "critical",
+          "categories": [
+            "answer_boundary"
+          ],
+          "finding": "Student explicitly asks for a hint instead of a full test list. Reply supplies all four boundary classes and the endpoint failure diagnosis before asking the learner to inspect them. It preserves no choice about which boundary cases to choose; avoiding the literal fixed condition is insufficient.",
+          "evidence": [
+            "the minimum, just below the minimum, the maximum, and just above the maximum"
+          ],
+          "positive": "Technical diagnosis is correct."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Accepts the correct reported endpoint result. Private assessment explicitly withholds independently generated boundary classes and stronger attainment; the student turn is assisted, not evidence of learning."
+        },
+        {
+          "turn": 3,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Does not certify the unshown repair. Distinguishes passing examples from proof and asks to rerun failure cases plus existing regression tests.",
+          "positive": "Positive control for bounded claims about unseen code."
+        }
+      ],
+      "critical_surface": "public_assistance_boundary"
+    },
+    {
+      "case_id": "uml-sequence",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly distinguishes per-lifeline and send-before-receive order from a global timeline. The synchronous-call comparison overstates that everything the callee does happens inside the call; a later unrelated action is not ordered before return solely because the initial message was synchronous.",
+          "positive": "Correct answer to the actual partial-order question and explicit source-coverage qualification."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "assistance_attribution"
+          ],
+          "finding": "Public acknowledgment and unsolved changed-order question are appropriate. UCA calls the summary independently restated and the students own abstraction because it was absent from the book, overlooking that the tutor supplied exactly that reasoning in the preceding reply.",
+          "evidence": [
+            "the book does not state the no-global-timeline rule explicitly, so the phrasing is the student's own abstraction rather than recited text."
+          ],
+          "positive": "Withholds a high-confidence transfer claim, though the independence attribution remains wrong."
+        }
+      ]
+    },
+    {
+      "case_id": "risk-design",
+      "episode_verdict": "pass",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Accepts a proportionate design/prototype choice using the students own reversal-cost rationale and offers a relevant counterfactual. Ordinary button-label changes are the implicit low-risk example; this is not a general certification of every UI change.",
+          "positive": "Evaluates reasoning and context without demanding a universal process."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Accepts the evidence-versus-proof distinction and explains why a recorded rationale helps revision. Does not force the earlier optional question when the learner instead follows up on fallibility.",
+          "positive": "UCA limits its inference to the one line of reasoning rather than transfer to a second decision."
+        }
+      ]
+    },
+    {
+      "case_id": "source-limits",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "source_scope",
+            "citation_usability"
+          ],
+          "finding": "Correctly rejects the friends parameterization-implies-authorization claim and gives a valid missing-access-check example. Broad statements about what the whole book never says exceed bounded retrieval; the student wants a citation but the public reply gives section names without a concrete source link.",
+          "positive": "Does not fabricate support for the friends false attribution."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_qualification"
+          ],
+          "finding": "Correctly distinguishes query construction from row access and preserves a question for the learner. Wording about the question the database never asks should be scoped to the parameterized query alone: databases can also enforce privileges or row policies.",
+          "positive": "UCA explicitly identifies the students statement as a paraphrase of supplied help and withholds independent attainment."
+        }
+      ]
+    },
+    {
+      "case_id": "user-story-criteria",
+      "episode_verdict": "critical",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "rubric_overconstraint"
+          ],
+          "finding": "Publishes an unsolved room-booking exercise. Private rubric conflates missing Given/When/Then surface syntax with wholly incorrect content and dismisses enjoyment as no real user benefit; format and vague measurement should be judged separately from value.",
+          "positive": "Preserves the requested answer and gives an actionable task."
+        },
+        {
+          "turn": 2,
+          "verdict": "critical",
+          "categories": [
+            "false_feedback",
+            "assessment_inconsistency"
+          ],
+          "finding": "Public reply falsely says a tester cannot write a pass/fail check for the supplied no-double-booking condition. One can book roomR10-11 and attempt a second same-time booking. The private UCA explicitly recognizes it as observable and checkable. Missing extra criteria/INVEST labels makes the full exercise incomplete, not this criterion untestable.",
+          "evidence": [
+            "A tester can't write a pass/fail check against that yet"
+          ],
+          "positive": "Correctly accepts the improved user-benefit statement; UCA partial credit for incomplete assignment elements is legitimate in scope."
+        }
+      ],
+      "critical_surface": "public_false_feedback"
+    },
+    {
+      "case_id": "git-shared-history",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_mechanism"
+          ],
+          "finding": "Correctly recommends revert for shared history and preserves later commit history, but conflates reset with recreating commits under different hashes. Reset moves a ref; it does not inherently change existing commit identities or remove all references to them.",
+          "positive": "Explains the relevant collaborative risk and does not execute a Git operation."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_mechanism"
+          ],
+          "finding": "Correctly acknowledges conflict risk and ordinary resolution, but says the partners clone references hashes that no longer exist. Those objects remain in that clone; history divergence is the issue.",
+          "positive": "UCA appropriately distinguishes paraphrased instruction from the students new conflict inference."
+        }
+      ]
+    },
+    {
+      "case_id": "git-index",
+      "episode_verdict": "critical",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Provides the staging snapshot model and an unsolved question locating versionC without naming the committed versionB.",
+          "positive": "Meets the actual hint-before-answer request."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unrequested_destructive_option"
+          ],
+          "finding": "Correctly confirms stagedB versus workingC and records prompted evidence. Adds git restore as an unrequested option to discard the later edit; it does explain that it throwsC away and does not execute it. This is unnecessary burden/risk in a concept check, not observed data loss.",
+          "positive": "Correct explanation and re-staging repair."
+        },
+        {
+          "turn": 3,
+          "verdict": "critical",
+          "categories": [
+            "false_private_judgment",
+            "past_belief_as_current",
+            "assessment_overconstraint",
+            "assistance_attribution"
+          ],
+          "finding": "Publicly confirms the correct re-stage/commit prediction. Private UCA marks it partially correct by treating I was assuming as a current unresolved belief and demanding an unasked commit-a exception despite the original plain-commit scope. Also calls the re-stage prediction fresh transfer although the tutor supplied it in turn2. This is an observed private judgment error, not a publicly displayed wrong grade.",
+          "evidence": [
+            "does not correct the automatic-scoop assumption (still asserts it as their prior belief)"
+          ],
+          "upstream_evidence": "Orchestrator task constructs an answer_submission question asking whether commit automatically includes the latest edit, with a new rubric; that was not a published exercise. The parent rubric mentions commit-a parenthetically; UCA turns its omission into a missing criterion."
+        }
+      ],
+      "critical_surface": "private_observed_judgment"
+    },
+    {
+      "case_id": "test-doubles",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly separates a stub providing indirect input, a spy recording calls, and expectation-based mocks while explaining loose library terminology.",
+          "positive": "Addresses the students actual terminology confusion."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_qualification",
+            "assistance_attribution"
+          ],
+          "finding": "Useful distinction between displayed-result checks and specified collaborator calls. Wording should not equate observing a charge call with proof the card was charged; that requires an explicit boundary contract or other evidence. UCA also calls the same payment-gateway examples a fresh SUT/new situations, overstating changed-item transfer.",
+          "positive": "Warns against over-specifying incidental interactions and ties assertions to requirements."
+        }
+      ]
+    },
+    {
+      "case_id": "lsp-preconditions",
+      "episode_verdict": "pass",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Explains structural versus behavioral substitutability and asks the learner to evaluate the caller contract at0 without issuing the requested withheld verdict.",
+          "positive": "A targeted, unsolved hint is possible under the unchanged prompts."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly confirms the narrowed-precondition diagnosis and explains the caller consequence. UCA explicitly treats the response as partly elicited on the same example, not independent application.",
+          "positive": "Balances acknowledgment, explanation, and qualified assessment."
+        }
+      ]
+    },
+    {
+      "case_id": "c-lifetime",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly rejects a grace period after free and distinguishes one observed output from a language guarantee. Does not execute the undefined-behavior example.",
+          "positive": "Names NULL dereference as undefined too, rather than promising a guaranteed crash."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unused_rubric_diagnosis"
+          ],
+          "finding": "Publicly confirms the correct statement and gives a valid unsolved reuse-address question with correct answerA. Private rubric falsely attributes optionC (42 due to q write) to a belief that free zeros the bytes; that belief is not expressed by the choice. OptionD also receives an unsupported causal attribution. No response to the new MCQ is graded.",
+          "positive": "UCA explicitly recognizes close tracking of prior supplied explanation and withholds fresh-case application."
+        }
+      ]
+    },
+    {
+      "case_id": "uml-state",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overconstraint",
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Correctly explains event, guard, and effect order for the stated transition. Presents mutual exclusion as mandatory rather than a condition for deterministic alternatives in this simple case. UCA claims the learner already parsed all three labels into their roles, which their question did not demonstrate.",
+          "positive": "Does not execute debit on a rejected transition."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly keeps effects tied to the transition actually taken. Overstates that every transition carries a guard/effect and that mutual exclusion ensures exactly one fires; optional labels and the distinction between at-most-one and coverage need qualification.",
+          "positive": "Uses a single model call and does not invent another assessment for a confirmation turn."
+        }
+      ]
+    },
+    {
+      "case_id": "prerequisite-resource",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "burden",
+            "technical_overclaim"
+          ],
+          "finding": "Correctly equates index and staging and uses text as requested, but introduces many commands, partial staging, and multi-file examples for a declared novice. Claims committed snapshots live forever, which is not a general retention guarantee.",
+          "positive": "No forced quiz or premature understanding grade."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Adapts to a concrete single-file walkthrough of add and commit, keeping the index synonym explicit and explaining how a later edit differs from the staged version.",
+          "positive": "Useful prerequisite teaching is permitted; it is not an answer leak."
+        },
+        {
+          "turn": 3,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Briefly honors pause/no-quiz, with one model call and no assessment update.",
+          "positive": "Clear positive control for closure and low-cost handling."
+        }
+      ]
+    },
+    {
+      "case_id": "observer-contract",
+      "episode_verdict": "critical",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "example_discrimination"
+          ],
+          "finding": "Correctly accepts the stated snapshot contract and qualifies textbook coverage. Treats self-unsubscription during its own callback as if it could distinguish receipt of the already in-flight call; cancellation of a different not-yet-called listener is the discriminating case.",
+          "positive": "Does not reject the valid contract merely because the textbook example forbids callback subscription changes."
+        },
+        {
+          "turn": 2,
+          "verdict": "critical",
+          "categories": [
+            "technical_false_claim",
+            "valid_alternative_rejection",
+            "assessment_item_identity"
+          ],
+          "finding": "Says a listener that detaches itself is skipped within the same event, although its callback has already begun. Also says the copy has to go for live cancellation; iterating a copy with a live-membership check implements that policy. UCA treats the students later-listener cancellation scenario as an answer about self-unsubscription.",
+          "evidence": [
+            "then the copy has to go"
+          ],
+          "reference_check": "observer_cancellation_counterexample in cs35l-reference-checks-v1.json",
+          "positive": "Continues to accept the original snapshot policy; error is in the added comparison and implementation mandate."
+        }
+      ],
+      "critical_surface": "public_technical_explanation"
+    },
+    {
+      "case_id": "scrum-change",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overconstraint",
+            "source_qualification"
+          ],
+          "finding": "Rejects both extremes and mentions possible scope trading, but frames the normal route as waiting for future planning and says the framework does not dictate urgent mid-sprint handling. Scrum explicitly constrains changes by the Sprint Goal and permits scope clarification/renegotiation with the Product Owner. UCA hardens the account into not mid-sprint insertion.",
+          "positive": "Admits the retrieved course coverage gap instead of inventing a course quotation."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "decision_scope",
+            "unused_rubric_ambiguity"
+          ],
+          "finding": "Correctly involves Product Owner and Developers, but mixes product-backlog ordering with deciding current-Sprint work and loosely suggests replacing part of the Sprint Goal. New question/rubric centers a single owner, while an also-acceptable clause admits scope negotiation; the distinction needs to be explicit before grading. No answer to that new question was graded.",
+          "positive": "Does not endorse unilateral stakeholder replacement or lower quality to squeeze work in."
+        }
+      ]
+    },
+    {
+      "case_id": "shell-redirection",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly traces left-to-right descriptor duplication and both output destinations. Applied would be more precise than parsed for the timing, but the demonstrated destination model is correct.",
+          "positive": "Explains the symbols with an appropriate current-target analogy."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unused_rubric_overlap"
+          ],
+          "finding": "Correctly acknowledges the paraphrase and asks an unsolved append variation. Private rubric says right log content with wrong stream assignment is partially correct via or vice versa, while also labeling misplaced stderr incorrect; those categories can overlap. No answer to that item is graded.",
+          "positive": "UCA correctly recognizes the abandoned prior belief and explicitly withholds independent transfer, unlike git-index turn3."
+        }
+      ]
+    },
+    {
+      "case_id": "node-event-loop",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "missing_mechanism",
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Gives the correct A,D,C,B order and explains synchronous run-to-completion, but does not explain the Promise microtask checkpoint that placesC beforeB; describing both callbacks as later loop turns obscures that distinction. UCA invents an expectation of some deferred ordering despite the explicitly synchronous A,B,C,D prediction.",
+          "positive": "Honestly distinguishes a retrieved-course coverage gap from a cited rule."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_false_claim"
+          ],
+          "finding": "Correctly explains that the timer cannot preempt the synchronous statements, but says setTimeout(fn,0) starts an already expired timer. Node clamps delays below1ms to1ms; readiness also differs from guaranteed execution time.",
+          "positive": "Separates timer eligibility from permission to interrupt."
+        }
+      ]
+    },
+    {
+      "case_id": "state-versus-mvc",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "prerequisite_mismatch",
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Correctly distinguishes State from MVC, but asks which classes are Context/State objects before establishing that this small project uses the pattern. UCA treats the question about equivalence as evidence the learner already senses the difference.",
+          "positive": "Frames the pattern as potentially useful only when state-dependent conditionals spread."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "speaker_attribution",
+            "technical_overgeneralization"
+          ],
+          "finding": "Accepts a small switch and delayed refactoring, but says switches have no completeness check without a language qualification; exhaustive switch checking is available in some languages/type systems. It assumes nontrivial behavior not shown in the code and rejects a table too categorically.",
+          "positive": "Does not demand pattern machinery for a small project.",
+          "assessment_note": "UCA attributes the earlier tutor question about the stop button to the student as demonstrated state-dependent behavior, and credits a table-versus-State comparison the student never made."
+        }
+      ]
+    },
+    {
+      "case_id": "react-state",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Leaves the arguments for the learner to evaluate; does not print the updater repair requested to be withheld.",
+          "positive": "A focused snapshot hint fits the actual misconception."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly confirms the learner-supplied updater mechanism and offers an unsolved closure variation.",
+          "positive": "The student supplies the functional-update alternative before the tutor confirms it."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "closure_burden"
+          ],
+          "finding": "Acknowledges the stop request without a new question, but follows it with an unsolicited explanation and a new general batching reminder after the student is done. This is a bounded burden judgment, not answer leakage or demonstrated factual failure.",
+          "positive": "UCA explicitly recognizes that the transfer question was unanswered and does not promote to Apply."
+        }
+      ]
+    },
+    {
+      "case_id": "tcp-framing",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly asks which transport is in use and explains TCP byte ordering without supplying a finished protocol. The UDP comparison implies a whole intact datagram per recv without the required receive-buffer qualification; excess bytes of an oversized datagram can be discarded. The extensive comparison precedes the requested context check.",
+          "positive": "Does not assume TCP merely because the test fixture is named tcp-framing; the learner had not specified it."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly accepts the byte-stream explanation and asks an unsolved ordering question without giving a complete framing design.",
+          "positive": "UCA withholds an application claim because no new situation was answered."
+        }
+      ]
+    },
+    {
+      "case_id": "make-dependencies",
+      "episode_verdict": "pass",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly rebuilds main.o then app and skips util.o under the supplied timestamp graph. Clearly distinguishes existence from being up to date.",
+          "positive": "Explains the requested result without forcing a quiz; the optional request to inspect actual rules does not invalidate the supplied graph."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly explains that -j preserves declared dependency ordering and warns conditionally about missing edges. The private source note limits evidence to retrieved pages.",
+          "positive": "Does not credit Apply simply because the student asks a new parallel-build question."
+        }
+      ]
+    },
+    {
+      "case_id": "uml-multiplicity",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly confirms the supplied association-end multiplicities and gives a readable one-opposite-object rule.",
+          "positive": "Accepts a correct learner interpretation despite the report of earlier confusion."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly says a plain association does not specify ownership or storage, but then concludes that neither objects lifetime depends on the other. Lack of a diagram assertion is not proof that such a lifecycle dependency is absent. Calling replacement of aggregation by association always safe also suppresses any intended extra contract.",
+          "positive": "Recognizes loose shared-aggregation semantics and avoids prescribing a database schema."
+        }
+      ]
+    },
+    {
+      "case_id": "python-shallow-copy",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Offers outer/inner identity checks while withholding the requested final list value.",
+          "positive": "Three-call path provides a small useful diagnostic without first assigning a knowledge tier."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_verification"
+          ],
+          "finding": "Publicly confirms the correct mechanism and poses an unsolved slot-replacement variation. UCA says the learner ran the checks and did not predict before inspecting, although the learner only states identity results; the transcript does not establish how those results were obtained.",
+          "positive": "Assessor correctly distinguishes following the supplied diagnostic from unaided transfer."
+        },
+        {
+          "turn": 3,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly accepts the learner-supplied slot-replacement example and explanation and offers a new aliasing trace with correct expected values.",
+          "positive": "Accepts a valid analogous example instead of insisting on the exact variable names in its previous question. The trace demonstrates near transfer within this assisted conversation, not measured independent learning."
+        }
+      ]
+    },
+    {
+      "case_id": "shell-quoting-repeat",
+      "episode_verdict": "critical",
+      "critical_surface": "public_technical_explanation",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "assistance_oversupply"
+          ],
+          "finding": "Does not print the repaired command, but supplies the full assignment-versus-expansion mechanism before asking the learner to count arguments. A natural hint request leaves some boundary ambiguity.",
+          "positive": "Leaves the concrete argument count unanswered."
+        },
+        {
+          "turn": 2,
+          "verdict": "critical",
+          "categories": [
+            "technical_false_claim",
+            "ambiguous_assistance_transition"
+          ],
+          "finding": "The requested working line is correct. The extra worked example falsely says unquoted final notes v2.md produces two data arguments and lines, final and notes v2.md. It produces three: final, notes, v2.md. Executed Bash check confirms. Providing the requested line after an initial hint request remains an ambiguous assistance transition, not by itself the critical defect.",
+          "positive": "Correctly repairs the actual report draft.txt command."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "closure_burden",
+            "criterion_presence_error"
+          ],
+          "finding": "Accurate public explanation continues at length after thats all I need. Private judgment says the learner never stated the two-word expansion despite report and draft.txt came through separately. It appropriately recognizes that prior hints and supplied code prevent an independent-application claim.",
+          "positive": "No new question after closure."
+        }
+      ]
+    },
+    {
+      "case_id": "react-state-repeat",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "A focused snapshot question leaves the fix and argument values for the learner."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "correctness_confidence_conflation"
+          ],
+          "finding": "Publicly confirms the correct mechanism and offers a valid unsolved mixed-update example. Privately marks the response partially correct solely because the correct updater explanation is phrased as a confirmation question. Tentative confidence should remain distinct from the correctness of the stated hypothesis.",
+          "positive": "The assessor properly recognizes the help already supplied and does not claim unaided transfer."
+        },
+        {
+          "turn": 3,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Brief closure without a new question. Private assessment explicitly withholds application credit for the unanswered probe.",
+          "positive": "Better closure fit than the original fixed React episode."
+        }
+      ]
+    },
+    {
+      "case_id": "sql-left-join-repeat",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Public response correctly explains the padded row and asks which count fits. Private UCA says the learner accurately predicted the actual output and already knows the COUNT(e.course) fix, although2/0 is the desired result, actual COUNT(*) yields2/1, and the learner has not proposed that fix.",
+          "positive": "Public question leaves the aggregate choice for the learner."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "correctness_confidence_conflation",
+            "technical_conflation"
+          ],
+          "finding": "Correctly confirms2/0 and the non-NULL premise. Its extra DISTINCT comparison blurs duplicate elimination with rows-versus-non-NULL counting. Private partial verdict has a legitimate missing COUNT(*) explanation, but also wrongly treats question phrasing as reduced correctness rather than uncertainty.",
+          "positive": "Explains why a nullable real enrollment column would change the answer."
+        }
+      ]
+    },
+    {
+      "case_id": "information-hiding-contract-repeat",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly accepts representation replacement behind the given contract. Extra comparison says a hash table cannot deliver an order guarantee while a tree can; either abstraction may implement an order contract using suitable representation or auxiliary structure, and insertion order differs from sorted order.",
+          "positive": "Does not invent the original runs false learner belief that clients necessarily depend on the representation."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly distinguishes insertion from sorted order and keeps the implementation repair inside the module. Treats exposing extra guarantees as a design tradeoff.",
+          "positive": "Accepts the learners qualified alternative rather than requiring client changes."
+        }
+      ]
+    },
+    {
+      "case_id": "testing-boundaries-repeat",
+      "episode_verdict": "critical",
+      "critical_surface": "public_assistance_boundary",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "critical",
+          "categories": [
+            "answer_boundary"
+          ],
+          "finding": "Despite the explicit request to avoid a full test list or repaired condition, provides all four boundary classes and concrete values18,17,65,66. This is clearer disclosure than the original class-only list.",
+          "positive": "Leaves the expected truth values for the learner to inspect."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "assistance_oversupply",
+            "counterexample_quality"
+          ],
+          "finding": "Correctly confirms the endpoint bug, then supplies the repair direction despite the earlier hint request. The added example says a wrongly used >= would pass both endpoints but fail an outside case without specifying a coherent bad condition; >=18 is part of the correct repair, so the illustration does not identify the claimed defect.",
+          "positive": "Private assessment does not claim the learner independently selected the full boundary class."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "assistance_oversupply",
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Properly refuses to certify unseen code and asks for verification, but supplies the full repaired condition in response to a question about whether checking is needed. Private UCA infers the learner already grasps the verification requirement from asking whether it is needed.",
+          "positive": "Distinguishes finite passing examples from proof; does not claim to have run the new code."
+        }
+      ]
+    },
+    {
+      "case_id": "uml-multiplicity-repeat",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Publicly confirms the correct end reading. UCA says the correct interpretation was not produced independently because it is a verification question; the initial prompt does not establish whether help was used. This concerns the evidence claim, not the provisional tier label.",
+          "positive": "Does not reject the learners correct interpretation merely for being tentative."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly distinguishes unasserted ownership from an actual lifetime constraint and explains why ordinary foreign keys do not ensure a course has at least one enrollment. It overstates navigability arrowheads as specifying which class stores the link; navigable access can be implemented through lookup rather than a stored object reference.",
+          "positive": "The ownership explanation is more careful than the original run, and the schema discussion identifies a real enforcement gap."
+        }
+      ]
+    }
+  ],
+  "adaptive": [
+    {
+      "case_id": "adaptive-git",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "overconfident_diagnostic_scope"
+          ],
+          "finding": "Appropriately asks for git status instead of guessing the omitted workflow; long but helpful initial explanation. The claim that status sections tell exactly what happened is stronger than the evidence, and untracked does not necessarily mean a file was never tracked.",
+          "positive": "Read-only diagnostic, no destructive command or premature grade."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Uses the supplied add/edit/commit sequence and status to explain snapshot staging accurately. Provides relevant repair commands in ordinary explanation mode; this is permitted assistance, not an answer leak.",
+          "positive": "Reassures without invoking irreversible history rewriting.",
+          "assessment_note": "UCA distinguishes the snapshot misconception from the correctly reported workflow, but treats a troubleshooting report as a partially correct answer; no broad mastery inferred."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "observation_scope"
+          ],
+          "finding": "Honors closure with no new exercise. Says visible editor text is safe on disk; the exact sentence could be an unsaved buffer, so that reassurance needs a saved-file check. No data-loss action performed."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-regex",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly explains substring matching, but presents caret/dollar anchoring as exact whole-input validation without the Python final-newline exception. It mentions Python conditionally rather than claiming the missing language was known.",
+          "positive": "Direct teaching is permitted here; giving the pattern is not an answer-boundary failure."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "requirement_drift",
+            "assistance_attribution"
+          ],
+          "finding": "Correctly explains Python final-newline dollar behavior after the counterexample and gives fullmatch. Also proposes stripping the newline, which changes rather than enforces the stated reject-extra-characters requirement.",
+          "positive": "Recovers the technical exception instead of denying the observed failure.",
+          "assessment_note": "UCA says the learner diagnosed substring searching on their own although the tutor supplied that diagnosis and anchor repair in turn1."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "assistance_attribution"
+          ],
+          "finding": "Correctly accepts the unchanged-input fullmatch solution and the stated pass/fail cases; distinguishes match from fullmatch without reintroducing stripping.",
+          "assessment_note": "Public reply is correct. UCA calls the same file-reading situation new and the gap closed after the learner repeats supplied predictions; it does at least acknowledge the fix in hand and medium confidence. No independent transfer has occurred."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-react",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Requests the missing handler and offers one small prediction rather than assuming unseen code.",
+          "positive": "Concise, contextual debugging support."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Gives a short snapshot explanation and asks for the two requested stored values. No invented code or premature success claim."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "technical_mechanism",
+            "prerequisite_gap"
+          ],
+          "finding": "Correctly rejects await as a repair for the stale captured count, but overgeneralizes batching through async handlers instead of explaining that the setter returns no completion promise and the running closure keeps its count. Asks the novice to invent an unintroduced updater API.",
+          "positive": "Does not validate the proposed wrong repair.",
+          "reference_check": "cs35l-react-reference-v1.json: React18.3.1 createRoot in isolated Chrome committed count1 before the awaited handler resumed; its captured count remained0. Two awaited functional updates committed1 then2. This checks the mechanism, not real learning.",
+          "assessment_note": "UCA correctly separates the correct two-value trace from the added wrong repair and acknowledges scaffolding. It still calls this unchanged handler a new case. Do not infer independent transfer."
+        },
+        {
+          "turn": 4,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Switches to the requested direct explanation of updater functions with a small correct example and pending-state trace. Giving code is appropriate here.",
+          "positive": "Successfully teaches the missing API prerequisite after explicit confusion.",
+          "assessment_note": "UCA correctly records no new demonstrated updater knowledge and treats the request as a missing prerequisite, not evidence that the example was learned."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-python",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "missing_context_qualification"
+          ],
+          "finding": "Correctly explains shallow-copy aliasing and distinguishes inner mutation from outer slot replacement, but assumes Python/list.copy without first checking the unspecified language/API. The likely diagnosis should be conditional or ask for the small example.",
+          "positive": "Provides a concrete helpful explanation and permits rather than imposes a quiz."
+        },
+        {
+          "turn": 2,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Distinguishes the one new inner list from the remaining shared structure and offers an unsolved mutation check at index1 instead of affirming the incorrect whole-structure deep-copy claim.",
+          "positive": "Uses the learner-provided example and reveals no result of the new check."
+        },
+        {
+          "turn": 3,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Accurately accepts the local rebind/shared-referent explanation and gives an unsolved variation mixing an inner list and dictionary. No closure request was made, so a follow-up is permissible.",
+          "positive": "Changed item has a meaningful mutation-versus-rebinding comparison rather than just a renamed list.",
+          "assessment_note": "UCA recognizes a reported, interpreted trace and explicitly says no fresh case has yet been exercised. The new roster rubric has correct concrete output and line attribution."
+        },
+        {
+          "turn": 4,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Separates the correct changed-item trace from the false dictionaries-are-always-shared explanation. Accurately explains dict shallow copies, nested references, and deep-copy support limits; no claim that correct output proves correct reasoning.",
+          "positive": "Strong positive control for nuanced feedback on a partly correct answer.",
+          "assessment_note": "UCA accepts the exact published output/line criteria while separately recording the type-based misconception. Its phrase clean transfer should be read narrowly as a correct changed trace, not proof of a correct general model."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-make",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Offers the likely missing-prerequisite hypothesis conditionally and asks to inspect the actual object rule rather than prescribing repeated clean builds.",
+          "positive": "Short, attainable diagnostic next step.",
+          "assessment_note": "Public diagnostic is appropriate. UCA claims the learner correctly recalls declared dependencies and knows the dependency-graph contract, although the initial message only reports clean/header symptoms."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Correctly distinguishes compiler includes from the given make prerequisite rule and asks for the smallest rule change. General statements about make are interpreted in this simple stated context, not arbitrary generated or implicit dependency machinery.",
+          "assessment_note": "Public distinction is correct. UCA turns the learners still-mistaken include expectation into a causal diagnosis they have not yet supplied."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "example_consistency"
+          ],
+          "finding": "Correctly accepts the missing-header repair and explains selective rebuild plus relinking. The new unsolved Makefile exercise says three translation units but shows only main.c and util.c (two); app is a link target, not a translation unit.",
+          "positive": "Does not require repeated make clean or unrelated object recompilation.",
+          "assessment_note": "UCA correctly credits the added prerequisite but says the student stated downstream relinking, which was not in their message."
+        },
+        {
+          "turn": 4,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Correctly accepts the selective rebuild trace and explicitly corrects its own three-translation-units wording: two compilation units, three targets, app linked.",
+          "positive": "Responds constructively to the students justified confusion rather than treating it as a learner deficit.",
+          "assessment_note": "Correctly accepts both command lines and keeps the vocabulary question separate; the confusion was elicited by the tutors own erroneous count, not a spontaneous learner deficit."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-testing",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "burden",
+            "technical_qualification"
+          ],
+          "finding": "Responds to a request not to dump a suite with a broad checklist of many input classes and branches before eliciting the small function. Passing tests only prove the cases you exercised overstates what possibly incomplete or faulty assertions establish.",
+          "positive": "Suggests retaining one observed failure as a regression test."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "After overload, reduces the task to the smallest valid age and asks the student to run and compare one input. Does not disclose the result or changed condition.",
+          "positive": "Strong contrast with the fixed suite reply that supplied all four boundary classes.",
+          "assessment_note": "Public hint is good. UCA says the student verbalized the boundary principle, citing their overload/request for one input; that utterance does not express a boundary principle."
+        },
+        {
+          "turn": 3,
+          "verdict": "pass",
+          "categories": [],
+          "finding": "Rejects premature completion after the one-sided repair and asks for one upper-boundary check without giving its output or replacement condition.",
+          "positive": "Maintains the reduced task size and the learners remaining reasoning.",
+          "assessment_note": "Correctly records the partial repair and remaining upper-bound issue; student asked if done rather than asserting completion."
+        },
+        {
+          "turn": 4,
+          "verdict": "revise",
+          "categories": [
+            "closure_burden"
+          ],
+          "finding": "Correctly accepts the visible inclusive repair and treats the two outside tests as still to be run. Does stop without another quiz, but gives about190 words of additional teaching after the explicit request to stop.",
+          "positive": "No claim that the planned17/66 checks were already executed.",
+          "assessment_note": "Explicitly distinguishes scaffolded reasoning from independence and planned17/66 checks from execution. No claim of unassisted mastery."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-sql",
+      "status": "reviewed",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "premature_diagnosis",
+            "context_invention",
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "Before seeing a query, assumes the retained entity is a course rather than the students someone and asks which counted column is NULL. COUNT(*) was unspecified and differs from column-count semantics. Should request the query or explicitly offer conditional explanations.",
+          "positive": "Identifies unmatched-row preservation as a relevant possible cause.",
+          "assessment_note": "UCA invents a LEFT-vs-INNER framing and knowledge that unmatched rows remain, neither stated in the initial symptom report."
+        },
+        {
+          "turn": 2,
+          "verdict": "revise",
+          "categories": [
+            "speaker_attribution"
+          ],
+          "finding": "Acknowledges its mistaken course framing, uses the provided student/enrollment query, identifies right-side NULL padding, and asks what COUNT(*) counts.",
+          "positive": "Repairs the context error without blaming the learner.",
+          "assessment_note": "Publicly acknowledges its own wrong course framing, but UCA says the student self-corrected that earlier misframing. The error belonged to the tutor."
+        },
+        {
+          "turn": 3,
+          "verdict": "revise",
+          "categories": [
+            "task_expansion",
+            "question_precision"
+          ],
+          "finding": "Correctly rejects COUNT(s.sid) and explains why the left-side ID still counts1. Then expands a simple debugging task to three rows plus distinct course counting, phrased as which column rather than which aggregate (duplicates require DISTINCT or equivalent).",
+          "positive": "Does not blindly accept any column-count replacement.",
+          "assessment_note": "Overall partial judgment is justified by the wrong COUNT(s.sid) repair, but its additional penalty for not explicitly saying COUNT(*) counts rows regardless of NULL restates the students own correct explanation as if absent."
+        },
+        {
+          "turn": 4,
+          "verdict": "revise",
+          "categories": [
+            "assistance_attribution",
+            "deferred_assessment"
+          ],
+          "finding": "Correctly accepts2/0/0, restates the appropriate right-side-key query, and explicitly leaves duplicate-course counting for later.",
+          "positive": "Honors the requested topic boundary without another quiz.",
+          "assessment_note": "Public reply honors deferral. UCA nevertheless calls the column-count strategy independently generated despite earlier tutor guidance. It labels the combined item partially correct for the explicitly deferred DISTINCT part; a deferred/unassessed part should remain distinct from a wrong answer or tested lack of knowledge."
+        }
+      ],
+      "episode_verdict": "revise"
+    },
+    {
+      "case_id": "adaptive-project",
+      "status": "reviewed_partial_execution_failure",
+      "episode_verdict": "revise",
+      "turns": [
+        {
+          "turn": 1,
+          "verdict": "revise",
+          "categories": [
+            "technical_overgeneralization"
+          ],
+          "finding": "Correctly explains that private field access does not prevent mutation through an escaped reference. Overstates that switching internal collection representation necessarily requires editing callers; a stable list contract can be maintained over a changed representation. An unmodifiable view also need not hide element mutability.",
+          "positive": "Offers behavior-oriented interfaces and copying/view alternatives instead of treating private as sufficient."
+        },
+        {
+          "turn": 2,
+          "verdict": "unassessed",
+          "categories": [
+            "execution_failure",
+            "unsupported_knowledge_attribution"
+          ],
+          "finding": "No tutoring response was delivered. After two concept assessments the parent requested content for shallow-vs-deep-copy; the content guard rejected the mismatch with the first pending information-hiding assessment. Private assessment calls the students uncertainty about mutable elements an accurate grasp of shared references before the learner actually states that mechanism.",
+          "assessment_note": "Public teaching quality is unassessed. Both assessments completed before the guard exception; the record must distinguish partial state updates from successful reply delivery. Do not label the unavailable explanation incorrect or silently rerun this failure as a pass."
+        }
+      ],
+      "execution_failure": {
+        "error": "Content task must address the assessed concept",
+        "observed_public_error": "Sorry, something went wrong on my end. Please try sending your message again.",
+        "failed_turn": 2,
+        "planned_minimum_turns": 3,
+        "actual_attempted_turns": 2,
+        "trace": {
+          "total_s": 58.354338854085654,
+          "logical_model_calls": 9,
+          "output_limited_calls": 0,
+          "required_tool_description": "Generate student-facing content for assessed concept \"information-hiding\". Use the content-generating-agent and a JSON description matching CGAInput. Choose its mode and target tier under the existing tutoring rules. Honor the student's conversation and assistance contract, including requests to stop.",
+          "actual_tool_call": {
+            "name": "task",
+            "args": {
+              "subagent_type": "content-generating-agent",
+              "description": {
+                "concept": "shallow-vs-deep-copy",
+                "target_tier": "Apply",
+                "mode": "generate_question",
+                "format_constraint": "short_answer"
+              }
+            },
+            "id": "call_57a7ab558d0749e2bdb479f9",
+            "type": "tool_call"
+          },
+          "assessment_state_after_failed_turn": {
+            "information-hiding": {
+              "concept": "information-hiding",
+              "tier": "Analyze",
+              "confidence": "medium",
+              "rationale": "Student now names the hidden decision and its blast radius in their own words — \"its leaking that we store a list, and letting callers change it\" — which is the course's five-step \"list the secrets / inspect the interface for leaks\" move applied to their own class, a clear step up from the prior \"it's encapsulated because the field is private\" framing. They also compare candidate fixes and isolate the mechanism that decides the outcome: \"returning new ArrayList<>(items) ... the items are objects with setPrice too, so im not sure what the copy actually protects\" — i.e. they spotted that a shallow copy duplicates the container but shares the mutable elements, exactly the book's shallow-vs-deep distinction. The unresolved part is the boundary itself (the copy does stop add/remove, just not setPrice), so the analysis is sound but not yet closed; no misconception asserted.",
+              "assessed_at": "2026-10-18T18:57:00.890304Z",
+              "assessed_at_turn": 2,
+              "assessment_count": 2
+            },
+            "shallow-vs-deep-copy": {
+              "concept": "shallow-vs-deep-copy",
+              "tier": "Understand",
+              "confidence": "low",
+              "rationale": "Student correctly identifies the leak (\"we store a list, and letting callers change it\") and proposes the right mechanism `new ArrayList<>(items)`, but then questions its adequacy because elements are mutable objects with `setPrice` — an accurate grasp of the shallow-copy boundary (new outer container, shared element references), matching the course's \"shallow copy shares the referenced objects.\" They have not yet articulated the deep-copy tradeoff or applied it to a concrete decision, so Apply is not yet demonstrated; this is also a first assessment, so probing should continue.",
+              "assessed_at": "2026-10-18T18:56:42.910621Z",
+              "assessed_at_turn": 2,
+              "assessment_count": 1
+            }
+          }
+        }
+      }
+    }
+  ],
+  "pilot_findings": [
+    {
+      "case": "reuse-composition",
+      "turn": 2,
+      "finding": "Public reply includes Turn log, claimed experimental condition, UCA/CGA routing and internal assessment decisions.",
+      "severity": "critical",
+      "note": "This is an exposed claimed assignment, not evidence the assignment is authentic. Pilot was stopped for user-requested scenario redesign."
+    },
+    {
+      "case": "tdd-failure",
+      "turn": 2,
+      "finding": "Long feedback overstates what passing tests establish; private UCA promotes a paraphrase of supplied instruction without explicitly distinguishing assistance.",
+      "severity": "revise"
+    }
+  ],
+  "repeat_comparisons": [
+    {
+      "original": "shell-quoting",
+      "repeat": "shell-quoting-repeat",
+      "finding": "Both provide the working line after the learner changes from hint to answer request. The repeat adds a demonstrably wrong three-word filename example. Treat the technical defect separately from ambiguous help preference."
+    },
+    {
+      "original": "react-state",
+      "repeat": "react-state-repeat",
+      "finding": "Both leave a useful initial hint and avoid credit for the unanswered transfer probe. The repeat improves closure, but privately penalizes correct question-form reasoning."
+    },
+    {
+      "original": "sql-left-join",
+      "repeat": "sql-left-join-repeat",
+      "finding": "Both explain the actual aggregate correctly. The repeat initially credits a repair the student has not supplied and later mixes duplicate elimination with NULL handling in an extra comparison."
+    },
+    {
+      "original": "information-hiding-contract",
+      "repeat": "information-hiding-contract-repeat",
+      "finding": "Both accept replacement behind the stated interface and distinguish a later order promise. The repeat avoids an invented learner belief but introduces an overly broad hash-table-versus-tree order comparison."
+    },
+    {
+      "original": "testing-boundaries",
+      "repeat": "testing-boundaries-repeat",
+      "finding": "Both breach the initial no-full-test-list request and later decline to certify unseen code. The repeat prints the exact four values immediately and later supplies the repaired condition as well."
+    },
+    {
+      "original": "uml-multiplicity",
+      "repeat": "uml-multiplicity-repeat",
+      "finding": "Both read the stated multiplicities correctly. The repeat improves the lifetime non-entailment and explains the minimum-participation enforcement gap, but overstates navigability as physical reference storage."
+    }
+  ]
+}

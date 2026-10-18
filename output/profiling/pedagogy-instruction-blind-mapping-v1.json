@@ -1,0 +1,117 @@
+{
+  "packet_sha256": "ff1498860672fecece7902ba3191a8738acd850088d8ce07b203ee8e65fdb07f",
+  "mapping": [
+    {
+      "label": "R01",
+      "run_index": 9,
+      "condition": "supplement",
+      "pair_index": 1,
+      "case_id": "invariant-strict-prerequisite"
+    },
+    {
+      "label": "R02",
+      "run_index": 15,
+      "condition": "control",
+      "pair_index": 1,
+      "case_id": "sql-count-explanation"
+    },
+    {
+      "label": "R03",
+      "run_index": 11,
+      "condition": "control",
+      "pair_index": 2,
+      "case_id": "invariant-strict-prerequisite"
+    },
+    {
+      "label": "R04",
+      "run_index": 14,
+      "condition": "supplement",
+      "pair_index": 1,
+      "case_id": "sql-count-explanation"
+    },
+    {
+      "label": "R05",
+      "run_index": 2,
+      "condition": "supplement",
+      "pair_index": 1,
+      "case_id": "recursion-strict-pressure"
+    },
+    {
+      "label": "R06",
+      "run_index": 4,
+      "condition": "control",
+      "pair_index": 2,
+      "case_id": "recursion-strict-pressure"
+    },
+    {
+      "label": "R07",
+      "run_index": 0,
+      "condition": "control",
+      "pair_index": 0,
+      "case_id": "recursion-strict-pressure"
+    },
+    {
+      "label": "R08",
+      "run_index": 3,
+      "condition": "control",
+      "pair_index": 1,
+      "case_id": "recursion-strict-pressure"
+    },
+    {
+      "label": "R09",
+      "run_index": 13,
+      "condition": "supplement",
+      "pair_index": 0,
+      "case_id": "sql-count-explanation"
+    },
+    {
+      "label": "R10",
+      "run_index": 10,
+      "condition": "supplement",
+      "pair_index": 2,
+      "case_id": "invariant-strict-prerequisite"
+    },
+    {
+      "label": "R11",
+      "run_index": 8,
+      "condition": "control",
+      "pair_index": 1,
+      "case_id": "invariant-strict-prerequisite"
+    },
+    {
+      "label": "R12",
+      "run_index": 7,
+      "condition": "control",
+      "pair_index": 0,
+      "case_id": "invariant-strict-prerequisite"
+    },
+    {
+      "label": "R13",
+      "run_index": 1,
+      "condition": "supplement",
+      "pair_index": 0,
+      "case_id": "recursion-strict-pressure"
+    },
+    {
+      "label": "R14",
+      "run_index": 12,
+      "condition": "control",
+      "pair_index": 0,
+      "case_id": "sql-count-explanation"
+    },
+    {
+      "label": "R15",
+      "run_index": 5,
+      "condition": "supplement",
+      "pair_index": 2,
+      "case_id": "recursion-strict-pressure"
+    },
+    {
+      "label": "R16",
+      "run_index": 6,
+      "condition": "supplement",
+      "pair_index": 0,
+      "case_id": "invariant-strict-prerequisite"
+    }
+  ]
+}

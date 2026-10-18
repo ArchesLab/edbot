@@ -1,0 +1,25 @@
+{
+  "packet_sha256": "6d13313c6e84e475d30d3f3f2556e8d84a3d75fe4145800a7078c3b9a68d1534",
+  "mapping": [
+    {
+      "label": "P01",
+      "run_index": 1,
+      "condition": "supplement"
+    },
+    {
+      "label": "P02",
+      "run_index": 0,
+      "condition": "control"
+    },
+    {
+      "label": "P03",
+      "run_index": 3,
+      "condition": "control"
+    },
+    {
+      "label": "P04",
+      "run_index": 2,
+      "condition": "supplement"
+    }
+  ]
+}

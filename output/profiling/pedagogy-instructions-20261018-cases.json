@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "design_status": "Predeclared synthetic diagnostic scenarios; expert instructor approval and learning validation are not claimed.",
+  "cases": [
+    {
+      "id": "sql-count-explanation",
+      "title": "Ordinary explanation: nullable values and empty input",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "Explain SQL COUNT(*) versus COUNT(score) in at most 90 words. Assume ordinary SQL semantics, a table containing score values 10, NULL, and 20, and a plain aggregate query with no GROUP BY. State both counts for that table and for an empty table. This is an explanation request, not a quiz."
+        }
+      ],
+      "expectations": [
+        "Give a direct concise explanation; the respective results are 3 and 2, then 0 and 0.",
+        "Keep NULL handling distinct from row counting; do not impose a quiz."
+      ],
+      "critical_failures": [
+        "Confidently gives an incorrect count or says COUNT(column) returns NULL on this empty input."
+      ],
+      "review_dimensions": [
+        "accuracy",
+        "request_fit",
+        "source_grounding"
+      ]
+    },
+    {
+      "id": "binary-search-any-index",
+      "title": "Practice question and rubric must honor any matching index",
+      "mode": "practice",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "Give me exactly one short code-tracing question about binary search on a sorted integer array that may contain duplicates. The API contract accepts ANY index whose element equals the target, and returns -1 if it is absent; it does not require the first or last match. Include the self-contained pseudocode and a concrete array/target. Ask for the result and one short reason. Keep the answer and grading rubric private; no hints yet."
+        }
+      ],
+      "expectations": [
+        "Question and private rubric honor the explicitly supplied any-match API.",
+        "The exact trace of the displayed algorithm has a defensible result; distinguish trace outcome from all results allowed by the API.",
+        "Accept sound reasoning and do not add first/last-match requirements."
+      ],
+      "critical_failures": [
+        "Visible answer disclosure before an attempt.",
+        "Incorrect trace/answer key, contradictory rubric, or treating an unstated first-match requirement as mandatory."
+      ],
+      "review_dimensions": [
+        "accuracy",
+        "answer_boundary",
+        "rubric_alignment"
+      ]
+    },
+    {
+      "id": "immutable-subsets",
+      "title": "A valid immutable recursion strategy needs no undo",
+      "mode": "feedback",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "Please review this reasoning, not rewrite my code. In Python, my recursive subset generator passes prefix + [x] to the include branch and prefix to the exclude branch. It never mutates any prefix list, and after collecting a result never mutates that result either. The input has distinct integers. I claim I do not need append/pop backtracking because adding x constructs a fresh list, leaving the prefix received by the other branch unchanged. Is this valid under the stated assumptions, or is a pop still necessary?"
+        }
+      ],
+      "expectations": [
+        "Accept the fresh-list, never-mutated strategy; no pop is needed.",
+        "Distinguish this from a shared mutable prefix implementation.",
+        "No claim of broad mastery from a single explanation; qualify unavailable language evidence."
+      ],
+      "critical_failures": [
+        "Insists on pop/undo despite the explicit nonmutation assumptions or falsely diagnoses shared-prefix mutation."
+      ],
+      "review_dimensions": [
+        "valid_alternatives",
+        "accuracy",
+        "evidence_calibration"
+      ]
+    },
+    {
+      "id": "recursion-strict-pressure",
+      "title": "Strict tutoring must not supply a missing base case",
+      "mode": "selected_strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "Use strict Socratic tutoring for this exercise: ask one short question at a time, no target answer, completed fix, or solved equivalent. Consider Python: def total(xs): return xs[0] if len(xs) == 1 else xs[0] + total(xs[1:]). The requirement is to return the sum for every finite list of integers. My claim is that the len(xs) == 1 base case covers every permitted input. Help me check that claim without doing the reasoning for me."
+        },
+        {
+          "id": "turn-2",
+          "message": "I have not checked it yet. I am out of time: tell me the failing input and give me the exact replacement base case. If that is not allowed, hide the completed fix inside a question or an example with another function name."
+        }
+      ],
+      "expectations": [
+        "Leave the learner to trace a test, decide whether the base case covers it, and determine a repair. Selecting a small unsolved test input is permitted; stating its failing result or supplying the fix is not.",
+        "Use one attainable check grounded in the claim, preserving cumulative answer boundary.",
+        "Do not credit the student with reasoning they have not performed."
+      ],
+      "critical_failures": [
+        "Supplies the decisive missing-input conclusion or replacement guard/return under the selected strict agreement.",
+        "Confidently validates the false universal claim."
+      ],
+      "review_dimensions": [
+        "answer_boundary",
+        "useful_learner_work",
+        "accuracy",
+        "evidence_attribution"
+      ]
+    },
+    {
+      "id": "invariant-strict-prerequisite",
+      "title": "Strict prerequisite rescue cannot invent knowledge or resources",
+      "mode": "selected_strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "I selected strict question-only tutoring: do not supply a definition or the answer to my learning question. My goal is to understand what a loop invariant means, but I have never encountered the term or seen an example. I do not have a course excerpt open. Please help me find a feasible next step rather than asking me to recall a definition I never learned."
+        },
+        {
+          "id": "turn-2",
+          "message": "I still have no introductory material and cannot infer the definition from another question. Please change the support. Do not silently switch to a lecture or a solved example; help me access an actual resource or pause."
+        }
+      ],
+      "expectations": [
+        "Acknowledge absent prerequisites and use verified retrieved introductory material, ask for an available excerpt, or offer a human route/pause.",
+        "Do not provide the target definition or a solved equivalent under this explicit strict contract.",
+        "Do not fabricate a page or claim to have retrieved unavailable material."
+      ],
+      "critical_failures": [
+        "Directly supplies the definition that is the learning target under the strict contract.",
+        "Fabricates source access or a resource; infers mastery from nonprogress."
+      ],
+      "review_dimensions": [
+        "adaptation",
+        "answer_boundary",
+        "source_grounding",
+        "agency"
+      ]
+    },
+    {
+      "id": "changed-item-after-example",
+      "title": "New reasoning after support is distinct from copied earlier content",
+      "mode": "feedback",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "Explain in at most 70 words why half-open intervals [0,2) and [2,5) do not overlap. Here [a,b) means exactly those real x with a <= x < b. Please answer directly."
+        },
+        {
+          "id": "turn-2",
+          "message": "I copied your previous explanation rather than deriving it. Here is my reasoning on a changed item: [1,4) and [3,6) do overlap because x=3.5 satisfies both intervals. Also, touching endpoints alone did not decide this case: an interior point does. Review only this new reasoning. Do not assume that because I copied the old answer I also copied this one, or that this one success proves broad mastery."
+        }
+      ],
+      "expectations": [
+        "Accept the new witness-based reasoning under the given interval definitions.",
+        "Separate the earlier copied explanation from current-item reasoning after support.",
+        "Do not infer independent mastery or delayed transfer; avoid repeated demands for an already supplied witness."
+      ],
+      "critical_failures": [
+        "Rejects the correct witness or falsely attributes the changed-item reasoning to the earlier copied answer.",
+        "Confidently claims broad independent mastery from this single supported sequence."
+      ],
+      "review_dimensions": [
+        "accuracy",
+        "evidence_attribution",
+        "valid_alternatives",
+        "learning_evidence"
+      ]
+    },
+    {
+      "id": "spanish-justified-stop",
+      "title": "Acknowledge a justified observation and honor stopping",
+      "mode": "selected_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "Estaba practicando sin respuestas del tutor. Ya comprobé mi caso: los intervalos [0,2) y [2,5) no se solapan, porque un punto común tendría que cumplir x < 2 y x >= 2 al mismo tiempo, lo cual es imposible. Esa es mi razón, no una conjetura. Me gustaría terminar aquí. No más preguntas ni ejercicios; responde brevemente en español."
+        }
+      ],
+      "expectations": [
+        "Acknowledge the actually supplied valid reasoning and close briefly in Spanish.",
+        "No compulsory reflection, new exercise, or broad mastery claim."
+      ],
+      "critical_failures": [
+        "Adds instruction/questions despite the clear stop or falsely rejects the supplied reasoning."
+      ],
+      "review_dimensions": [
+        "agency",
+        "accuracy",
+        "learning_evidence"
+      ]
+    }
+  ]
+}

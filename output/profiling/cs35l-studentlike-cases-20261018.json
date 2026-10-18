@@ -1,0 +1,1572 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-18T17:46:06.604321+00:00",
+  "course_url": "https://tobiasduerschmid.github.io/SEBook/CS35L",
+  "course_page_sha256": "1d857d39b712315290460db5395a8138426e10e8a7b7687b0ee1c7dccee3acfc",
+  "scope": "Unchanged production prompts; full agent conversations with plausible student language; isolated synthetic students. Both routine help and stress behaviors are included. No skill supplement injected.",
+  "design": {
+    "unique_episodes": 30,
+    "unique_turns": 68,
+    "repeat_episodes": 6,
+    "planned_total_episodes": 36,
+    "planned_total_turns": 83,
+    "order_seed": 3518,
+    "repetitions_flag": 1,
+    "sampling": "Purposive course breadth and known risk interactions, not representative random student sample.",
+    "review": "Primary Codex reviewer applies both PedAdvisor and AI Tutor criteria; not independent human validation.",
+    "reference_visibility": "Reference facts and criteria are retained for review; only turn.message reaches the app.",
+    "missingness": "Record execution failures, skipped dependent turns, and scenario mismatch separately; do not score unobserved turns.",
+    "consistency": "Six prespecified unchanged anchor episodes repeat in fresh student sessions; no statistical reliability estimate.",
+    "performance": "Descriptive latency and call counts with evidence capture; no baseline speedup or learning-effect claim.",
+    "amendment": "User requested student-like interactions while keeping stress coverage. First pilot was stopped after two complete episodes; its partial third episode and all earlier evidence are retained separately. This revised fixture was frozen before its own inference.",
+    "source_pilot_fixture_sha256": "eb4a4003389ef321d9f8d2c9c85717f06ebd374d76ff18d3b2cca11918627ad9",
+    "student_realism_limits": "Synthetic personas and turns authored by Codex, not observed students; fixed follow-ups may fit imperfectly, so review dialogue fit and exclude invalid inferences. Separate live adaptive conversations will complement this set."
+  },
+  "cases": [
+    {
+      "id": "reuse-composition",
+      "title": "Reuse through composition",
+      "topic": "Reuse through composition",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/designprinciples/reuse.html",
+      "source_path": "SEBook/designprinciples/reuse.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i need a stack for the project. i put a list inside it and only expose push/pop, rather than inherit from List and get insert and everything else. is that a reasonable way to reuse the list? a short review would help."
+        },
+        {
+          "id": "turn-2",
+          "message": "i dont mean never use inheritance. if the new thing really can do everything the parent promises, then inheritance can make sense?"
+        }
+      ],
+      "reference_facts": [
+        "Compositioncanreuseimplementationwithoutpubliclyexposingalloperations.",
+        "Inheritancecanbeappropriateforsubstitutability;noabsolute rule."
+      ],
+      "expectations": [
+        "Judgefunctionalrequirements;acceptqualifiedalternative."
+      ],
+      "critical_failures": [
+        "Claimsreuse requiresinheritance orcompositionuniversallysuperior."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "reuse-composition",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "tdd-failure",
+      "title": "TDD red-green-refactor",
+      "topic": "TDD red-green-refactor",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/testing/tdd.html",
+      "source_path": "SEBook/testing/tdd.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "im trying TDD but the test just says ModuleNotFoundError because i imported the wrong path. thats red, right? should i start writing the feature now?"
+        },
+        {
+          "id": "turn-2",
+          "message": "oh i should fix the setup so the test actually reaches what i want to check. then make that small behavior pass and refactor while its green?"
+        }
+      ],
+      "reference_facts": [
+        "The prompt says the import path is wrong, so this is a setup defect rather than evidence about the intended behavior. A deliberate missing interface can be a meaningful initial TDD failure in a different scenario.",
+        "Fix the setup, observe an intended failure, implement the needed behavior, and refactor while checks pass. Passing tests are bounded evidence, not proof of all behavior."
+      ],
+      "expectations": [
+        "Differentiatetestinfrastructurefailurefrommissingbehavior;acceptrevision."
+      ],
+      "critical_failures": [
+        "Approvesanyexceptionasadequatebehavioralred orrequiresrefactorbeforetestcanexercisebehavior."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "tdd-failure",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "regex-fullmatch",
+      "title": "Regex API and whole-string matching",
+      "topic": "Regex API and whole-string matching",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/regex.html",
+      "source_path": "SEBook/tools/regex.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "im checking a code that should be exactly 2 digits, 0 to9. python: bool(re.search(r\"[0-9]{2}\", s)). why isnt {2} enough? please give a hint without the finished fix."
+        },
+        {
+          "id": "turn-2",
+          "message": "i tried a12b and it matches12. so it found two digits but didnt care about the stuff around them? dont tell me the new function yet, what should i look for?"
+        },
+        {
+          "id": "turn-3",
+          "message": "i found re.fullmatch and tried it with [0-9]{2}. 12 works, a12b and123 dont. it has to match the entire input, right?"
+        }
+      ],
+      "reference_facts": [
+        "search locates a matching substring; fullmatch requires entire input.",
+        "[0-9] restricts ASCII; do not equate Python \\d with ASCII."
+      ],
+      "expectations": [
+        "Do not give the finished fix initially; turn2 explicitly withholds replacement API.",
+        "Acknowledge the final self-reported fullmatch reasoning without certifying broad mastery."
+      ],
+      "critical_failures": [
+        "Reveals replacement API/pattern in turns1–2.",
+        "Confidently treats search as whole-string matching or says all digit classes are ASCII."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "regex-fullmatch",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "security-auth",
+      "title": "Authentication and authorization in Spanish",
+      "topic": "Authentication and authorization in Spanish",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/systems/security.html",
+      "source_path": "SEBook/systems/security.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "para el proyecto de35L: si ya inicié sesión, ¿por qué aún tengo que comprobar permisos al abrir un informe? pensé que con el login bastaba. me lo explicas en español, corto por favor?"
+        },
+        {
+          "id": "turn-2",
+          "message": "ah, login dice quién soy, pero no si puedo leer el informe de otra persona. ocultar el botón tampoco basta porque pueden cambiar el ID en la URL. ¿así está bien? gracias, ya quiero parar."
+        }
+      ],
+      "reference_facts": [
+        "Identity verification differs from resource authorization; server-side permission checks needed."
+      ],
+      "expectations": [
+        "Spanish language, concrete distinction, acknowledge valid reasoning thenstop."
+      ],
+      "critical_failures": [
+        "Says login alone authorizes all resources or client-side hiding sufficiently enforces access."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "security-auth",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "information-hiding-contract",
+      "title": "Information hiding and public behavior",
+      "topic": "Information hiding and public behavior",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/designprinciples/informationhiding.html",
+      "source_path": "SEBook/designprinciples/informationhiding.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "our module only has get(id) and put(id,value), and values are immutable strings. we dont promise any order or running time. i want to replace the private hash table with a tree. my partner says clients all have to change. why would they if the values and errors stay the same?"
+        },
+        {
+          "id": "turn-2",
+          "message": "what if we add a promise to iterate in insertion order? then just returning the tree in sorted order wouldnt work. wed need something to preserve the promised order, right?"
+        }
+      ],
+      "reference_facts": [
+        "Private representation canchangeifallpublicpromisespreserved.",
+        "Changedexplicitorderpromisecannotbesilentlydropped."
+      ],
+      "expectations": [
+        "Accept firstqualifiedclaim andsecondchangedcontract reasoning;no inventedguarantees."
+      ],
+      "critical_failures": [
+        "Insistsprivatehash table type must bepublic or imports insertion-order requirement intoturn1."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "information-hiding-contract",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "sql-left-join",
+      "title": "SQL outer joins and counting",
+      "topic": "SQL outer joins and counting",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/systems/data_management.html",
+      "source_path": "SEBook/systems/data_management.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my SQL count is off. Students has sid1 and sid2, Enroll has (sid1,A) and(sid1,B). course is never NULL in real enroll rows. i used SELECT s.sid, COUNT(*) FROM Students s LEFT JOIN Enroll e ON s.sid=e.sid GROUP BY s.sid. i expected2 for sid1 and0 for sid2. am i reading LEFT JOIN wrong?"
+        },
+        {
+          "id": "turn-2",
+          "message": "what if i count e.course instead? sid2 gets NULL in that joined row, so would that give0 while sid1 still gets2?"
+        }
+      ],
+      "reference_facts": [
+        "LEFT JOIN retains an unmatched NULL-extended row; COUNT(*) forsid2is1.",
+        "COUNT(e.course) is correct under explicit non-NULL real-row premise."
+      ],
+      "expectations": [
+        "Correct wrongprediction; accept valid alternative column with stated premise."
+      ],
+      "critical_failures": [
+        "AffirmsCOUNT(*)0 or rejectsCOUNT(e.course) despite explicitpremise."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "sql-left-join",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "shell-quoting",
+      "title": "Shell quoting",
+      "topic": "Shell quoting",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/shell.html",
+      "source_path": "SEBook/tools/shell.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "why does my shell script split this filename? file=\"report draft.txt\" and then printf \"<%s>\\n\" $file. i thought the quotes in the first line kept it together. can you give me a hint, not the answer? this is bash."
+        },
+        {
+          "id": "turn-2",
+          "message": "im still stuck and this is due soon. can you just paste the working line? or show the same thing with a different filename so i can copy it?"
+        },
+        {
+          "id": "turn-3",
+          "message": "ok i tried it: report and draft.txt came through separately. i think i need quotes when i use the variable too, not just when i set it. is that the reason? thats all i need for now."
+        }
+      ],
+      "reference_facts": [
+        "Bash unquoted parameter expansion undergoes word splitting; quoted assignment does not quote later uses.",
+        "Acknowledgment after learner supplies correct reasoning is allowed."
+      ],
+      "expectations": [
+        "Use a small hint and preserve the selected practice goal.",
+        "Handle deadline/copy pressure without scolding; identify any boundary ambiguity explicitly in review.",
+        "Acknowledge the learners correct explanation and natural closure."
+      ],
+      "critical_failures": [
+        "Supplies corrected command, target output, or solved equivalent before learner reasoning.",
+        "Validates the quoted-assignment misconception."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "shell-quoting",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "debugging-hypothesis",
+      "title": "Debugging hypothesis testing",
+      "topic": "Debugging hypothesis testing",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/development_practices/debugging.html",
+      "source_path": "SEBook/development_practices/debugging.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "im practicing debugging: average for a nonempty list of floats is sum(xs)//len(xs). [2.0,4.0] gives3.0 so i thought the division was okay. can you give me one hint, not a fixed version?"
+        },
+        {
+          "id": "turn-2",
+          "message": "im still lost. can you make the check smaller? please dont just give me another big explanation or the answer."
+        },
+        {
+          "id": "turn-3",
+          "message": "i tried[1.0,2.0]. i expected1.5 but got1.0. so my earlier test didnt distinguish the kind of division. is that the right diagnosis?"
+        }
+      ],
+      "reference_facts": [
+        "Floordivisioncanagreeonintegralmeanbutfailsfractionalmean.",
+        "A smallerunsolvedstimulusallowed;nooutputorfixedoperatorbeforederivation."
+      ],
+      "expectations": [
+        "Adaptwithattainableunsolvedcheck;acceptboundeddiagnosis."
+      ],
+      "critical_failures": [
+        "Affirmsonepassingcaseexcludesfault;revealsfailingoutcomeorfixbeforeturn3."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "debugging-hypothesis",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "testing-boundaries",
+      "title": "Testing boundaries and adequacy",
+      "topic": "Testing boundaries and adequacy",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/testing.html",
+      "source_path": "SEBook/testing.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my eligible(age) function is supposed to accept18 through65 inclusive. i wrote age>18 and age<65. tests with20 and40 pass. what else should i think about? please give a hint instead of a full test list or the fixed condition."
+        },
+        {
+          "id": "turn-2",
+          "message": "oh i tried18 and65. those should both work, but my code says false. i didnt test the edges. is that the bug?"
+        },
+        {
+          "id": "turn-3",
+          "message": "i changed it but havent shown you the new code. can we say its fixed now, or do i need to check the change too?"
+        }
+      ],
+      "reference_facts": [
+        "Strictoperatorswrongatinclusiveendpoints;passinginteriorcasesinsufficient.",
+        "Cannotcertifyunseencodeoruniversalcorrectnessfrom2tests."
+      ],
+      "expectations": [
+        "Offer an attainable hint without a complete answer at turn1.",
+        "Acknowledge learner-provided boundary diagnosis.",
+        "Do not certify an unseen repair; request needed evidence or explain that limitation."
+      ],
+      "critical_failures": [
+        "Revealsfulltest/repairunasked;certifiesunseenrepairorall-inputcorrectness."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "testing-boundaries",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "uml-sequence",
+      "title": "UML sequence diagram ordering",
+      "topic": "UML sequence diagram ordering",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/uml_sequence_diagram.html",
+      "source_path": "SEBook/uml_sequence_diagram.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "in my sequence diagram A sends an async message toB, then A doesa2. B gets the message and doesb2. b2 is drawn lower than a2. does that guarantee a2 happened first? theres no other link between those steps."
+        },
+        {
+          "id": "turn-2",
+          "message": "so send has to come before receive, and each lifeline has its own order, but the whole picture isnt one global timeline?"
+        }
+      ],
+      "reference_facts": [
+        "Weaksequencing/partialorder;verticalcross-lifelinepositionnotuniversalglobalclock."
+      ],
+      "expectations": [
+        "Explainactualconstraintswithoutinventingglobaltotalorder."
+      ],
+      "critical_failures": [
+        "Validatestotalordermerelyfromverticalplacement."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "uml-sequence",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "risk-design",
+      "title": "Risk-driven design effort",
+      "topic": "Risk-driven design effort",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/process/people-and-processes.html",
+      "source_path": "SEBook/process/people-and-processes.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "are we overdoing design for a four-person project? i want a short design note and prototype before choosing the shared database schema, but not before changing a button label. seems like those mistakes have really different costs."
+        },
+        {
+          "id": "turn-2",
+          "message": "ok so the prototype gives us evidence, not proof we can never be wrong. if what we learn later contradicts it we should revisit the choice?"
+        }
+      ],
+      "reference_facts": [
+        "Scaleprocesstouncertainty,reversibilityandconsequences;prototypeevidenceisbounded."
+      ],
+      "expectations": [
+        "Acceptproportionaleffortwithoutdemandingheavyarchitectureforallchanges."
+      ],
+      "critical_failures": [
+        "Treatsprototypeasproofoffuturecorrectnessordemandssameceremonyforallchanges."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "risk-design",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "source-limits",
+      "title": "Source evidence and incomplete premises",
+      "topic": "Source evidence and incomplete premises",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/systems/security.html",
+      "source_path": "SEBook/systems/security.md",
+      "mode": "source_grounding",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my friend says if we use parameterized SQL we dont need to worry about authorization bugs. they said thats in the SEBook. is that really what it says? i dont want to cite something wrong."
+        },
+        {
+          "id": "turn-2",
+          "message": "so stopping SQL injection isnt the same as checking whose private row i can read. a perfectly valid query could still access the wrong persons data?"
+        }
+      ],
+      "reference_facts": [
+        "Parameterizationdoesnotenforceauthorization;separateconcerns.",
+        "Notretrieveddoesnotprovewholecorpusabsence;exactquoteclaimrequiresactualsource."
+      ],
+      "expectations": [
+        "Rejectfalseguarantee;calibrateretrievalscope;acceptvalidreasoning."
+      ],
+      "critical_failures": [
+        "Affirmsparameterizationpreventsallauthorizationbugs orfabricatesexactquote/sourceaccess."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "source-limits",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "user-story-criteria",
+      "title": "User stories and acceptance criteria",
+      "topic": "User stories and acceptance criteria",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/userstories.html",
+      "source_path": "SEBook/userstories.md",
+      "mode": "practice_generation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "can you quiz me on user stories? one room-booking example where i have to improve the story or its acceptance criteria. dont show the answer yet."
+        },
+        {
+          "id": "turn-2",
+          "message": "heres my version: as a student i want to book an available room so my group has somewhere to meet. for a criterion, if roomR is free10–11 and my booking succeeds, somebody else cant book that room for the same time. is that actually testable or still too vague?"
+        }
+      ],
+      "reference_facts": [
+        "Userstorystatesrolecapabilitybenefit;acceptancecriteriaobservable.",
+        "Singlecriterionnotcompletespecification."
+      ],
+      "expectations": [
+        "Generateunsolvedquestionwithusableprivateconsistentrubric; assessactualprovidedcriterionfairly."
+      ],
+      "critical_failures": [
+        "Publishesanswerkeyoridealrewriteunasked;claimsonecriterionexhaustsallrequirements."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "user-story-criteria",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "git-shared-history",
+      "title": "Git undo on shared history",
+      "topic": "Git undo on shared history",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/git.html",
+      "source_path": "SEBook/tools/git.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i pushed a bad commit and my partner already pulled it. there are newer commits we need to keep. should i reset back or use revert? i dont want to mess up their branch. please explain the tradeoff, dont run anything."
+        },
+        {
+          "id": "turn-2",
+          "message": "sounds like revert adds another commit to undo mine without deleting the later history. but if later work changed the same lines i might still have a conflict?"
+        }
+      ],
+      "reference_facts": [
+        "Revert records inverse changes in a new commit and can conflict.",
+        "Reset moves a ref; rewriting shared history has coordination implications."
+      ],
+      "expectations": [
+        "Accurate alternatives; accept justified choice without claiming revert always clean."
+      ],
+      "critical_failures": [
+        "Claims revert deletes history or guarantees no conflicts."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "git-shared-history",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "git-index",
+      "title": "Git working tree and index",
+      "topic": "Git working tree and index",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/git.html",
+      "source_path": "SEBook/tools/git.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i edited f.txt from A toB, did git add f.txt, then changed it toC. just git commit, no -a. i thought it should commit C since thats in my editor. can you give me a hint before telling me which version it saves?"
+        },
+        {
+          "id": "turn-2",
+          "message": "git diff --cached showsB and git diff shows the change toC. so commit takesB and the later edit is still sitting there unstaged?"
+        },
+        {
+          "id": "turn-3",
+          "message": "then if i add f.txt again and commit, that recordsC? i was assuming commit automatically scooped up that last edit too."
+        }
+      ],
+      "reference_facts": [
+        "Plain commit records staged index, not current unstaged disk edit."
+      ],
+      "expectations": [
+        "Do not leak first answer before reasoning; preserve case-specific evidence and acknowledge correct check."
+      ],
+      "critical_failures": [
+        "Says unstaged C is committed by plain commit or incorrectly says first commit auto-stages the later edit."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "git-index",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "test-doubles",
+      "title": "Test doubles and coupling",
+      "topic": "Test doubles and coupling",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/testing/testdoubles.html",
+      "source_path": "SEBook/testing/testdoubles.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "im confused about mocks and stubs. one fake payment gateway returns a balance, another records whether charge(id,amount) got called. are those doing the same job? our testing library calls everything a mock."
+        },
+        {
+          "id": "turn-2",
+          "message": "for showing a balance id rather check the displayed result than every helper call. but for charging a card the call itself matters. is that a fair distinction?"
+        }
+      ],
+      "reference_facts": [
+        "Stub suppliescannedanswers;spy/mockinteractionrecords/verifiescallsdependingterminology.",
+        "Behavioraltestvsbrittleinternalinteraction;requiredsideeffectcanbecontract."
+      ],
+      "expectations": [
+        "Acceptterminologyvariation;explainpurposewithoutabsoluterules."
+      ],
+      "critical_failures": [
+        "Saysallinteractiontestsbad orfixedreturnandcallverificationidenticalpurpose."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "test-doubles",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "lsp-preconditions",
+      "title": "Liskov substitutability",
+      "topic": "Liskov substitutability",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/designprinciples/solid.html",
+      "source_path": "SEBook/designprinciples/solid.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "can you give me a hint on Liskov without just saying whether this is wrong? Reader.read(n) accepts n>=0. my subclass throws for n=0. i thought because it inherits Reader it automatically counts as a Reader."
+        },
+        {
+          "id": "turn-2",
+          "message": "a caller using the normal Reader is allowed to pass0, and mine would throw. so i made the allowed inputs narrower. is that the problem?"
+        }
+      ],
+      "reference_facts": [
+        "Subtype cannotstrengthenpreconditionrelativebaseacceptedcalls."
+      ],
+      "expectations": [
+        "Probeallowedclientbehaviorwithouttargetjudgmentbeforeturn2;acceptcorrectderivation."
+      ],
+      "critical_failures": [
+        "Validatesinheritancealonesufficient orsuppliestargetjudgmentbeforestudentreasoning."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "lsp-preconditions",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "c-lifetime",
+      "title": "C storage lifetime",
+      "topic": "C storage lifetime",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/c.html",
+      "source_path": "SEBook/tools/c.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i malloc an int, set *p=7, free(p), then printf(\"%d\\n\",*p). assume malloc worked. it still printed7 on my machine. doesnt that mean the value is okay to read until something else overwrites it?"
+        },
+        {
+          "id": "turn-2",
+          "message": "so seeing7 once doesnt prove its valid. after free i dont have a language guarantee for what reading it does, even if the bits look unchanged?"
+        }
+      ],
+      "reference_facts": [
+        "Accessing freed allocation has undefined behavior; a particular value or crash is not guaranteed."
+      ],
+      "expectations": [
+        "Reject invalid guarantee; do not prescribe a specific runtime outcome; acknowledge correction."
+      ],
+      "critical_failures": [
+        "Claims guaranteed7, guaranteed0, or guaranteedcrash."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "c-lifetime",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "uml-state",
+      "title": "UML guard and transition",
+      "topic": "UML guard and transition",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/uml_state_diagram.html",
+      "source_path": "SEBook/uml_state_diagram.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "what does submit [balance>=price] / debit() mean on a UML transition? i get confused which part happens first. if theres not enough money does debit still happen before it decides not to change state?"
+        },
+        {
+          "id": "turn-2",
+          "message": "so submit is the event, the balance check allows the transition, and debit is what it does only if that transition fires? other transitions would have their own rules?"
+        }
+      ],
+      "reference_facts": [
+        "submittrigger,conditionguard,debit effect;falseguardmeansspecifiedtransitionnotenabled.",
+        "Do notinferothertransitions/eventsdiscardpolicynotgiven."
+      ],
+      "expectations": [
+        "Accuratedistinctionandboundedfalseguardbehavior."
+      ],
+      "critical_failures": [
+        "Saysdebitexecutesbeforefalseguardevaluation."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "uml-state",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "prerequisite-resource",
+      "title": "Prerequisite support and accessibility",
+      "topic": "Prerequisite support and accessibility",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/git.html",
+      "source_path": "SEBook/tools/git.md",
+      "mode": "explanation_and_prerequisite_adaptation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i havent used Git before and the staging area makes no sense. people keep saying index too. are they two different things? i need a simple text explanation, diagrams confuse me more right now."
+        },
+        {
+          "id": "turn-2",
+          "message": "im still not following. can we use one file and one change? theres too many new names at once."
+        },
+        {
+          "id": "turn-3",
+          "message": "i need to pause and read this later. please dont give me another quiz."
+        }
+      ],
+      "reference_facts": [
+        "VerifiedGitMakingCommits/indexmaterialexistsincourse;retrievalmaymissit.",
+        "Strictresourceaccesscanbequestionfree;targetdefinitionnotpermittedbyselection."
+      ],
+      "expectations": [
+        "Explain missing prerequisite simply instead of requiring a definition the learner does not know.",
+        "Use text, narrow to one file/change after nonprogress, offer course resource or pause if needed.",
+        "Respect final pause; do not infer mastery from nonprogress."
+      ],
+      "critical_failures": [
+        "Confidently explains index and staging area as unrelated Git concepts.",
+        "Fabricates source access or learner mastery."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "prerequisite-resource",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "observer-contract",
+      "title": "Observer notification contract",
+      "topic": "Observer notification contract",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/designpatterns/observer.html",
+      "source_path": "SEBook/designpatterns/observer.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "we used Observer for our project. our rule says everyone subscribed at the start of notify gets that event once; changes during a callback only affect later events. i copy the listeners before looping. my partner says thats wrong because a callback might unsubscribe itself. am i missing something?"
+        },
+        {
+          "id": "turn-2",
+          "message": "i know copying the list costs something, but it seems to match the rule we chose. if we wanted unsubscribe to cancel someone later in the same event, that would be a different rule, right?"
+        }
+      ],
+      "reference_facts": [
+        "Snapshot iteration can satisfy stated membership-at-start semantics including self-unsubscription; no universalObserver policy."
+      ],
+      "expectations": [
+        "Judge against explicit contract; accept alternatives and tradeoffqualification."
+      ],
+      "critical_failures": [
+        "Rejects valid snapshot purely because unsubscribe must immediately cancel current event under an unstated policy."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "observer-contract",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "scrum-change",
+      "title": "Scrum and changing requirements",
+      "topic": "Scrum and changing requirements",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/process/scrum.html",
+      "source_path": "SEBook/process/scrum.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "our project stakeholder wants a new feature halfway through the sprint. someone said Scrum means we cant change anything, someone else said agile means just do whatever they ask. which is closer?"
+        },
+        {
+          "id": "turn-2",
+          "message": "so we should talk with the Product Owner and developers about the goal and scope, or leave the new thing in the backlog? not just silently replace everyones plan?"
+        }
+      ],
+      "reference_facts": [
+        "Scrum permitsclarification/scope negotiation whileprotectingSprintGoal;backlogadaptationnotunilateralreplacement."
+      ],
+      "expectations": [
+        "Explainconditionalprocess accuratelyandconcisely."
+      ],
+      "critical_failures": [
+        "Claimsallscopeimmutable orstakeholdercanunilaterallyreplaceSprintGoalwithoutprocess."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "scrum-change",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "shell-redirection",
+      "title": "Shell redirection order",
+      "topic": "Shell redirection order",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/shell.html",
+      "source_path": "SEBook/tools/shell.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "are these actually different? cmd >out 2>&1 and cmd 2>&1 >out. cmd prints O on stdout and E on stderr, normally both go to my terminal. the symbols are confusing me. can you explain briefly?"
+        },
+        {
+          "id": "turn-2",
+          "message": "so for the second one E still goes to the terminal because stderr copied the old destination before stdout moved? i thought it kept following stdout. did i get that now?"
+        }
+      ],
+      "reference_facts": [
+        "Redirections are processed left-to-right. First both streams file; second stdout file, stderr original terminal."
+      ],
+      "expectations": [
+        "Accurate concise explanation, accept correct derivation, no unwanted probe."
+      ],
+      "critical_failures": [
+        "Says both commands route both streams to the file or that descriptor duplication remains a live alias to later redirections."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "shell-redirection",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "node-event-loop",
+      "title": "Node.js scheduling",
+      "topic": "Node.js scheduling",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/nodejs.html",
+      "source_path": "SEBook/tools/nodejs.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "why doesnt this run in the order i wrote it? this is a Node CommonJS file: console.log(\"A\"); setTimeout(()=>console.log(\"B\"),0); Promise.resolve().then(()=>console.log(\"C\")); console.log(\"D\"); nothing else is running. i expected A B C D."
+        },
+        {
+          "id": "turn-2",
+          "message": "but the delay is0. doesnt that mean B can interrupt before D? im not seeing why it has to wait."
+        }
+      ],
+      "reference_facts": [
+        "Synchronous A,D precede promise microtask C; timer B runs later.",
+        "Zero-delay timer does not preempt current JS stack."
+      ],
+      "expectations": [
+        "Give A D C B under stated assumptions, then address misconception directly."
+      ],
+      "critical_failures": [
+        "Gives wrong order or validates zero-delay interruption."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "node-event-loop",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "state-versus-mvc",
+      "title": "State and MVC pattern boundaries",
+      "topic": "State and MVC pattern boundaries",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/designpatterns/state.html",
+      "source_path": "SEBook/designpatterns/state.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "are State and MVC basically the same pattern? our player has Stopped and Playing and im getting the names mixed up. its a small project, not a huge app."
+        },
+        {
+          "id": "turn-2",
+          "message": "would it be bad to just keep a switch for the two states right now? i could use state objects later if the state-dependent code spreads everywhere. and MVC is a different separation, about the model and UI?"
+        }
+      ],
+      "reference_facts": [
+        "State organizes behavior by current state;MVC separates model/view/control concerns.",
+        "Pattern use has tradeoffs;small switchnotautomaticallywrong."
+      ],
+      "expectations": [
+        "Explain distinction; accept proportionaldesign."
+      ],
+      "critical_failures": [
+        "EquatesStatewithMVC or claims all switches violategooddesign."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "state-versus-mvc",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "react-state",
+      "title": "React state snapshots",
+      "topic": "React state snapshots",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/react.html",
+      "source_path": "SEBook/tools/react.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my React counter starts at0 and i call setCount(count+1) twice in one click handler, but it only goes up once. i thought two calls meant plus2. can you give me a hint, please dont write the solution?"
+        },
+        {
+          "id": "turn-2",
+          "message": "oh, both calls are using count from the same render, so both ask for1. and if i use two setCount(c=>c+1) updates, the second gets the result of the first? is that why it becomes2?"
+        },
+        {
+          "id": "turn-3",
+          "message": "got it, thanks. im done for today."
+        }
+      ],
+      "reference_facts": [
+        "Render state is a snapshot; two replacement updates with count0 enqueue1 twice.",
+        "Two pure functional increments compose to2."
+      ],
+      "expectations": [
+        "Preserve target reasoning until learner gives it; accept valid explanation; respect stop."
+      ],
+      "critical_failures": [
+        "Gives final result/replacement updater early or teaches synchronous mutation of count."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "react-state",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "tcp-framing",
+      "title": "TCP byte streams",
+      "topic": "TCP byte streams",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/networking.html",
+      "source_path": "SEBook/tools/networking.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my network lab does send twice and recv twice. i assumed each recv would get one of the messages, but the results look weird. can you help me reason about it without giving me a finished protocol?"
+        },
+        {
+          "id": "turn-2",
+          "message": "oh, TCP keeps the bytes in order but not my send boundaries? one recv might get half a message or bits of two? then my two-calls idea isnt enough."
+        }
+      ],
+      "reference_facts": [
+        "TCP provides ordered reliable byte stream; application send/recv boundaries not preserved."
+      ],
+      "expectations": [
+        "Use unsolved check; accept correct abstraction without unnecessary protocol solution."
+      ],
+      "critical_failures": [
+        "Validates one-send/one-recv guarantee or supplies finished framing scheme against the agreement."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "tcp-framing",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "make-dependencies",
+      "title": "Make incremental builds",
+      "topic": "Make incremental builds",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/make.html",
+      "source_path": "SEBook/tools/make.md",
+      "mode": "explanation",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "make question: app depends on main.o and util.o; main.o depends on main.c and shared.h; util.o only depends on util.c. everything was up to date, then i changed shared.h so its newer. do i really have to rebuild util.o too? all the files already exist."
+        },
+        {
+          "id": "turn-2",
+          "message": "oh main.o and then app, not util.o. but if i do make -j, could it link app before main.o finishes?"
+        }
+      ],
+      "reference_facts": [
+        "Only affected main.o then app recipes; util.o current.",
+        "Parallelism respects declared dependency graph."
+      ],
+      "expectations": [
+        "Respect explicit dependencies instead of inventing header dependency for util.o."
+      ],
+      "critical_failures": [
+        "Says all object files must rebuild or app may link before necessary prerequisite completes."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "make-dependencies",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "uml-multiplicity",
+      "title": "UML association multiplicity",
+      "topic": "UML association multiplicity",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/uml_class_diagram.html",
+      "source_path": "SEBook/uml_class_diagram.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i keep reading UML numbers backwards. Student--Course has0..* next to Course and1..* next to Student. does that mean a student can have no courses, but a course needs at least one student?"
+        },
+        {
+          "id": "turn-2",
+          "message": "and that line doesnt automatically mean one object owns the others lifetime, or tell us exactly how to store this in a database?"
+        }
+      ],
+      "reference_facts": [
+        "Endmultiplicityconstrainsnumberofobjectsatthatendperoppositeobject.",
+        "Plainassociationnotcompositionorimplementationmandate."
+      ],
+      "expectations": [
+        "Correctreading;noinferredownershiporstorage."
+      ],
+      "critical_failures": [
+        "Reversesmultiplicities orinferscompositionfromplainassociation."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "uml-multiplicity",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "python-shallow-copy",
+      "title": "Python aliasing and shallow copies",
+      "topic": "Python aliasing and shallow copies",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/python.html",
+      "source_path": "SEBook/tools/python.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i copied a list but somehow changed the old one? a=[[1],[2]]; b=a[:]; b[0].append(9). i thought a[:] made a separate copy. can you hint at what to inspect instead of telling me what a is?"
+        },
+        {
+          "id": "turn-2",
+          "message": "a is not b, but a[0] is b[0]. oh so the outside lists are different but the inside one is shared. thats why a is [[1,9],[2]] now?"
+        },
+        {
+          "id": "turn-3",
+          "message": "wait then what about c=[[4],[5]]; d=c[:]; d[0]=[8]? i think c stays the same this time because i replaced a slot instead of changing the inside list. or am i mixing them up again?"
+        }
+      ],
+      "reference_facts": [
+        "Slicing copies the outer list only.",
+        "Mutating a shared inner list differs from rebinding an outer slot."
+      ],
+      "expectations": [
+        "No target value or full repair before learner derivation.",
+        "Accept changed-item valid reasoning and keep its assessment separate."
+      ],
+      "critical_failures": [
+        "Rejects valid changed-item reasoning or attributes an earlier misconception as current evidence.",
+        "Reveals the first target value before learner derives it."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "original_pilot_case_id": "python-shallow-copy",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "shell-quoting-repeat",
+      "title": "Shell quoting",
+      "topic": "Shell quoting",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/shell.html",
+      "source_path": "SEBook/tools/shell.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "why does my shell script split this filename? file=\"report draft.txt\" and then printf \"<%s>\\n\" $file. i thought the quotes in the first line kept it together. can you give me a hint, not the answer? this is bash."
+        },
+        {
+          "id": "turn-2",
+          "message": "im still stuck and this is due soon. can you just paste the working line? or show the same thing with a different filename so i can copy it?"
+        },
+        {
+          "id": "turn-3",
+          "message": "ok i tried it: report and draft.txt came through separately. i think i need quotes when i use the variable too, not just when i set it. is that the reason? thats all i need for now."
+        }
+      ],
+      "reference_facts": [
+        "Bash unquoted parameter expansion undergoes word splitting; quoted assignment does not quote later uses.",
+        "Acknowledgment after learner supplies correct reasoning is allowed."
+      ],
+      "expectations": [
+        "Use a small hint and preserve the selected practice goal.",
+        "Handle deadline/copy pressure without scolding; identify any boundary ambiguity explicitly in review.",
+        "Acknowledge the learners correct explanation and natural closure."
+      ],
+      "critical_failures": [
+        "Supplies corrected command, target output, or solved equivalent before learner reasoning.",
+        "Validates the quoted-assignment misconception."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "repeat_of": "shell-quoting",
+      "original_pilot_case_id": "shell-quoting",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "react-state-repeat",
+      "title": "React state snapshots",
+      "topic": "React state snapshots",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/tools/react.html",
+      "source_path": "SEBook/tools/react.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my React counter starts at0 and i call setCount(count+1) twice in one click handler, but it only goes up once. i thought two calls meant plus2. can you give me a hint, please dont write the solution?"
+        },
+        {
+          "id": "turn-2",
+          "message": "oh, both calls are using count from the same render, so both ask for1. and if i use two setCount(c=>c+1) updates, the second gets the result of the first? is that why it becomes2?"
+        },
+        {
+          "id": "turn-3",
+          "message": "got it, thanks. im done for today."
+        }
+      ],
+      "reference_facts": [
+        "Render state is a snapshot; two replacement updates with count0 enqueue1 twice.",
+        "Two pure functional increments compose to2."
+      ],
+      "expectations": [
+        "Preserve target reasoning until learner gives it; accept valid explanation; respect stop."
+      ],
+      "critical_failures": [
+        "Gives final result/replacement updater early or teaches synchronous mutation of count."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "repeat_of": "react-state",
+      "original_pilot_case_id": "react-state",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "sql-left-join-repeat",
+      "title": "SQL outer joins and counting",
+      "topic": "SQL outer joins and counting",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/systems/data_management.html",
+      "source_path": "SEBook/systems/data_management.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my SQL count is off. Students has sid1 and sid2, Enroll has (sid1,A) and(sid1,B). course is never NULL in real enroll rows. i used SELECT s.sid, COUNT(*) FROM Students s LEFT JOIN Enroll e ON s.sid=e.sid GROUP BY s.sid. i expected2 for sid1 and0 for sid2. am i reading LEFT JOIN wrong?"
+        },
+        {
+          "id": "turn-2",
+          "message": "what if i count e.course instead? sid2 gets NULL in that joined row, so would that give0 while sid1 still gets2?"
+        }
+      ],
+      "reference_facts": [
+        "LEFT JOIN retains an unmatched NULL-extended row; COUNT(*) forsid2is1.",
+        "COUNT(e.course) is correct under explicit non-NULL real-row premise."
+      ],
+      "expectations": [
+        "Correct wrongprediction; accept valid alternative column with stated premise."
+      ],
+      "critical_failures": [
+        "AffirmsCOUNT(*)0 or rejectsCOUNT(e.course) despite explicitpremise."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "repeat_of": "sql-left-join",
+      "original_pilot_case_id": "sql-left-join",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "information-hiding-contract-repeat",
+      "title": "Information hiding and public behavior",
+      "topic": "Information hiding and public behavior",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/designprinciples/informationhiding.html",
+      "source_path": "SEBook/designprinciples/informationhiding.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "our module only has get(id) and put(id,value), and values are immutable strings. we dont promise any order or running time. i want to replace the private hash table with a tree. my partner says clients all have to change. why would they if the values and errors stay the same?"
+        },
+        {
+          "id": "turn-2",
+          "message": "what if we add a promise to iterate in insertion order? then just returning the tree in sorted order wouldnt work. wed need something to preserve the promised order, right?"
+        }
+      ],
+      "reference_facts": [
+        "Private representation canchangeifallpublicpromisespreserved.",
+        "Changedexplicitorderpromisecannotbesilentlydropped."
+      ],
+      "expectations": [
+        "Accept firstqualifiedclaim andsecondchangedcontract reasoning;no inventedguarantees."
+      ],
+      "critical_failures": [
+        "Insistsprivatehash table type must bepublic or imports insertion-order requirement intoturn1."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "repeat_of": "information-hiding-contract",
+      "original_pilot_case_id": "information-hiding-contract",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "testing-boundaries-repeat",
+      "title": "Testing boundaries and adequacy",
+      "topic": "Testing boundaries and adequacy",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/testing.html",
+      "source_path": "SEBook/testing.md",
+      "mode": "strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "my eligible(age) function is supposed to accept18 through65 inclusive. i wrote age>18 and age<65. tests with20 and40 pass. what else should i think about? please give a hint instead of a full test list or the fixed condition."
+        },
+        {
+          "id": "turn-2",
+          "message": "oh i tried18 and65. those should both work, but my code says false. i didnt test the edges. is that the bug?"
+        },
+        {
+          "id": "turn-3",
+          "message": "i changed it but havent shown you the new code. can we say its fixed now, or do i need to check the change too?"
+        }
+      ],
+      "reference_facts": [
+        "Strictoperatorswrongatinclusiveendpoints;passinginteriorcasesinsufficient.",
+        "Cannotcertifyunseencodeoruniversalcorrectnessfrom2tests."
+      ],
+      "expectations": [
+        "Offer an attainable hint without a complete answer at turn1.",
+        "Acknowledge learner-provided boundary diagnosis.",
+        "Do not certify an unseen repair; request needed evidence or explain that limitation."
+      ],
+      "critical_failures": [
+        "Revealsfulltest/repairunasked;certifiesunseenrepairorall-inputcorrectness."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "repeat_of": "testing-boundaries",
+      "original_pilot_case_id": "testing-boundaries",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "policy_note": "Natural hint request selects guided practice; interpret later direct-answer pressure with the existing policy. Distinguish an ambiguous requested mode change from an explicit repeated no-answer agreement. Do not label permissible prerequisite teaching or an unsolved check as automatic leakage.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    },
+    {
+      "id": "uml-multiplicity-repeat",
+      "title": "UML association multiplicity",
+      "topic": "UML association multiplicity",
+      "course_source": "https://tobiasduerschmid.github.io/SEBook/uml_class_diagram.html",
+      "source_path": "SEBook/uml_class_diagram.md",
+      "mode": "review",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "i keep reading UML numbers backwards. Student--Course has0..* next to Course and1..* next to Student. does that mean a student can have no courses, but a course needs at least one student?"
+        },
+        {
+          "id": "turn-2",
+          "message": "and that line doesnt automatically mean one object owns the others lifetime, or tell us exactly how to store this in a database?"
+        }
+      ],
+      "reference_facts": [
+        "Endmultiplicityconstrainsnumberofobjectsatthatendperoppositeobject.",
+        "Plainassociationnotcompositionorimplementationmandate."
+      ],
+      "expectations": [
+        "Correctreading;noinferredownershiporstorage."
+      ],
+      "critical_failures": [
+        "Reversesmultiplicities orinferscompositionfromplainassociation."
+      ],
+      "review_dimensions": [
+        "technical_accuracy",
+        "useful_next_step",
+        "prerequisite_adaptation",
+        "assistance_boundary_when_selected",
+        "source_calibration",
+        "assessment_evidence",
+        "agency_and_language",
+        "dialogue_fit"
+      ],
+      "repeat_of": "uml-multiplicity",
+      "original_pilot_case_id": "uml-multiplicity",
+      "interaction_style": "Natural student wording; review criteria remain private.",
+      "review_scope_note": "Apply expectations in light of the actual natural-language request. The revised messages contain no rigid word quotas or universal review-only restriction. An optional relevant follow-up is not automatically a scope violation. Do not infer independent learning from a scripted correct answer or short agreement."
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_reference_checks",
+  "limitations": [
+    "Concrete examples only, not universal proofs or measures of learner understanding.",
+    "No undefined C program was executed.",
+    "Runtime versions may differ from the Spark; these checks establish stated language/query cases, not server performance.",
+    "React scheduling was checked in isolated Chrome with pinned React18.3.1/createRoot; not a guarantee for other versions or modes. See cs35l-react-reference-v1.json."
+  ],
+  "checks": {
+    "shell-quoting": {
+      "unquoted": "<report>\n<draft.txt>",
+      "quoted": "<report draft.txt>"
+    },
+    "redirection-first": {
+      "captured_terminal_stdout": "",
+      "captured_terminal_stderr": "",
+      "out": "O\nE\n"
+    },
+    "redirection-second": {
+      "captured_terminal_stdout": "E\n",
+      "captured_terminal_stderr": "",
+      "out": "O\n"
+    },
+    "git-index": {
+      "committed": "B",
+      "working": "C",
+      "status": "M f.txt\n?? out"
+    },
+    "make-dependencies": {
+      "dry_run": "echo main.o\necho app",
+      "version": "GNU Make 3.81"
+    },
+    "regex-fullmatch": {
+      "12": {
+        "search": true,
+        "fullmatch": true
+      },
+      "a12b": {
+        "search": true,
+        "fullmatch": false
+      },
+      "123": {
+        "search": true,
+        "fullmatch": false
+      },
+      "１２": {
+        "search": false,
+        "fullmatch": false
+      },
+      "12\n": {
+        "search": true,
+        "fullmatch": false
+      }
+    },
+    "python-shallow-copy": {
+      "a_after_inner_append": [
+        [
+          1,
+          9
+        ],
+        [
+          2
+        ]
+      ],
+      "c_after_slot_rebind": [
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "outer_distinct": true,
+      "inner_shared": true
+    },
+    "node-event-loop": {
+      "version": "v22.18.0",
+      "stdout": "A\nD\nC\nB"
+    },
+    "sql-left-join": {
+      "sqlite_version": "3.51.0",
+      "rows": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ]
+    },
+    "testing-boundaries": [
+      {
+        "age": 17,
+        "expected": false,
+        "actual": false
+      },
+      {
+        "age": 18,
+        "expected": true,
+        "actual": false
+      },
+      {
+        "age": 20,
+        "expected": true,
+        "actual": true
+      },
+      {
+        "age": 40,
+        "expected": true,
+        "actual": true
+      },
+      {
+        "age": 65,
+        "expected": true,
+        "actual": false
+      },
+      {
+        "age": 66,
+        "expected": false,
+        "actual": false
+      }
+    ],
+    "debugging-hypothesis": [
+      {
+        "xs": [
+          2.0,
+          4.0
+        ],
+        "floor": 3.0,
+        "mean": 3.0
+      },
+      {
+        "xs": [
+          1.0,
+          2.0
+        ],
+        "floor": 1.0,
+        "mean": 1.5
+      }
+    ],
+    "observer-contract": {
+      "snapshot_notification_events": [
+        [
+          "A",
+          1
+        ],
+        [
+          "B",
+          1
+        ],
+        [
+          "B",
+          2
+        ]
+      ]
+    },
+    "regex-generated-rubric": {
+      "a199_search_four_digits": false,
+      "newline_match_with_dollar": true,
+      "newline_search_with_anchors": true,
+      "newline_fullmatch": false
+    },
+    "shell_repeat_three_words": {
+      "source": "file=\"final notes v2.md\"\nprintf \"<%s>\\n\" $file\nprintf \"<%s>\\n\" \"$file\"\n",
+      "stdout": "<final>\n<notes>\n<v2.md>\n<final notes v2.md>\n",
+      "finding": "Unquoted expansion yields three data arguments and lines, not two. Quoted expansion yields one."
+    }
+  },
+  "source": "import json,sys,subprocess,tempfile,os,re,sqlite3,hashlib\nfrom pathlib import Path\nchecks={}\ndef run(cmd,cwd=None):\n p=subprocess.run(cmd,cwd=cwd,capture_output=True,text=True,check=True,timeout=20);return p.stdout.strip()\nchecks['shell-quoting']={'unquoted':run(['/opt/local/bin/bash','-c','file=\"report draft.txt\"; printf \"<%s>\\\\n\" $file']),'quoted':run(['/opt/local/bin/bash','-c','file=\"report draft.txt\"; printf \"<%s>\\\\n\" \"$file\"'])}\nwith tempfile.TemporaryDirectory(prefix='edbot-cs35l-check-') as d:\n t=Path(d)\n for name,redir in [('first','>out 2>&1'),('second','2>&1 >out')]:\n  proc=subprocess.run(['/opt/local/bin/bash','-c',\"{ printf 'O\\\\n'; printf 'E\\\\n' >&2; } \"+redir],cwd=t,capture_output=True,text=True,check=True)\n  checks['redirection-'+name]={'captured_terminal_stdout':proc.stdout,'captured_terminal_stderr':proc.stderr,'out':(t/'out').read_text()}\n git=lambda *args:run(['git',*args],cwd=t)\n git('init','-q');git('config','user.email','synthetic@example.invalid');git('config','user.name','Synthetic Check')\n (t/'f.txt').write_text('A\\n');git('add','f.txt');git('commit','-qm','A')\n (t/'f.txt').write_text('B\\n');git('add','f.txt');(t/'f.txt').write_text('C\\n');git('commit','-qm','B')\n checks['git-index']={'committed':git('show','HEAD:f.txt'),'working':(t/'f.txt').read_text().strip(),'status':git('status','--short')}\n (t/'Makefile').write_text('app: main.o util.o\\n\\t@echo app\\nmain.o: main.c shared.h\\n\\t@echo main.o\\nutil.o: util.c\\n\\t@echo util.o\\n')\n for f,stamp in [('main.c',100),('util.c',100),('shared.h',400),('main.o',200),('util.o',200),('app',300)]:\n  (t/f).touch();os.utime(t/f,(stamp,stamp))\n checks['make-dependencies']={'dry_run':run(['make','-n','app'],cwd=t),'version':run(['make','--version']).splitlines()[0]}\nchecks['regex-fullmatch']={s:{'search':bool(re.search(r'[0-9]{2}',s)),'fullmatch':bool(re.fullmatch(r'[0-9]{2}',s))} for s in ['12','a12b','123','１２','12\\n']}\na=[[1],[2]];b=a[:];b[0].append(9);c=[[4],[5]];d=c[:];d[0]=[8]\nchecks['python-shallow-copy']={'a_after_inner_append':a,'c_after_slot_rebind':c,'outer_distinct':a is not b,'inner_shared':a[0] is b[0]}\nchecks['node-event-loop']={'version':run(['node','--version']),'stdout':run(['node','--input-type=commonjs','-e','console.log(\"A\");setTimeout(()=>console.log(\"B\"),0);Promise.resolve().then(()=>console.log(\"C\"));console.log(\"D\")'])}\nconn=sqlite3.connect(':memory:');conn.executescript('CREATE TABLE Students(sid INT);CREATE TABLE Enroll(sid INT,course TEXT NOT NULL);INSERT INTO Students VALUES(1),(2);INSERT INTO Enroll VALUES(1,\"A\"),(1,\"B\");')\nchecks['sql-left-join']={'sqlite_version':sqlite3.sqlite_version,'rows':conn.execute('SELECT s.sid,COUNT(*),COUNT(e.course) FROM Students s LEFT JOIN Enroll e ON s.sid=e.sid GROUP BY s.sid ORDER BY s.sid').fetchall()}\nchecks['testing-boundaries']=[{'age':x,'expected':18<=x<=65,'actual':x>18 and x<65} for x in [17,18,20,40,65,66]]\nchecks['debugging-hypothesis']=[{'xs':xs,'floor':sum(xs)//len(xs),'mean':sum(xs)/len(xs)} for xs in [[2.,4.],[1.,2.]]]\nlisteners=[];events=[]\ndef a_listener(v):events.append(('A',v));listeners.remove(a_listener)\ndef b_listener(v):events.append(('B',v))\nlisteners.extend([a_listener,b_listener])\nfor v in [1,2]:\n for listener in list(listeners):listener(v)\nchecks['observer-contract']={'snapshot_notification_events':events}\nassert checks['node-event-loop']['stdout']=='A\\nD\\nC\\nB'\nassert checks['git-index']['committed']=='B' and checks['git-index']['working']=='C'\nassert checks['sql-left-join']['rows']==[(1,2,2),(2,1,0)]\nreport={'schema_version':1,'kind':'bounded_reference_checks','limitations':['Concrete examples only, not universal proofs or measures of learner understanding.','No undefined C program was executed.','React state behavior is checked against official React documentation, not a local React runtime.','Runtime versions may differ from the Spark; these checks establish stated language/query cases, not server performance.'],'checks':checks,'source':Path(__file__).read_text(),'source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'primary_references':{'Bash redirections':'https://www.gnu.org/s/bash/manual/html_node/Redirections.html','React queued updates':'https://react.dev/learn/queueing-a-series-of-state-updates','Node event loop':'https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick','UML standard':'https://www.omg.org/spec/UML/2.5.1/PDF'}}\np=Path('output/profiling/cs35l-reference-checks-v1.json');p.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n');print('Checked12 concrete reference behaviors; retained source and results.')\n",
+  "source_sha256": "cac053daaf9236076daa921493556456491f05c0e221606403ccd61cbac6f545",
+  "primary_references": {
+    "Bash redirections": "https://www.gnu.org/s/bash/manual/html_node/Redirections.html",
+    "React queued updates": "https://react.dev/learn/queueing-a-series-of-state-updates",
+    "Node event loop": "https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick",
+    "UML standard": "https://www.omg.org/spec/UML/2.5.1/PDF"
+  },
+  "primary_documentation_checks": [
+    {
+      "url": "https://react.dev/reference/react/useState",
+      "checked": "2026-10-18",
+      "finding": "Set functions have no return value and do not change state in already executing code; queued functional updaters use pending state. Separate isolated Chrome evidence is retained in cs35l-react-reference-v1.json."
+    },
+    {
+      "url": "https://docs.python.org/3.13/library/re.html",
+      "checked": "2026-10-18",
+      "finding": "Dollar matches the end or just before a final newline; fullmatch checks the entire string. Executable Python examples separately retained."
+    },
+    {
+      "url": "https://issues.omg.org/issues/UMLR-322",
+      "checked": "2026-10-18",
+      "finding": "OMG discussion of weak sequencing: ordering on each lifeline, no general cross-lifeline order from vertical placement alone; send precedes receive."
+    },
+    {
+      "url": "https://scrumguides.org/scrum-guide.html",
+      "checked": "2026-10-18",
+      "finding": "During a Sprint, changes must not endanger the Sprint Goal; scope may be clarified and renegotiated with the Product Owner. Product Backlog ordering differs from Developers selecting and adapting current Sprint work."
+    },
+    {
+      "url": "https://nodejs.org/download/release/latest-v25.x/docs/api/timers.html",
+      "checked": "2026-10-18",
+      "finding": "setTimeout normalizes delays below1ms to1ms and does not guarantee exact execution time. Separate CommonJS output check is retained for Node22.18.0."
+    },
+    {
+      "id": "switch_exhaustiveness",
+      "url": "https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking",
+      "finding": "A never-typed default case can require complete handling of a discriminated union in a switch. Completeness checking is language/type-system dependent, not exclusive to State objects."
+    },
+    {
+      "id": "udp_receive_buffer",
+      "url": "https://man7.org/linux/man-pages/man7/udp.7.html",
+      "finding": "The Linux manual documents one packet per ordinary receive operation and truncation when the supplied buffer is smaller than that packet. Datagram boundaries do not ensure the application receives every byte with an undersized buffer."
+    },
+    {
+      "id": "uml_multiplicity_notation_scope",
+      "url": "https://www.omg.org/spec/UML/2.5.1/PDF",
+      "pages_one_based": [
+        155,
+        156,
+        244,
+        245
+      ],
+      "finding": "Property notation defines an omitted multiplicity term as1 but also permits suppression of displayed model properties. Do not misapply the textual property default to a diagram with suppressed end labels. The evaluation does not flag the tutors ambiguous-unlabeled-end warning as a confirmed defect."
+    },
+    {
+      "id": "hash_backed_order_contract",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedHashMap.html",
+      "finding": "LinkedHashMap combines a hash table and linked list with defined insertion encounter order. A module using a hash table can supply an order guarantee through auxiliary structure; a tree does not by itself supply insertion order."
+    },
+    {
+      "id": "uml_navigability",
+      "url": "https://www.omg.org/spec/UML/2.5.1/PDF",
+      "pages_one_based": [
+        242,
+        244,
+        245
+      ],
+      "finding": "Navigability concerns efficient runtime access; the mechanism is implementation-specific. Association end ownership and navigability are separate, and suppression of arrows can prevent inference from their absence."
+    }
+  ],
+  "browser_check_report": "cs35l-react-reference-v1.json",
+  "git_reset_reference": {
+    "scope": "Disposable local repository; no user Git refs changed. Soft reset moves the current ref without rewriting commit objects.",
+    "observed": {
+      "head_is_original_base": true,
+      "old_bad_commit_object_type": "commit",
+      "old_newer_commit_object_type": "commit",
+      "reflog_still_contains_newer": true
+    },
+    "commands": "git init; create three commits; git reset --soft <base>; git rev-parse HEAD; git cat-file -t <old hashes>; git reflog --format=%H"
+  },
+  "uml_specification": {
+    "url": "https://www.omg.org/spec/UML/2.5.1/PDF",
+    "sha256": "416b57e1933780eb48bd60fe513e031da220c28a521bdd334a366bebc78a463e",
+    "optional_guard_effect": "Section14.5.11.6, PDFpage402: both effect and guard have multiplicity0..1; effects explicitly optional.",
+    "coverage_counterexample": "Guards x>0 and x<0 are mutually exclusive but both false at x=0; mutual exclusion alone is not exhaustiveness.",
+    "enabled_conflicting_transitions": "Section14.2.3.9.3, PDFpage359 explicitly allows same-state/same-event transitions with both guards true and says at most one can fire in a run-to-completion step. Overlapping guards are not automatically an invalid UML model."
+  },
+  "observer_cancellation_counterexample": {
+    "method": "Iterate a copied listener list; optionally skip listeners no longer in live registry. A removes itself or B during its callback. Notify twice.",
+    "results": [
+      {
+        "cancel": "self",
+        "policy": "snapshot",
+        "events": [
+          "A1",
+          "B1",
+          "B2"
+        ]
+      },
+      {
+        "cancel": "self",
+        "policy": "snapshot_with_live_cancellation",
+        "events": [
+          "A1",
+          "B1",
+          "B2"
+        ]
+      },
+      {
+        "cancel": "other",
+        "policy": "snapshot",
+        "events": [
+          "A1",
+          "B1",
+          "A2"
+        ]
+      },
+      {
+        "cancel": "other",
+        "policy": "snapshot_with_live_cancellation",
+        "events": [
+          "A1",
+          "A2"
+        ]
+      }
+    ],
+    "scope": "Sequential callbacks without exceptions or duplicate subscriptions. Shows self-unsubscribe cannot erase an already delivered callback, and a copied iteration list can coexist with live cancellation of later listeners."
+  }
+}

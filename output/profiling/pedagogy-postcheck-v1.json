@@ -1,0 +1,7 @@
+{
+  "health_http_status": 200,
+  "runtime_source_hash_mismatches": [],
+  "original_server_pid_exists": true,
+  "source_manifest_report_sha256": "fc5905fbb20a70552cdc0d1ae55f5accce356543f1868c20cca55d7d2cb97711",
+  "note": "Read-only post-experiment checks; no server restart."
+}

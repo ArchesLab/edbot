@@ -1,0 +1,19 @@
+{
+  "question_array": [
+    2,
+    5,
+    7,
+    7,
+    7,
+    7,
+    9,
+    11
+  ],
+  "first_mid_floor": 3,
+  "first_mid_ceiling": 4,
+  "first_match": 2,
+  "last_match": 5,
+  "limits": [
+    "Checks this generated item only; no student answer was graded."
+  ]
+}

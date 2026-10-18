@@ -1,0 +1,43 @@
+{
+  "pilot": {
+    "report": "cs35l-pedagogy-breadth-v1.json",
+    "status": "stopped_by_evaluator_after_user_requested_more_student_like_language",
+    "completed_episodes": 2,
+    "completed_full_profile_turns": 4,
+    "partial_episode": "regex-fullmatch",
+    "note": "Stopped pilot is retained separately; interruption is not a model failure."
+  },
+  "revised_fixed": {
+    "fixture": "cs35l-studentlike-cases-20261018.json",
+    "fixture_sha256": "91dcef4c71706e735a0ff501ddcb8ae5dc0df37722c9a3e02fd3d8e5f4ad5a98",
+    "report": "cs35l-studentlike-v2.json",
+    "planned_episodes": 36,
+    "planned_turns": 83,
+    "completed_episodes": 36,
+    "successful_turns": 83,
+    "failed_turns": 0
+  },
+  "adaptive": {
+    "plan": "cs35l-adaptive-plan-20261018.json",
+    "report": "cs35l-adaptive-v2.json",
+    "planned_episodes": 8,
+    "planned_turns_range": [
+      24,
+      40
+    ],
+    "followup_author": "Primary Codex agent responds to actual observed tutor replies under predeclared scenario states.",
+    "observed_episodes": 8,
+    "completed_episodes": 7,
+    "failed_episode": "adaptive-project",
+    "observed_turns": 28,
+    "successful_turns": 27,
+    "failure_handling": "Retained second-turn application guard failure; no retry substituted and no follow-up fabricated after the episode closed."
+  },
+  "concurrency": "Adaptive cohort may overlap the fixed-case run on the same resident server, whose max-running-requests is2. This is a quality study, not an isolated latency benchmark; request overlap can affect timings and sampling. Neither cohort changes runtime settings.",
+  "review": "One Codex reviewer applies PedAdvisor and AI Tutor lenses. No independent human review or NotebookLM consultation; that capability is unavailable.",
+  "adaptive_input_pilot": {
+    "report": "cs35l-adaptive-v1.json",
+    "status": "excluded_harness_input_channel_failure",
+    "note": "Initial noninteractive stdin closed after the first reply. Restarted all adaptive cases with TTY stdin; interrupted input-channel pilot is retained separately, not scored as a model failure."
+  }
+}

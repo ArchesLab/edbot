@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "purpose": "Complement fixed student-like stress cases with reactive conversations: subsequent utterances are chosen only after seeing the actual tutor reply.",
+  "course_url": "https://tobiasduerschmid.github.io/SEBook/CS35L",
+  "authoring": "Primary Codex agent simulates plausible learner utterances under these scenario states; no learner model, real-student data, or validated behavioral distribution.",
+  "protocol": [
+    "Start vague when a student would plausibly omit context; provide missing details if the tutor asks.",
+    "Follow or misunderstand the actual reply rather than pretending a different question was asked.",
+    "Include short assent, incomplete reasoning, frustration, and natural closure without always producing perfect answers.",
+    "Do not use hidden reference answers to claim independent learning. Record adaptation rationale for every chosen follow-up.",
+    "Three to five turns per episode, unless execution failure prevents continuation. End explicitly after the scenario has produced enough evidence."
+  ],
+  "review": [
+    "Technical correctness",
+    "Attainability and adaptation",
+    "Source calibration",
+    "Evidence of understanding versus assent/copying",
+    "Request fit and stopping",
+    "Whether the simulated reply plausibly follows the actual tutor response"
+  ],
+  "cases": [
+    {
+      "id": "adaptive-git",
+      "topic": "Git staging",
+      "first_message": "git commit didnt save my last edit?? im worried i lost it. can you help me figure out what happened?",
+      "learner_state": "Can supply add/edit/commit order and status when asked; initially conflates index and working file.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-regex",
+      "topic": "Regex and API ambiguity",
+      "first_message": "why does my regex accept abc12xyz when i only want two digits? i used [0-9]{2}.",
+      "learner_state": "Initially omits language/API; supplies Python re.search if asked. May overgeneralize a local fix.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-react",
+      "topic": "React debugging",
+      "first_message": "my button says +2 but the counter only goes up by1. im using React. i dont get it.",
+      "learner_state": "Can provide two setCount(count+1) calls; initially thinks state calls mutate the variable immediately.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-python",
+      "topic": "Python copy confusion",
+      "first_message": "i used copy and the original list changed too. i thought copy meant separate?",
+      "learner_state": "Supplies nested list and shallow-copy mutation when asked; may overgeneralize all assignments as deep copies.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-make",
+      "topic": "Build debugging",
+      "first_message": "my C program only works after make clean. changing a header doesnt seem to do anything. what am i missing?",
+      "learner_state": "Can provide a rule missing header dependency; initially treats clean as a permanent solution.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-testing",
+      "topic": "Test adequacy and frustration",
+      "first_message": "my tests pass but i know my function is wrong on some inputs. how do i even start finding those? please dont dump a big test suite on me.",
+      "learner_state": "Can provide age>18 && age<65 and inclusive18..65 requirement. Needs one attainable check, may say stuck.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-sql",
+      "topic": "SQL debugging",
+      "first_message": "LEFT JOIN is giving me a count of1 for someone who hasnt enrolled in anything. is SQL broken or am i misunderstanding it?",
+      "learner_state": "Can provide Students LEFT JOIN Enroll with COUNT(*). Needs NULL-extended row explanation and may merely assent.",
+      "min_turns": 3,
+      "max_turns": 5
+    },
+    {
+      "id": "adaptive-project",
+      "topic": "Information hiding and project tradeoffs",
+      "first_message": "my teammate says our class is encapsulated because the list field is private. but getItems returns that same list and other code changes it. does private not do what i thought?",
+      "learner_state": "Can discuss a read-only/snapshot alternative without assuming every copy is deep or universally necessary; may ask for concise help and stop.",
+      "min_turns": 3,
+      "max_turns": 5
+    }
+  ]
+}

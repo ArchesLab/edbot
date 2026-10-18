@@ -1,0 +1,44 @@
+{
+  "limits": "Concrete finite traces;not universal correctness proof or a learning study.",
+  "recursion": {
+    "positive": {
+      "input": [
+        2,
+        3
+      ],
+      "result": 5
+    },
+    "empty_exception": "IndexError"
+  },
+  "invariant_checkpoints": [
+    {
+      "i": 0,
+      "total": 0,
+      "guard": true,
+      "candidate_invariant": true,
+      "next_element_exists": true
+    },
+    {
+      "i": 1,
+      "total": 10,
+      "guard": true,
+      "candidate_invariant": true,
+      "next_element_exists": true
+    },
+    {
+      "i": 2,
+      "total": 30,
+      "guard": true,
+      "candidate_invariant": true,
+      "next_element_exists": true
+    },
+    {
+      "i": 3,
+      "total": 60,
+      "guard": false,
+      "candidate_invariant": true,
+      "next_element_exists": false
+    }
+  ],
+  "source_replay_sha256": "dc0de588e8daeada4575535de1374a7d29c61bdd3088e8eedfaf8a10633b8881"
+}

@@ -1,0 +1,1224 @@
+{
+  "limits": "Descriptive counts from a purposive synthetic suite; single-reviewer judgments, not learning effects or population rates. Episode verdict is worst observed issue and may concern private artifacts. Timing under overlapping work is not a speedup comparison. Logical model calls exclude hidden retries. Failed public replies remain unassessed.",
+  "percentile_method": "Linear interpolation at (n-1)*p",
+  "validation": [
+    {
+      "cohort": "fixed",
+      "unique_case_ids": true,
+      "unique_review_ids": true,
+      "review_case_ids_match": true,
+      "all_episode_profiles_present": true,
+      "review_turn_counts_match": true,
+      "observation_profile_counts_match": true
+    },
+    {
+      "cohort": "adaptive",
+      "unique_case_ids": true,
+      "unique_review_ids": true,
+      "review_case_ids_match": true,
+      "all_episode_profiles_present": true,
+      "review_turn_counts_match": true,
+      "observation_profile_counts_match": true
+    }
+  ],
+  "cohorts": {
+    "fixed": {
+      "report": "cs35l-studentlike-v2.json",
+      "report_sha256": "3ac0d9f904a0e3f918999e595776cb880ef9597579aadc26c6c84bfde3356dd3",
+      "execution": "completed",
+      "observed_cases": 36,
+      "execution_counts": {
+        "completed": 36
+      },
+      "profiled_turns": 83,
+      "successful_turns": 83,
+      "failed_turns": 0,
+      "captured_observations": 83,
+      "turn_seconds_successful": {
+        "n": 83,
+        "sum": 5394.330490076682,
+        "median": 65.32072069402784,
+        "mean": 64.99193361538171,
+        "p95_linear": 104.16824000542982,
+        "min": 7.8456143389921635,
+        "max": 126.56494062393904
+      },
+      "visible_ttft_seconds_successful": {
+        "n": 83,
+        "sum": 5393.626172379358,
+        "median": 65.31185433710925,
+        "mean": 64.98344785999227,
+        "p95_linear": 104.15361693995072,
+        "min": 7.835868779104203,
+        "max": 126.55461543705314
+      },
+      "model_calls_successful": {
+        "n": 83,
+        "sum": 690,
+        "median": 9,
+        "mean": 8.313253012048193,
+        "p95_linear": 12.0,
+        "min": 1,
+        "max": 14
+      },
+      "model_calls_all": 690,
+      "episode_verdicts": {
+        "revise": 26,
+        "critical": 7,
+        "pass": 3
+      },
+      "turn_verdicts": {
+        "revise": 49,
+        "pass": 27,
+        "critical": 7
+      },
+      "issue_turn_counts_nonexclusive": {
+        "additional_instruction": 1,
+        "ambiguous_assistance_transition": 1,
+        "ambiguous_mode_transition": 1,
+        "answer_boundary": 2,
+        "assessment_inconsistency": 1,
+        "assessment_item_identity": 1,
+        "assessment_overconstraint": 2,
+        "assistance_attribution": 5,
+        "assistance_oversupply": 3,
+        "burden": 4,
+        "citation_usability": 1,
+        "closure_burden": 3,
+        "closure_cost": 1,
+        "contradictory_wording": 1,
+        "correctness_confidence_conflation": 2,
+        "counterexample_quality": 1,
+        "criterion_presence_error": 1,
+        "decision_scope": 1,
+        "diagnostic_overclaim": 1,
+        "example_discrimination": 1,
+        "false_feedback": 1,
+        "false_private_judgment": 1,
+        "fixed_dialogue_fit": 1,
+        "missing_mechanism": 1,
+        "oversupplied_hint": 2,
+        "past_belief_as_current": 1,
+        "prerequisite_mismatch": 1,
+        "question_as_answer_assessment": 1,
+        "rubric_consistency": 1,
+        "rubric_overconstraint": 1,
+        "source_qualification": 1,
+        "source_scope": 2,
+        "speaker_attribution": 1,
+        "task_size": 1,
+        "technical_conflation": 1,
+        "technical_false_claim": 3,
+        "technical_mechanism": 2,
+        "technical_overclaim": 2,
+        "technical_overconstraint": 2,
+        "technical_overgeneralization": 9,
+        "technical_qualification": 3,
+        "unrequested_destructive_option": 1,
+        "unsupported_deficit_attribution": 1,
+        "unsupported_knowledge_attribution": 6,
+        "unsupported_verification": 1,
+        "unused_rubric_ambiguity": 1,
+        "unused_rubric_diagnosis": 1,
+        "unused_rubric_error": 1,
+        "unused_rubric_overlap": 1,
+        "valid_alternative_rejection": 1
+      },
+      "cases": [
+        {
+          "id": "reuse-composition",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "tdd-failure",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "regex-fullmatch",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "security-auth",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "information-hiding-contract",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "sql-left-join",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-quoting",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "debugging-hypothesis",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "testing-boundaries",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "uml-sequence",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "risk-design",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "source-limits",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "user-story-criteria",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "critical"
+        },
+        {
+          "id": "git-shared-history",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "git-index",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "test-doubles",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "lsp-preconditions",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "c-lifetime",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "uml-state",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "prerequisite-resource",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "observer-contract",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "critical"
+        },
+        {
+          "id": "scrum-change",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-redirection",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "node-event-loop",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "state-versus-mvc",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "react-state",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "tcp-framing",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "make-dependencies",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "uml-multiplicity",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "python-shallow-copy",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-quoting-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "react-state-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "sql-left-join-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "information-hiding-contract-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "testing-boundaries-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "uml-multiplicity-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        }
+      ]
+    },
+    "fixed_unique": {
+      "observed_cases": 30,
+      "execution_counts": {
+        "completed": 30
+      },
+      "profiled_turns": 68,
+      "successful_turns": 68,
+      "failed_turns": 0,
+      "captured_observations": 68,
+      "turn_seconds_successful": {
+        "n": 68,
+        "sum": 4641.6016236846335,
+        "median": 67.75861205544788,
+        "mean": 68.25884740712696,
+        "p95_linear": 116.78030842724253,
+        "min": 7.8456143389921635,
+        "max": 126.56494062393904
+      },
+      "visible_ttft_seconds_successful": {
+        "n": 68,
+        "sum": 4641.038758218056,
+        "median": 67.75008685188368,
+        "mean": 68.25056997379494,
+        "p95_linear": 116.76894450341348,
+        "min": 7.835868779104203,
+        "max": 126.55461543705314
+      },
+      "model_calls_successful": {
+        "n": 68,
+        "sum": 566,
+        "median": 9.0,
+        "mean": 8.323529411764707,
+        "p95_linear": 12.0,
+        "min": 1,
+        "max": 14
+      },
+      "model_calls_all": 566,
+      "episode_verdicts": {
+        "revise": 22,
+        "critical": 5,
+        "pass": 3
+      },
+      "turn_verdicts": {
+        "revise": 39,
+        "pass": 24,
+        "critical": 5
+      },
+      "issue_turn_counts_nonexclusive": {
+        "additional_instruction": 1,
+        "ambiguous_mode_transition": 1,
+        "answer_boundary": 1,
+        "assessment_inconsistency": 1,
+        "assessment_item_identity": 1,
+        "assessment_overconstraint": 2,
+        "assistance_attribution": 5,
+        "burden": 4,
+        "citation_usability": 1,
+        "closure_burden": 2,
+        "closure_cost": 1,
+        "contradictory_wording": 1,
+        "decision_scope": 1,
+        "diagnostic_overclaim": 1,
+        "example_discrimination": 1,
+        "false_feedback": 1,
+        "false_private_judgment": 1,
+        "fixed_dialogue_fit": 1,
+        "missing_mechanism": 1,
+        "oversupplied_hint": 2,
+        "past_belief_as_current": 1,
+        "prerequisite_mismatch": 1,
+        "question_as_answer_assessment": 1,
+        "rubric_consistency": 1,
+        "rubric_overconstraint": 1,
+        "source_qualification": 1,
+        "source_scope": 2,
+        "speaker_attribution": 1,
+        "task_size": 1,
+        "technical_false_claim": 2,
+        "technical_mechanism": 2,
+        "technical_overclaim": 2,
+        "technical_overconstraint": 2,
+        "technical_overgeneralization": 7,
+        "technical_qualification": 3,
+        "unrequested_destructive_option": 1,
+        "unsupported_deficit_attribution": 1,
+        "unsupported_knowledge_attribution": 3,
+        "unsupported_verification": 1,
+        "unused_rubric_ambiguity": 1,
+        "unused_rubric_diagnosis": 1,
+        "unused_rubric_error": 1,
+        "unused_rubric_overlap": 1,
+        "valid_alternative_rejection": 1
+      },
+      "cases": [
+        {
+          "id": "reuse-composition",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "tdd-failure",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "regex-fullmatch",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "security-auth",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "information-hiding-contract",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "sql-left-join",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-quoting",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "debugging-hypothesis",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "testing-boundaries",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "uml-sequence",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "risk-design",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "source-limits",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "user-story-criteria",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "critical"
+        },
+        {
+          "id": "git-shared-history",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "git-index",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "test-doubles",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "lsp-preconditions",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "c-lifetime",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "uml-state",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "prerequisite-resource",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "observer-contract",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "critical"
+        },
+        {
+          "id": "scrum-change",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-redirection",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "node-event-loop",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "state-versus-mvc",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "react-state",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "tcp-framing",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "make-dependencies",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "uml-multiplicity",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "python-shallow-copy",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        }
+      ]
+    },
+    "fixed_repeat": {
+      "observed_cases": 6,
+      "execution_counts": {
+        "completed": 6
+      },
+      "profiled_turns": 15,
+      "successful_turns": 15,
+      "failed_turns": 0,
+      "captured_observations": 15,
+      "turn_seconds_successful": {
+        "n": 15,
+        "sum": 752.7288663920481,
+        "median": 45.28754545398988,
+        "mean": 50.18192442613654,
+        "p95_linear": 80.719489727146,
+        "min": 23.211683737114072,
+        "max": 81.40350507805124
+      },
+      "visible_ttft_seconds_successful": {
+        "n": 15,
+        "sum": 752.5874141613021,
+        "median": 45.27442340715788,
+        "mean": 50.17249427742014,
+        "p95_linear": 80.71209216949065,
+        "min": 23.204374792985618,
+        "max": 81.39578442205675
+      },
+      "model_calls_successful": {
+        "n": 15,
+        "sum": 124,
+        "median": 8,
+        "mean": 8.266666666666667,
+        "p95_linear": 10.899999999999997,
+        "min": 4,
+        "max": 13
+      },
+      "model_calls_all": 124,
+      "episode_verdicts": {
+        "critical": 2,
+        "revise": 4
+      },
+      "turn_verdicts": {
+        "revise": 10,
+        "critical": 2,
+        "pass": 3
+      },
+      "issue_turn_counts_nonexclusive": {
+        "ambiguous_assistance_transition": 1,
+        "answer_boundary": 1,
+        "assistance_oversupply": 3,
+        "closure_burden": 1,
+        "correctness_confidence_conflation": 2,
+        "counterexample_quality": 1,
+        "criterion_presence_error": 1,
+        "technical_conflation": 1,
+        "technical_false_claim": 1,
+        "technical_overgeneralization": 2,
+        "unsupported_knowledge_attribution": 3
+      },
+      "cases": [
+        {
+          "id": "shell-quoting-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "react-state-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "sql-left-join-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "information-hiding-contract-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "testing-boundaries-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "uml-multiplicity-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        }
+      ]
+    },
+    "adaptive": {
+      "report": "cs35l-adaptive-v2.json",
+      "report_sha256": "5d6464af63ccdbc11c619e80b1e53cec019ea0d22b235823d3828af397a21c0b",
+      "execution": "completed_with_errors",
+      "observed_cases": 8,
+      "execution_counts": {
+        "completed": 7,
+        "failed": 1
+      },
+      "profiled_turns": 28,
+      "successful_turns": 27,
+      "failed_turns": 1,
+      "captured_observations": 28,
+      "turn_seconds_successful": {
+        "n": 27,
+        "sum": 2261.3977831229568,
+        "median": 86.94948470895179,
+        "mean": 83.7554734489984,
+        "p95_linear": 121.04580664627719,
+        "min": 13.085238134022802,
+        "max": 128.6013061159756
+      },
+      "visible_ttft_seconds_successful": {
+        "n": 27,
+        "sum": 2251.298826869577,
+        "median": 86.78332268400118,
+        "mean": 83.38143803220656,
+        "p95_linear": 120.6603438893333,
+        "min": 13.05881997407414,
+        "max": 128.3244011660572
+      },
+      "model_calls_successful": {
+        "n": 27,
+        "sum": 227,
+        "median": 8,
+        "mean": 8.407407407407407,
+        "p95_linear": 10.0,
+        "min": 1,
+        "max": 11
+      },
+      "model_calls_all": 236,
+      "episode_verdicts": {
+        "revise": 8
+      },
+      "turn_verdicts": {
+        "revise": 18,
+        "pass": 9,
+        "unassessed": 1
+      },
+      "issue_turn_counts_nonexclusive": {
+        "assistance_attribution": 3,
+        "burden": 1,
+        "closure_burden": 1,
+        "context_invention": 1,
+        "deferred_assessment": 1,
+        "example_consistency": 1,
+        "execution_failure": 1,
+        "missing_context_qualification": 1,
+        "observation_scope": 1,
+        "overconfident_diagnostic_scope": 1,
+        "premature_diagnosis": 1,
+        "prerequisite_gap": 1,
+        "question_precision": 1,
+        "requirement_drift": 1,
+        "speaker_attribution": 1,
+        "task_expansion": 1,
+        "technical_mechanism": 1,
+        "technical_overgeneralization": 2,
+        "technical_qualification": 1,
+        "unsupported_knowledge_attribution": 5
+      },
+      "cases": [
+        {
+          "id": "adaptive-git",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-regex",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-react",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-python",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-make",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-testing",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-sql",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-project",
+          "execution": "failed",
+          "turns": 2,
+          "verdict": "revise"
+        }
+      ]
+    },
+    "all": {
+      "observed_cases": 44,
+      "execution_counts": {
+        "completed": 43,
+        "failed": 1
+      },
+      "profiled_turns": 111,
+      "successful_turns": 110,
+      "failed_turns": 1,
+      "captured_observations": 111,
+      "turn_seconds_successful": {
+        "n": 110,
+        "sum": 7655.728273199638,
+        "median": 68.59497730794828,
+        "mean": 69.59752975636034,
+        "p95_linear": 120.17802115193334,
+        "min": 7.8456143389921635,
+        "max": 128.6013061159756
+      },
+      "visible_ttft_seconds_successful": {
+        "n": 110,
+        "sum": 7644.924999248935,
+        "median": 68.43677404639311,
+        "mean": 69.49931817499032,
+        "p95_linear": 119.76686606304719,
+        "min": 7.835868779104203,
+        "max": 128.3244011660572
+      },
+      "model_calls_successful": {
+        "n": 110,
+        "sum": 917,
+        "median": 9.0,
+        "mean": 8.336363636363636,
+        "p95_linear": 12.0,
+        "min": 1,
+        "max": 14
+      },
+      "model_calls_all": 926,
+      "episode_verdicts": {
+        "revise": 34,
+        "critical": 7,
+        "pass": 3
+      },
+      "turn_verdicts": {
+        "revise": 67,
+        "pass": 36,
+        "critical": 7,
+        "unassessed": 1
+      },
+      "issue_turn_counts_nonexclusive": {
+        "additional_instruction": 1,
+        "ambiguous_assistance_transition": 1,
+        "ambiguous_mode_transition": 1,
+        "answer_boundary": 2,
+        "assessment_inconsistency": 1,
+        "assessment_item_identity": 1,
+        "assessment_overconstraint": 2,
+        "assistance_attribution": 8,
+        "assistance_oversupply": 3,
+        "burden": 5,
+        "citation_usability": 1,
+        "closure_burden": 4,
+        "closure_cost": 1,
+        "context_invention": 1,
+        "contradictory_wording": 1,
+        "correctness_confidence_conflation": 2,
+        "counterexample_quality": 1,
+        "criterion_presence_error": 1,
+        "decision_scope": 1,
+        "deferred_assessment": 1,
+        "diagnostic_overclaim": 1,
+        "example_consistency": 1,
+        "example_discrimination": 1,
+        "execution_failure": 1,
+        "false_feedback": 1,
+        "false_private_judgment": 1,
+        "fixed_dialogue_fit": 1,
+        "missing_context_qualification": 1,
+        "missing_mechanism": 1,
+        "observation_scope": 1,
+        "overconfident_diagnostic_scope": 1,
+        "oversupplied_hint": 2,
+        "past_belief_as_current": 1,
+        "premature_diagnosis": 1,
+        "prerequisite_gap": 1,
+        "prerequisite_mismatch": 1,
+        "question_as_answer_assessment": 1,
+        "question_precision": 1,
+        "requirement_drift": 1,
+        "rubric_consistency": 1,
+        "rubric_overconstraint": 1,
+        "source_qualification": 1,
+        "source_scope": 2,
+        "speaker_attribution": 2,
+        "task_expansion": 1,
+        "task_size": 1,
+        "technical_conflation": 1,
+        "technical_false_claim": 3,
+        "technical_mechanism": 3,
+        "technical_overclaim": 2,
+        "technical_overconstraint": 2,
+        "technical_overgeneralization": 11,
+        "technical_qualification": 4,
+        "unrequested_destructive_option": 1,
+        "unsupported_deficit_attribution": 1,
+        "unsupported_knowledge_attribution": 11,
+        "unsupported_verification": 1,
+        "unused_rubric_ambiguity": 1,
+        "unused_rubric_diagnosis": 1,
+        "unused_rubric_error": 1,
+        "unused_rubric_overlap": 1,
+        "valid_alternative_rejection": 1
+      },
+      "cases": [
+        {
+          "id": "reuse-composition",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "tdd-failure",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "regex-fullmatch",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "security-auth",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "information-hiding-contract",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "sql-left-join",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-quoting",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "debugging-hypothesis",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "testing-boundaries",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "uml-sequence",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "risk-design",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "source-limits",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "user-story-criteria",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "critical"
+        },
+        {
+          "id": "git-shared-history",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "git-index",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "test-doubles",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "lsp-preconditions",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "c-lifetime",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "uml-state",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "prerequisite-resource",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "observer-contract",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "critical"
+        },
+        {
+          "id": "scrum-change",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-redirection",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "node-event-loop",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "state-versus-mvc",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "react-state",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "tcp-framing",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "make-dependencies",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "pass"
+        },
+        {
+          "id": "uml-multiplicity",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "python-shallow-copy",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "shell-quoting-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "react-state-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "sql-left-join-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "information-hiding-contract-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "testing-boundaries-repeat",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "critical"
+        },
+        {
+          "id": "uml-multiplicity-repeat",
+          "execution": "completed",
+          "turns": 2,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-git",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-regex",
+          "execution": "completed",
+          "turns": 3,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-react",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-python",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-make",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-testing",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-sql",
+          "execution": "completed",
+          "turns": 4,
+          "verdict": "revise"
+        },
+        {
+          "id": "adaptive-project",
+          "execution": "failed",
+          "turns": 2,
+          "verdict": "revise"
+        }
+      ]
+    }
+  },
+  "runner_source": "import json, hashlib, statistics, sys\nfrom collections import Counter\nfrom pathlib import Path\nROOT=Path('/Users/tobiasduerschmid/Projects/edbot'); D=ROOT/'output/profiling'\nreview=json.loads((D/'cs35l-semantic-review-v1.json').read_text())\n\ndef stats(values):\n v=sorted(values)\n if not v:return None\n pos=(len(v)-1)*.95;lo=int(pos);hi=min(lo+1,len(v)-1)\n return {'n':len(v),'sum':sum(v),'median':statistics.median(v),'mean':statistics.mean(v),'p95_linear':v[lo]+(v[hi]-v[lo])*(pos-lo),'min':v[0],'max':v[-1]}\n\ndef summarize(cases, reviews):\n byid={r['case_id']:r for r in reviews};turns=[t for c in cases for t in (c.get('profile') or {}).get('turns',[])];ok=[t for t in turns if t['success']]\n relevant=[byid[c['case']['id']] for c in cases if c['case']['id'] in byid]\n issues=Counter(cat for c in relevant for t in c['turns'] for cat in set(t['categories']))\n return {'observed_cases':len(cases),'execution_counts':dict(Counter(c['execution'] for c in cases)),'profiled_turns':len(turns),'successful_turns':len(ok),'failed_turns':len(turns)-len(ok),'captured_observations':sum(len(c['observations']) for c in cases),'turn_seconds_successful':stats([t['total_s'] for t in ok]),'visible_ttft_seconds_successful':stats([t['visible_ttft_s'] for t in ok if t.get('visible_ttft_s') is not None]),'model_calls_successful':stats([t['metrics']['model_call_count'] for t in ok]),'model_calls_all':sum(t['metrics']['model_call_count'] for t in turns),'episode_verdicts':dict(Counter(c.get('episode_verdict','pending') for c in relevant)),'turn_verdicts':dict(Counter(t['verdict'] for c in relevant for t in c['turns'])),'issue_turn_counts_nonexclusive':dict(sorted(issues.items())),'cases':[{'id':c['case']['id'],'execution':c['execution'],'turns':len((c.get('profile') or {}).get('turns',[])),'verdict':byid.get(c['case']['id'],{}).get('episode_verdict','unreviewed')} for c in cases]}\n\nreports={};results={};validations=[]\nfor kind,name in [('fixed','cs35l-studentlike-v2.json'),('adaptive','cs35l-adaptive-v2.json')]:\n p=D/name\n if not p.exists():continue\n d=json.loads(p.read_text()); reports[kind]=d\n results[kind]={'report':name,'report_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'execution':d['execution'],**summarize(d['cases'],review[kind])}\n if kind=='fixed':\n  results['fixed_unique']=summarize([c for c in d['cases'] if not c['case']['id'].endswith('-repeat')],review[kind])\n  results['fixed_repeat']=summarize([c for c in d['cases'] if c['case']['id'].endswith('-repeat')],review[kind])\n ids=[c['case']['id'] for c in d['cases']]; rids=[r['case_id'] for r in review[kind]]\n validations.append({'cohort':kind,'unique_case_ids':len(ids)==len(set(ids)),'unique_review_ids':len(rids)==len(set(rids)),'review_case_ids_match':set(ids)==set(rids),'all_episode_profiles_present':all(c.get('profile') is not None for c in d['cases']),'review_turn_counts_match':all(len(next((r['turns'] for r in review[kind] if r['case_id']==c['case']['id']),[]))==len((c.get('profile') or {}).get('turns',[])) for c in d['cases']),'observation_profile_counts_match':all(len(c['observations'])==len((c.get('profile') or {}).get('turns',[])) for c in d['cases'])})\nallcases=[c for d in reports.values() for c in d['cases']];allreviews=review['fixed']+review['adaptive'];results['all']=summarize(allcases,allreviews)\nprint(json.dumps({k:{kk:vv for kk,vv in v.items() if kk not in ['cases','issue_turn_counts_nonexclusive']} for k,v in results.items()},indent=2))\nif '--save' in sys.argv:\n assert len(reports['fixed']['cases'])==36 and len(reports['adaptive']['cases'])==8\n assert all(d['execution']!='running' for d in reports.values())\n assert all(all(v for k,v in x.items() if k!='cohort') for x in validations),validations\n assert results['fixed']['profiled_turns']==83\n for d in reports.values():\n  for c in d['cases']:\n   for t,o in zip(c['profile']['turns'],c['observations']):\n    assert t['prompt']==o['prompt']\n payload={'limits':'Descriptive counts from a purposive synthetic suite; single-reviewer judgments, not learning effects or population rates. Episode verdict is worst observed issue and may concern private artifacts. Timing under overlapping work is not a speedup comparison. Logical model calls exclude hidden retries. Failed public replies remain unassessed.','percentile_method':'Linear interpolation at (n-1)*p','validation':validations,'cohorts':results,'runner_source':Path(__file__).read_text()}\n (D/'cs35l-summary-v1.json').write_text(json.dumps(payload,indent=2)+'\\n')\n"
+}

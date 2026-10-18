@@ -1,0 +1,109 @@
+{
+  "status": "passed",
+  "limits": "Verification of captured identities, counts, hashes and document consistency; not independent pedagogical adjudication. Remote server postcheck is retained separately within this record after collection.",
+  "source_checks": {
+    "fixed": {
+      "files": 39,
+      "mismatches": []
+    },
+    "adaptive": {
+      "files": 39,
+      "mismatches": []
+    }
+  },
+  "repeat_checks": [
+    {
+      "case": "shell-quoting-repeat",
+      "student_messages_identical": true
+    },
+    {
+      "case": "react-state-repeat",
+      "student_messages_identical": true
+    },
+    {
+      "case": "sql-left-join-repeat",
+      "student_messages_identical": true
+    },
+    {
+      "case": "information-hiding-contract-repeat",
+      "student_messages_identical": true
+    },
+    {
+      "case": "testing-boundaries-repeat",
+      "student_messages_identical": true
+    },
+    {
+      "case": "uml-multiplicity-repeat",
+      "student_messages_identical": true
+    }
+  ],
+  "documents": [
+    {
+      "path": "docs/cs35l-tutoring-evaluation.md",
+      "sha256": "47d9b80fb90ccc443bcd9c0fa879b98de838616a3bc3df2098ebd4b082ad59fe",
+      "local_links_exist": true,
+      "trailing_whitespace": false
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-18-tutoring-quality-alternatives-design.md",
+      "sha256": "5f80a36116ad5661ed4ac4102afecb7c4dafde2dd4640a134e3958826efefd7a",
+      "local_links_exist": true,
+      "trailing_whitespace": false
+    }
+  ],
+  "artifacts_sha256": {
+    "cs35l-adaptive-plan-20261018.json": "b5bfc980468e9d4ec3ab6499bfa12b5d47f0eaf9524e99539edefa955556ed22",
+    "cs35l-adaptive-v1.json": "c5a49ab1b3b8dbc7dae83badae1caa3f4aac0d7a8178a3d573585ed6adc4b48a",
+    "cs35l-adaptive-v2.json": "5d6464af63ccdbc11c619e80b1e53cec019ea0d22b235823d3828af397a21c0b",
+    "cs35l-course-headings-20261018.json": "5296ef6942ffaf15edb60aef400fd14ecbe19f61c2f4a96fe036d6671d70301f",
+    "cs35l-experiment-amendments-20261018.json": "6f17b5d59e75c10bfe850522c97c9eab38034e9c34f63bf9d43d7f979fe9e976",
+    "cs35l-pedagogy-breadth-v1.json": "c9dfb9e43d24f0ceab6f177b078e74bf8d1741bc4db9b7dfa9a84339a9716ed8",
+    "cs35l-pedagogy-cases-20261018.json": "eb4a4003389ef321d9f8d2c9c85717f06ebd374d76ff18d3b2cca11918627ad9",
+    "cs35l-react-reference-v1.json": "cd96263638df79a59a346fd1f9112c61237e6e94f8e4140921203c6320aa2d70",
+    "cs35l-reference-checks-v1.json": "0924ed1750b3af7d53042845e05669dfb523d5abb54dc98cf611cbff84968655",
+    "cs35l-semantic-review-v1.json": "9e7a743ba250819f471e34d149e3230115826ac716559a71d57bbf802e9591d8",
+    "cs35l-source-manifest-20261018.json": "e28291ea59228ea7364c594d798472e4e9f447dd00f681fb0b9f523568f39838",
+    "cs35l-studentlike-cases-20261018.json": "91dcef4c71706e735a0ff501ddcb8ae5dc0df37722c9a3e02fd3d8e5f4ad5a98",
+    "cs35l-studentlike-v2.json": "3ac0d9f904a0e3f918999e595776cb880ef9597579aadc26c6c84bfde3356dd3",
+    "cs35l-summary-v1.json": "e5343aaef3526631fb02e372dc4c6824178132314d289b3660d5f35f48b0df9f"
+  },
+  "production_diff_from_484305f": "empty",
+  "runner_source": "import json,hashlib,re,subprocess\nfrom pathlib import Path\nD=Path('/Users/tobiasduerschmid/Projects/edbot/output/profiling');ROOT=D.parent.parent\nreports={k:json.loads((D/f'cs35l-{name}-v2.json').read_text()) for k,name in [('fixed','studentlike'),('adaptive','adaptive')]}\nfixture=json.loads((D/'cs35l-studentlike-cases-20261018.json').read_text())['cases'];review=json.loads((D/'cs35l-semantic-review-v1.json').read_text())\nassert [c['case'] for c in reports['fixed']['cases']]==fixture\nassert all(d['execution']!='running' for d in reports.values())\nrepeat_checks=[]\nfor c in fixture:\n if c['id'].endswith('-repeat'):\n  orig=next(x for x in fixture if x['id']==c['id'].removesuffix('-repeat'))\n  same=[x['message'] for x in c['turns']]==[x['message'] for x in orig['turns']]\n  assert same\n  repeat_checks.append({'case':c['id'],'student_messages_identical':same})\nsource_checks={}\nfor kind,d in reports.items():\n hashes=d['manifest']['source_sha256']\n def local_path(p):\n  q=Path(p)\n  return ROOT/q.relative_to('/home/duerschmid/edbot') if q.is_absolute() else ROOT/q\n bad=[p for p,h in hashes.items() if hashlib.sha256(local_path(p).read_bytes()).hexdigest()!=h];assert not bad\n source_checks[kind]={'files':len(hashes),'mismatches':bad}\n for c in d['cases']:\n  rv=next(x for x in review[kind] if x['case_id']==c['case']['id']);assert len(rv['turns'])==len(c['profile']['turns'])\n  assert len(c['observations'])==len(c['profile']['turns'])\n  for t,o,rt in zip(c['profile']['turns'],c['observations'],rv['turns']):\n   assert t['prompt']==o['prompt']\n   if 'response' in o: assert t['response']==o['response']\n   if 'prompt_sha256' in o: assert hashlib.sha256(o['prompt'].encode()).hexdigest()==o['prompt_sha256']\n   assert o.get('capture_error') is None\n   if not t['success']: assert rt['verdict']=='unassessed'\n   assert t['metrics']['model_call_count']==len(t['metrics']['model_calls'])\nassert reports['adaptive']['plan']==json.loads((D/'cs35l-adaptive-plan-20261018.json').read_text())\nfor cmd in [['git','diff','--exit-code','484305f','--','src','scripts','tests','pyproject.toml','uv.lock'],['git','diff','--check']]:subprocess.run(cmd,cwd=ROOT,check=True,capture_output=True)\ndocs=[ROOT/'docs/cs35l-tutoring-evaluation.md',ROOT/'docs/superpowers/specs/2026-10-18-tutoring-quality-alternatives-design.md'];docchecks=[]\nfor p in docs:\n s=p.read_text();assert 'Results will be filled' not in s\n assert not any(l.rstrip()!=l for l in s.splitlines())\n for link in re.findall(r'\\]\\(([^)]+)\\)',s):\n  if not re.match(r'\\w+://',link) and not link.startswith('#'):assert (p.parent/link.split('#')[0]).resolve().exists(),link\n docchecks.append({'path':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'local_links_exist':True,'trailing_whitespace':False})\nartifacts={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(D.glob('cs35l-*.json')) if p.name!='cs35l-verification-v1.json'}\nresult={'status':'passed','limits':'Verification of captured identities, counts, hashes and document consistency; not independent pedagogical adjudication. Remote server postcheck is retained separately within this record after collection.','source_checks':source_checks,'repeat_checks':repeat_checks,'documents':docchecks,'artifacts_sha256':artifacts,'production_diff_from_484305f':'empty','runner_source':Path(__file__).read_text()}\n(D/'cs35l-verification-v1.json').write_text(json.dumps(result,indent=2)+'\\n');print(json.dumps({k:v for k,v in result.items() if k not in ['runner_source','artifacts_sha256']},indent=2))\n",
+  "remote_postcheck": {
+    "health_status": 200,
+    "server_pid_2671848_present": true,
+    "source_files_checked": 39,
+    "source_mismatches": [],
+    "server_settings": {
+      "model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "context_length": 32768,
+      "max_running_requests": 2,
+      "speculative_algorithm": "EAGLE",
+      "chunked_prefill_size": 2048
+    },
+    "gpu_utilization_after_run_percent": 0,
+    "gpu_temperature_after_run_c": 48
+  },
+  "configuration_consistency": {
+    "profiles_checked": 44,
+    "distinct_requested_configurations": 1,
+    "distinct_observed_server_configurations": 1
+  },
+  "quote_check": {
+    "verified_in_captures": [
+      "A tester can't write a pass/fail check against that yet",
+      "the copy has to go",
+      "the book does not state the no-global-timeline rule explicitly",
+      "the minimum, just below the minimum, the maximum, and just above the maximum",
+      "i was assuming commit automatically scooped up that last edit too"
+    ],
+    "exception_verified_in_log": "Content task must address the assessed concept"
+  },
+  "public_architecture_marker_scan": {
+    "turns": 111,
+    "matches": [],
+    "limit": "Limited string scan, not proof of absence of all indirect disclosures."
+  },
+  "document_hash_note": "Document hashes refreshed on 2026-10-18 after clarifying the committed evidence subset and local-only raw captures. Historical runtime verification is unchanged."
+}

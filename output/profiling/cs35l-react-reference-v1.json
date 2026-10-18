@@ -1,0 +1,98 @@
+{
+  "checked_at": "2026-10-18T18:15:05.050Z",
+  "scope": "Isolated Chrome reference test, React 18.3.1 createRoot; not an EdBot or learner learning test.",
+  "bundle_urls": [
+    "https://unpkg.com/react@18.3.1/umd/react.development.js",
+    "https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+  ],
+  "sources": {
+    "react.js": "28348fef6cb0ed8b2ceeb22deaf824428fd13875d84c73d38f77dd216fc24e7f",
+    "react-dom.js": "f9044a5e9c39db8bb1a204dff924e526ec0a621e695bb69de1035811be8709e4",
+    "check.cjs": "97ff29a8c122e4ea485ef026828f5ce4eb79b4896e75447a6ec6e6002f4a77d1"
+  },
+  "runner_source": "const {chromium}=require('/Users/tobiasduerschmid/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');\nconst fs=require('fs');const crypto=require('crypto');\n(async()=>{const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});const results=[];\nfor (const mode of ['sync-functional','await-replacement','await-functional']) {\n const page=await browser.newPage();await page.setContent('<div id=\"root\"></div>');\n await page.addScriptTag({path:'/tmp/edbot-cs35l-react-reference/react.js'});await page.addScriptTag({path:'/tmp/edbot-cs35l-react-reference/react-dom.js'});\n await page.evaluate(mode=>{window.trace=[];function App(){const [count,setCount]=React.useState(0);React.useLayoutEffect(()=>{window.trace.push({event:'commit',count})});\n async function click(){window.trace.push({event:'before',captured:count,dom:document.querySelector('button').textContent});\n if(mode==='sync-functional'){setCount(c=>c+1);setCount(c=>c+1);}else{const returned=mode==='await-functional'?setCount(c=>c+1):setCount(count+1);window.trace.push({event:'setter_return',type:typeof returned});await returned;window.trace.push({event:'after_await',captured:count,dom:document.querySelector('button').textContent});if(mode==='await-functional')setCount(c=>c+1);else setCount(count+1);}\n window.done=true;}\n return React.createElement('button',{onClick:click},String(count));}\n ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));},mode);\n await page.locator('button').click();await page.waitForFunction(()=>window.done);await page.waitForTimeout(100);results.push({mode,react:await page.evaluate(()=>React.version),trace:await page.evaluate(()=>window.trace),final:await page.locator('button').textContent()});await page.close();}\n await browser.close();const sources={};for(const name of ['react.js','react-dom.js','check.cjs']){const data=fs.readFileSync('/tmp/edbot-cs35l-react-reference/'+name);sources[name]=crypto.createHash('sha256').update(data).digest('hex');}\n const report={checked_at:new Date().toISOString(),scope:'Isolated Chrome reference test, React 18.3.1 createRoot; not an EdBot or learner learning test.',bundle_urls:['https://unpkg.com/react@18.3.1/umd/react.development.js','https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js'],sources,runner_source:fs.readFileSync(__filename,'utf8'),results};fs.writeFileSync('/Users/tobiasduerschmid/Projects/edbot/output/profiling/cs35l-react-reference-v1.json',JSON.stringify(report,null,2)+'\\n');console.log(JSON.stringify(results,null,2));})().catch(e=>{console.error(e);process.exit(1)});\n",
+  "results": [
+    {
+      "mode": "sync-functional",
+      "react": "18.3.1",
+      "trace": [
+        {
+          "event": "commit",
+          "count": 0
+        },
+        {
+          "event": "before",
+          "captured": 0,
+          "dom": "0"
+        },
+        {
+          "event": "commit",
+          "count": 2
+        }
+      ],
+      "final": "2"
+    },
+    {
+      "mode": "await-replacement",
+      "react": "18.3.1",
+      "trace": [
+        {
+          "event": "commit",
+          "count": 0
+        },
+        {
+          "event": "before",
+          "captured": 0,
+          "dom": "0"
+        },
+        {
+          "event": "setter_return",
+          "type": "undefined"
+        },
+        {
+          "event": "commit",
+          "count": 1
+        },
+        {
+          "event": "after_await",
+          "captured": 0,
+          "dom": "1"
+        }
+      ],
+      "final": "1"
+    },
+    {
+      "mode": "await-functional",
+      "react": "18.3.1",
+      "trace": [
+        {
+          "event": "commit",
+          "count": 0
+        },
+        {
+          "event": "before",
+          "captured": 0,
+          "dom": "0"
+        },
+        {
+          "event": "setter_return",
+          "type": "undefined"
+        },
+        {
+          "event": "commit",
+          "count": 1
+        },
+        {
+          "event": "after_await",
+          "captured": 0,
+          "dom": "1"
+        },
+        {
+          "event": "commit",
+          "count": 2
+        }
+      ],
+      "final": "2"
+    }
+  ]
+}

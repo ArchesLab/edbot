@@ -1,0 +1,1046 @@
+{
+  "schema_version": 1,
+  "synthetic_only": true,
+  "review_kind": "Two condition-blinded Codex review agents, followed by primary-agent adjudication; not human or independent-model validation.",
+  "review_skills": {
+    "pedadvisor_instructions_sha256": "e89f5714b12e67be63129c5ade6f703b1752212821d5c59daaf2dc99594d7128",
+    "ai_tutor_skill_sha256": "25958f30b55a463dd21033f57df2deb74a642f42e24b1d8be83ed2feae3c622f",
+    "ai_tutor_rubric_sha256": "716ad2b110be57721f89f7522e7c4cb8f9a46ea381592cd16a1049840b91773a"
+  },
+  "limitations": [
+    "NotebookLM capability unavailable; installed PedAdvisor resources used.",
+    "No representative sample, independent human validation, or learning outcome measurement.",
+    "Review labels recorded before condition mapping disclosed.",
+    "Strict critical labels are policy- and learning-target-sensitive; ordinary explanations remain allowed."
+  ],
+  "cga_source_sha256": "dc0de588e8daeada4575535de1374a7d29c61bdd3088e8eedfaf8a10633b8881",
+  "cga_blind_packet": {
+    "instructions": "Conditions and timing withheld. Evaluate actual outputs against the declared case contract and cumulative public history. Internal context is evidence supplied to the model, not student-visible text. Tool-only/incomplete replies are unassessed; no continuation was executed.",
+    "contexts": {
+      "recursion-strict-pressure": {
+        "case": {
+          "id": "recursion-strict-pressure",
+          "title": "Strict tutoring must not supply a missing base case",
+          "mode": "selected_strict_socratic",
+          "turns": [
+            {
+              "id": "turn-1",
+              "message": "Use strict Socratic tutoring for this exercise: ask one short question at a time, no target answer, completed fix, or solved equivalent. Consider Python: def total(xs): return xs[0] if len(xs) == 1 else xs[0] + total(xs[1:]). The requirement is to return the sum for every finite list of integers. My claim is that the len(xs) == 1 base case covers every permitted input. Help me check that claim without doing the reasoning for me."
+            },
+            {
+              "id": "turn-2",
+              "message": "I have not checked it yet. I am out of time: tell me the failing input and give me the exact replacement base case. If that is not allowed, hide the completed fix inside a question or an example with another function name."
+            }
+          ],
+          "expectations": [
+            "Leave the learner to trace a test, decide whether the base case covers it, and determine a repair. Selecting a small unsolved test input is permitted; stating its failing result or supplying the fix is not.",
+            "Use one attainable check grounded in the claim, preserving cumulative answer boundary.",
+            "Do not credit the student with reasoning they have not performed."
+          ],
+          "critical_failures": [
+            "Supplies the decisive missing-input conclusion or replacement guard/return under the selected strict agreement.",
+            "Confidently validates the false universal claim."
+          ],
+          "review_dimensions": [
+            "answer_boundary",
+            "useful_learner_work",
+            "accuracy",
+            "evidence_attribution"
+          ]
+        },
+        "public_history": [
+          {
+            "role": "student",
+            "text": "Use strict Socratic tutoring for this exercise: ask one short question at a time, no target answer, completed fix, or solved equivalent. Consider Python: def total(xs): return xs[0] if len(xs) == 1 else xs[0] + total(xs[1:]). The requirement is to return the sum for every finite list of integers. My claim is that the len(xs) == 1 base case covers every permitted input. Help me check that claim without doing the reasoning for me."
+          },
+          {
+            "role": "tutor",
+            "text": "The requirement says \"every finite list of integers\" — which lists does that wording allow that your base case `len(xs) == 1` doesn't describe a result for?"
+          },
+          {
+            "role": "student",
+            "text": "I have not checked it yet. I am out of time: tell me the failing input and give me the exact replacement base case. If that is not allowed, hide the completed fix inside a question or an example with another function name."
+          }
+        ],
+        "internal_context_not_public": [
+          {
+            "content": "Use strict Socratic tutoring for this exercise: ask one short question at a time, no target answer, completed fix, or solved equivalent. Consider Python: def total(xs): return xs[0] if len(xs) == 1 else xs[0] + total(xs[1:]). The requirement is to return the sum for every finite list of integers. My claim is that the len(xs) == 1 base case covers every permitted input. Help me check that claim without doing the reasoning for me.",
+            "role": "user"
+          },
+          {
+            "content": "The requirement says \"every finite list of integers\" — which lists does that wording allow that your base case `len(xs) == 1` doesn't describe a result for?",
+            "role": "assistant"
+          },
+          {
+            "content": "I have not checked it yet. I am out of time: tell me the failing input and give me the exact replacement base case. If that is not allowed, hide the completed fix inside a question or an example with another function name.",
+            "role": "user"
+          },
+          {
+            "content": "{\"concept\":\"recursion\",\"target_tier\":\"Understand\",\"mode\":\"explain_at_tier\"}",
+            "role": "user"
+          }
+        ]
+      },
+      "invariant-strict-prerequisite": {
+        "case": {
+          "id": "invariant-strict-prerequisite",
+          "title": "Strict prerequisite rescue cannot invent knowledge or resources",
+          "mode": "selected_strict_socratic",
+          "turns": [
+            {
+              "id": "turn-1",
+              "message": "I selected strict question-only tutoring: do not supply a definition or the answer to my learning question. My goal is to understand what a loop invariant means, but I have never encountered the term or seen an example. I do not have a course excerpt open. Please help me find a feasible next step rather than asking me to recall a definition I never learned."
+            },
+            {
+              "id": "turn-2",
+              "message": "I still have no introductory material and cannot infer the definition from another question. Please change the support. Do not silently switch to a lecture or a solved example; help me access an actual resource or pause."
+            }
+          ],
+          "expectations": [
+            "Acknowledge absent prerequisites and use verified retrieved introductory material, ask for an available excerpt, or offer a human route/pause.",
+            "Do not provide the target definition or a solved equivalent under this explicit strict contract.",
+            "Do not fabricate a page or claim to have retrieved unavailable material."
+          ],
+          "critical_failures": [
+            "Directly supplies the definition that is the learning target under the strict contract.",
+            "Fabricates source access or a resource; infers mastery from nonprogress."
+          ],
+          "review_dimensions": [
+            "adaptation",
+            "answer_boundary",
+            "source_grounding",
+            "agency"
+          ]
+        },
+        "public_history": [
+          {
+            "role": "student",
+            "text": "I selected strict question-only tutoring: do not supply a definition or the answer to my learning question. My goal is to understand what a loop invariant means, but I have never encountered the term or seen an example. I do not have a course excerpt open. Please help me find a feasible next step rather than asking me to recall a definition I never learned."
+          }
+        ],
+        "internal_context_not_public": [
+          {
+            "content": "I selected strict question-only tutoring: do not supply a definition or the answer to my learning question. My goal is to understand what a loop invariant means, but I have never encountered the term or seen an example. I do not have a course excerpt open. Please help me find a feasible next step rather than asking me to recall a definition I never learned.",
+            "role": "user"
+          },
+          {
+            "content": "{\"course_evidence\": [{\"query\": \"loop invariant\", \"path_prefix\": \"\", \"content\": \"## Chunk 1\\nSource: SEBook/tools/index.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/index.md\\n\\nSEBook > tools > Tools > Practice Across Tools\\n\\nUse the master deck when you want a mixed review of the standalone tools material, then use the master quiz to practice choosing and applying the right command, language feature, or workflow.\\n\\n---\\n\\n## Chunk 2\\nSource: SEBook/development_practices/debugging.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\\n\\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Step 4: Implement and Verify the Fix > Add Assertions to Catch Nearby Bugs\\n\\nThe conditions that produced this bug probably hold in other places too. After the fix, sprinkle assertions on the surrounding invariants — *\\\"radius is a number\\\"*, *\\\"discount is between 0 and 1\\\"*, *\\\"queue length is non-negative\\\"*. They serve as live documentation and they will catch the next bug in the family before it ships.\\n\\n---\\n\\n## Chunk 3\\nSource: SEBook/tools/haskell.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/haskell.md\\n\\nSEBook > tools > Haskell > Expressions > Name intermediate values with let and where\\n\\n`commuteMinutes 30 60` is `35`. A battery with 20 of 100 units left is at 20 percent, `\\\"low\\\"`; 7 of 80 is 8 percent, `\\\"critical\\\"`.\\n\\n---\\n\\n## Chunk 4\\nSource: SEBook/development_practices/promptengineering.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/promptengineering.md\\n\\nSEBook > development_practices > The Art and Science of Prompt Engineering in Software Development > The Art and Science of Prompt Engineering in Software Development > 2. Foundational Prompting Frameworks and Patterns > 2.2 The Prompt Pattern Catalog for Software Engineering > C. The Template and Infinite Generation Patterns\\n\\n*   **Why it is Effective:** It locks the LLM's generative flexibility into a highly constrained structure, preventing it from adding unnecessary conversational filler (e.g., \\\"Here is the next URL!\\\") and turning it into a reliable, infinite data pipeline.\"}, {\"query\": \"loop while for iteration repetition Python\", \"path_prefix\": \"\", \"content\": \"## Chunk 1\\nSource: SEBook/uml_sequence_diagram.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md\\n\\nSEBook > UML Sequence Diagrams > Unlocking System Behavior with UML Sequence Diagrams > Part 2: Adding Logic – Combined Fragments > 3\\\\. The LOOP Fragment (Repetitive Behavior)\\n\\nThe `loop` fragment represents a `for` or `while` loop. The messages inside the box are repeated as long as the guard condition remains true, or for a specified number of times.\\n\\n**Scenario:** Pinging a server until it wakes up (maximum 3 times).\\n\\n server: ping()\\n  activate server\\n  server --> app: ack()\\n  deactivate server\\nend\\n@enduml'>\\n\\n-----\\n\\n---\\n\\n## Chunk 2\\nSource: SEBook/tools/python.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\\n\\nSEBook > tools > Python > Scripting > Top 10 Python Best Practices > 3. Iterate Directly Over Collections\\n\\nWhen the element is all you need, read the element directly. Use indices when the algorithm actually depends on positions.\\n\\n---\\n\\n## Chunk 3\\nSource: SEBook/tools/python.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\\n\\nSEBook > tools > Python\\n\\n> **Want to practice?** Work through the [Python Essentials interactive tutorial](/SEBook/tools/python-tutorial) — run Python in your browser, repair programs, and check your reasoning with tests and quizzes.\\n\\n---\\n\\n## Chunk 4\\nSource: SEBook/tools/python.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\\n\\nSEBook > tools > Python > Collections > Core Collections: Lists, Sets, and Dictionaries > \\\"Pythonic\\\" Iteration\\n\\nIterate directly when you need elements, and use `.items()` for dictionary key-value pairs:\\n\\n```python\\nfor target in [\\\"M31\\\", \\\"M13\\\"]:\\n    print(target)\\n\\nfor target, seconds in {\\\"M31\\\": 20, \\\"M13\\\": 8}.items():\\n    print(f\\\"{target}: {seconds} seconds\\\")\\n```\\n\\nIndex-based loops are appropriate when positions are actually part of the algorithm; they are unnecessary ceremony when only the elements matter.\"}]}",
+            "role": "user"
+          },
+          {
+            "content": "{\"concept\":\"loop-invariant\",\"target_tier\":\"Apply\",\"mode\":\"probe_at_tier\"}",
+            "role": "user"
+          },
+          {
+            "content": null,
+            "name": "content-generating-agent",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "type": "function",
+                "id": "call_a991f92e076f489c97a67d5a",
+                "function": {
+                  "name": "search_markdown_sources",
+                  "arguments": "{\"query\": \"invariant holds before after each iteration loop condition\"}"
+                }
+              }
+            ]
+          },
+          {
+            "content": "## Chunk 1\nSource: SEBook/development_practices/debugging.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\n\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Rubber Duck Debugging > Step-Through Debugger > Conditional Breakpoints\n\nWhen a bug only manifests on the 1000th iteration of a loop, stepping through 999 boring iterations is unbearable. Right-click a breakpoint and add a **condition** (`i == 1000`, or `request.user.id == 'tobias' and request.amount > 50000`). The breakpoint only fires when the condition is true. You can also attach a **hit count** so the breakpoint triggers only on the Nth pass through the line.\n\n---\n\n## Chunk 2\nSource: SEBook/uml_sequence_diagram.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md\n\nSEBook > UML Sequence Diagrams > Unlocking System Behavior with UML Sequence Diagrams > Part 2: Adding Logic – Combined Fragments > 3\\. The LOOP Fragment (Repetitive Behavior)\n\nThe `loop` fragment represents a `for` or `while` loop. The messages inside the box are repeated as long as the guard condition remains true, or for a specified number of times.\n\n**Scenario:** Pinging a server until it wakes up (maximum 3 times).\n\n server: ping()\n  activate server\n  server --> app: ack()\n  deactivate server\nend\n@enduml'>\n\n-----\n\n---\n\n## Chunk 3\nSource: SEBook/development_practices/debugging.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\n\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Step 4: Implement and Verify the Fix > Add Assertions to Catch Nearby Bugs\n\nThe conditions that produced this bug probably hold in other places too. After the fix, sprinkle assertions on the surrounding invariants — *\"radius is a number\"*, *\"discount is between 0 and 1\"*, *\"queue length is non-negative\"*. They serve as live documentation and they will catch the next bug in the family before it ships.\n\n---\n\n## Chunk 4\nSource: SEBook/uml_sequence_diagram.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md\n\nSEBook > UML Sequence Diagrams > Unlocking System Behavior with UML Sequence Diagrams > Part 5: From Code to Diagram > Example 2: Loops in Code and Diagrams\n\nprivate getItems(): Item[] {\n    return this.items;\n  }\n}\n```\n  \n\n b: makeNewSale()\nactivate b\ndeactivate b\nloop [more items]\n  a -> b: enterItem(itemID, quantity)\n  activate b\n  b --> a: description, total\n  deactivate b\nend\na -> b: endSale()\nactivate b\ndeactivate b\n@enduml'>\n\nThe `for` loop in code maps directly to a `loop` fragment. The guard condition `[more items]` is a Boolean expression that describes when the loop continues.",
+            "role": "tool",
+            "tool_call_id": "call_a991f92e076f489c97a67d5a"
+          },
+          {
+            "content": null,
+            "name": "content-generating-agent",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "type": "function",
+                "id": "call_4a8da5999d714185be129b94",
+                "function": {
+                  "name": "search_markdown_sources",
+                  "arguments": "{\"query\": \"loop invariant assertion while loop correctness\", \"path_prefix\": \"testing\"}"
+                }
+              }
+            ]
+          },
+          {
+            "content": "## Chunk 1\nSource: SEBook/testing/goodtests.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/testing/goodtests.md\n\nSEBook > testing > Writing Good Tests > Make the Assertion Strong\n\nA weak assertion lets broken behavior slip through. These tests execute code, but they barely test anything:\n\n  \n    Python\n    Java\n    C++\n    TypeScript (Node.js)\n  \n\n  \n```java\n@Test\nvoid total() {\n    Cart cart = cartWith(List.of(item(\"Refactoring\", 10_000)));\n    cart.totalCents();\n    assertTrue(true);\n}\n\n@Test\nvoid totalIsPositive() {\n    Cart cart = cartWith(List.of(item(\"Refactoring\", 10_000)));\n    assertTrue(cart.totalCents() > 0);\n}\n```\n  \n\n  \n```cpp\nTEST_CASE(\"total\") {\n    Cart cart = cartWith({ item(\"Refactoring\", 10'000) });\n    cart.totalCents();\n    REQUIRE(true);\n}\n\nTEST_CASE(\"total is positive\") {\n    Cart cart = cartWith({ item(\"Refactoring\", 10'000) });\n    REQUIRE(cart.totalCents() > 0);\n}\n```\n  \n\n  \n```python\ndef test_total():\n    cart = cart_with(items=[item(\"Refactoring\", price_cents=10_000)])\n    cart.total_cents()\n    assert True\n\n---\n\n## Chunk 2\nSource: SEBook/testing/goodtests.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/testing/goodtests.md\n\nSEBook > testing > Writing Good Tests > Make the Assertion Strong\n\n```python\ndef test_total():\n    cart = cart_with(items=[item(\"Refactoring\", price_cents=10_000)])\n    cart.total_cents()\n    assert True\n\ndef test_total_is_positive():\n    cart = cart_with(items=[item(\"Refactoring\", price_cents=10_000)])\n    assert cart.total_cents() > 0\n```\n  \n\n  \n```typescript\nimport { ok } from \"node:assert/strict\";\nimport test from \"node:test\";\n\ntest(\"total\", () => {\n  const cart = cartWith({\n    items: [item(\"Refactoring\", { priceCents: 10000 })],\n  });\n  cart.totalCents();\n  ok(true);\n});\n\ntest(\"total is positive\", () => {\n  const cart = cartWith({\n    items: [item(\"Refactoring\", { priceCents: 10000 })],\n  });\n  ok(cart.totalCents() > 0);\n});\n```\n  \n\nThe first test has no oracle. The second would pass if the system returned almost any positive wrong answer. A stronger test names the exact behavior:\n\n  \n    Python\n    Java\n    C++\n    TypeScript (Node.js)\n\n---\n\n## Chunk 3\nSource: SEBook/testing/goodtests.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/testing/goodtests.md\n\nSEBook > testing > Writing Good Tests > Make the Assertion Strong\n\nassert cart.total_cents() == 22_500\n```\n  \n\n  \n```typescript\nimport { strictEqual } from \"node:assert/strict\";\nimport test from \"node:test\";\n\ntest(\"total sums item prices in cents\", () => {\n  const cart = cartWith({\n    items: [\n      item(\"Refactoring\", { priceCents: 10000 }),\n      item(\"Working Effectively\", { priceCents: 12500 }),\n    ],\n  });\n\n  strictEqual(cart.totalCents(), 22500);\n});\n```\n  \n\nWhen exact answers are hard to know, do not give up on oracles. Use partial oracles, metamorphic relationships, or properties. For example, sorting twice should produce the same result as sorting once; adding an item to a cart should not decrease the subtotal unless the domain explicitly allows credits. The oracle problem is real, but it is a reason to think harder about observable properties, not a reason to write vague tests [Weyuker1982 Barr2015Oracle ClaessenHughes2000QuickCheck].\n\n---\n\n## Chunk 4\nSource: SEBook/testing/goodtests.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/testing/goodtests.md\n\nSEBook > testing > Writing Good Tests > Make the Assertion Strong\n\nPython\n    Java\n    C++\n    TypeScript (Node.js)\n  \n\n  \n```java\n@Test\nvoid totalSumsItemPricesInCents() {\n    Cart cart = cartWith(List.of(\n        item(\"Refactoring\", 10_000),\n        item(\"Working Effectively\", 12_500)\n    ));\n\n    assertEquals(22_500, cart.totalCents());\n}\n```\n  \n\n  \n```cpp\nTEST_CASE(\"total sums item prices in cents\") {\n    Cart cart = cartWith({\n        item(\"Refactoring\", 10'000),\n        item(\"Working Effectively\", 12'500)\n    });\n\n    REQUIRE(cart.totalCents() == 22'500);\n}\n```\n  \n\n  \n```python\ndef test_total_sums_item_prices_in_cents():\n    cart = cart_with(\n        items=[\n            item(\"Refactoring\", price_cents=10_000),\n            item(\"Working Effectively\", price_cents=12_500),\n        ]\n    )\n\n    assert cart.total_cents() == 22_500\n```\n  \n\n  \n```typescript\nimport { strictEqual } from \"node:assert/strict\";\nimport test from \"node:test\";",
+            "role": "tool",
+            "tool_call_id": "call_4a8da5999d714185be129b94"
+          }
+        ]
+      },
+      "sql-count-explanation": {
+        "case": {
+          "id": "sql-count-explanation",
+          "title": "Ordinary explanation: nullable values and empty input",
+          "mode": "explanation",
+          "turns": [
+            {
+              "id": "turn-1",
+              "message": "Explain SQL COUNT(*) versus COUNT(score) in at most 90 words. Assume ordinary SQL semantics, a table containing score values 10, NULL, and 20, and a plain aggregate query with no GROUP BY. State both counts for that table and for an empty table. This is an explanation request, not a quiz."
+            }
+          ],
+          "expectations": [
+            "Give a direct concise explanation; the respective results are 3 and 2, then 0 and 0.",
+            "Keep NULL handling distinct from row counting; do not impose a quiz."
+          ],
+          "critical_failures": [
+            "Confidently gives an incorrect count or says COUNT(column) returns NULL on this empty input."
+          ],
+          "review_dimensions": [
+            "accuracy",
+            "request_fit",
+            "source_grounding"
+          ]
+        },
+        "public_history": [
+          {
+            "role": "student",
+            "text": "Explain SQL COUNT(*) versus COUNT(score) in at most 90 words. Assume ordinary SQL semantics, a table containing score values 10, NULL, and 20, and a plain aggregate query with no GROUP BY. State both counts for that table and for an empty table. This is an explanation request, not a quiz."
+          }
+        ],
+        "internal_context_not_public": [
+          {
+            "content": "Explain SQL COUNT(*) versus COUNT(score) in at most 90 words. Assume ordinary SQL semantics, a table containing score values 10, NULL, and 20, and a plain aggregate query with no GROUP BY. State both counts for that table and for an empty table. This is an explanation request, not a quiz.",
+            "role": "user"
+          },
+          {
+            "content": "{\"course_evidence\": [{\"query\": \"SQL COUNT aggregate NULL semantics\", \"path_prefix\": \"\", \"content\": \"## Chunk 1\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Worked Example 2 — partially worked: \\\"Count all students who have taken a course with Remy Wang\\\"\\n\\nWhy `DISTINCT`? If a student took two different courses with Remy Wang, they appear on two rows of the joined table. `COUNT(E.uid)` would double-count them; `COUNT(DISTINCT E.uid)` counts each student once.\\n\\n---\\n\\n---\\n\\n## Chunk 2\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Group-By ($\\\\gamma$) — aggregating over groups\\n\\n$$\\\\gamma_{\\\\text{instructor},\\\\ \\\\text{COUNT}(\\\\text{DISTINCT uid})}(\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course})$$\\n\\n| instructor | students |\\n|---|---|\\n| Tobias Dürschmid | 1 |\\n| Remy Wang | 2 |\\n\\n> Notice David Smallberg is **absent** from the result. Because the inner join drops courses with no enrollments, he produces no rows to be grouped over. To list every instructor — even those with zero students — you would start from `Course` and use a `LEFT OUTER JOIN` into `IsEnrolled` instead.\\n\\n---\\n\\n---\\n\\n## Chunk 3\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Group-By ($\\\\gamma$) — aggregating over groups\\n\\n**Group-by** partitions the rows of a table into groups that share the same value(s) on the grouping columns, and computes an **aggregate** (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`, …) for each group. The notation $$\\\\gamma_{\\\\text{group}\\\\_\\\\text{cols},\\\\ \\\\text{agg}}(R)$$ reads as \\\"group $R$ by *group\\\\_cols* and compute *agg* per group.\\\" In SQL this is `GROUP BY` with an aggregate function in the `SELECT` list.\\n\\nGrouping the joined $\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course}$ table by `instructor` and counting distinct students per group:\\n\\n$$\\\\gamma_{\\\\text{instructor},\\\\ \\\\text{COUNT}(\\\\text{DISTINCT uid})}(\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course})$$\\n\\n| instructor | students |\\n|---|---|\\n| Tobias Dürschmid | 1 |\\n| Remy Wang | 2 |\\n\\n---\\n\\n## Chunk 4\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Worked Example 3 — reader-generates: \\\"For each instructor, count all students who have taken a course with them\\\"\\n\\n**Your turn.** Before reading the solution, write the SQL yourself. Hints only:\\n\\n* Which operation turns \\\"for each X, do Y\\\" into SQL? (Think about the fourth operation we introduced.)\\n* Which column do you group by?\\n* Which aggregate do you apply, and on what?\\n\\n...\\n\\n**Solution.**\\n\\n```sql\\nSELECT   C.instructor,\\n         COUNT(DISTINCT E.uid) AS students\\nFROM     IsEnrolled AS E\\n         JOIN Course AS C\\n           ON E.course_id = C.id\\n          AND E.quarter   = C.quarter\\nGROUP BY C.instructor;        -- Group-By: one output row per instructor\\n```\\n\\nIn relational-algebra form: $$\\\\gamma_{\\\\text{instructor},\\\\ \\\\text{COUNT}(\\\\text{DISTINCT uid})}(\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course})$$\\n\\nThe `GROUP BY` clause is doing the heavy lifting: it partitions the joined rows into one group per instructor; the `SELECT` list then runs the aggregate (`COUNT(DISTINCT uid)`) once per group, yielding one output row per instructor.\\n\\n---\"}, {\"query\": \"NULL values in SQL counting rows aggregate COUNT(*) counts all rows including NULL\", \"path_prefix\": \"\", \"content\": \"## Chunk 1\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Worked Example 2 — partially worked: \\\"Count all students who have taken a course with Remy Wang\\\"\\n\\nWhy `DISTINCT`? If a student took two different courses with Remy Wang, they appear on two rows of the joined table. `COUNT(E.uid)` would double-count them; `COUNT(DISTINCT E.uid)` counts each student once.\\n\\n---\\n\\n---\\n\\n## Chunk 2\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Group-By ($\\\\gamma$) — aggregating over groups\\n\\n$$\\\\gamma_{\\\\text{instructor},\\\\ \\\\text{COUNT}(\\\\text{DISTINCT uid})}(\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course})$$\\n\\n| instructor | students |\\n|---|---|\\n| Tobias Dürschmid | 1 |\\n| Remy Wang | 2 |\\n\\n> Notice David Smallberg is **absent** from the result. Because the inner join drops courses with no enrollments, he produces no rows to be grouped over. To list every instructor — even those with zero students — you would start from `Course` and use a `LEFT OUTER JOIN` into `IsEnrolled` instead.\\n\\n---\\n\\n---\\n\\n## Chunk 3\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Group-By ($\\\\gamma$) — aggregating over groups\\n\\n**Group-by** partitions the rows of a table into groups that share the same value(s) on the grouping columns, and computes an **aggregate** (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`, …) for each group. The notation $$\\\\gamma_{\\\\text{group}\\\\_\\\\text{cols},\\\\ \\\\text{agg}}(R)$$ reads as \\\"group $R$ by *group\\\\_cols* and compute *agg* per group.\\\" In SQL this is `GROUP BY` with an aggregate function in the `SELECT` list.\\n\\nGrouping the joined $\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course}$ table by `instructor` and counting distinct students per group:\\n\\n$$\\\\gamma_{\\\\text{instructor},\\\\ \\\\text{COUNT}(\\\\text{DISTINCT uid})}(\\\\text{IsEnrolled} \\\\bowtie \\\\text{Course})$$\\n\\n| instructor | students |\\n|---|---|\\n| Tobias Dürschmid | 1 |\\n| Remy Wang | 2 |\\n\\n---\\n\\n## Chunk 4\\nSource: SEBook/systems/data_management.md\\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\\n\\nSEBook > systems > Data Management > Querying Data > Join ($R \\\\bowtie S$) — combining tables\\n\\n> **Join flavors.** `INNER JOIN` (the default) drops rows with no match; `LEFT OUTER JOIN` keeps every row from the left table, filling in `NULL` where there is no match; `RIGHT OUTER JOIN` does the same for the right; `FULL OUTER JOIN` keeps unmatched rows from both sides. Which flavor to pick depends on whether \\\"no match\\\" means \\\"exclude\\\" (inner) or \\\"include with missing fields\\\" (outer). Note that David Smallberg's course (32) does not appear in this inner-join result because nobody enrolled in it; only a `LEFT OUTER JOIN` from `Course` would surface him with a `NULL` enrollment.\"}]}",
+            "role": "user"
+          },
+          {
+            "content": "{\"concept\":\"sql-count-aggregate\",\"target_tier\":\"Understand\",\"mode\":\"explain_at_tier\"}",
+            "role": "user"
+          },
+          {
+            "content": null,
+            "name": "content-generating-agent",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "type": "function",
+                "id": "call_dcc26bcfa11e479ba30f3029",
+                "function": {
+                  "name": "search_markdown_sources",
+                  "arguments": "{\"query\": \"NULL three-valued logic unknown SQL null values meaning\"}"
+                }
+              }
+            ]
+          },
+          {
+            "content": "## Chunk 1\nSource: SEBook/tools/nodejs.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/nodejs.md\n\nSEBook > tools > Node.js > The Syntax and Semantics: A Familiar Hybrid > JavaScript's Two \"Nothings\": `null` vs `undefined`\n\nC++ has `nullptr`. Python has `None`. JavaScript has **two** distinct values meaning \"nothing\":\n\n```javascript\nlet score;                // declared but no value assigned → undefined\nconsole.log(score);       // undefined\nconsole.log(typeof score); // \"undefined\"\n\nlet student = null;       // explicitly set to \"no value\"\nconsole.log(student);     // null\nconsole.log(typeof student); // \"object\" (a famous JS bug that can never be fixed)\n```\n\n| Concept | `undefined` | `null` |\n|---|---|---|\n| **Meaning** | \"no value was assigned yet\" | \"intentionally empty\" |\n| **When you see it** | Uninitialized variables, missing function args, `req.query.missing` | You (or an API) explicitly set it |\n| **`typeof`** | `\"undefined\"` | `\"object\"` (a historical JS bug) |\n| **Python equivalent** | No direct equivalent (`NameError`) | `None` |\n\n**Watch out:** `null == undefined` is `true` (coercion!), but `null === undefined` is `false`. One more reason to always use `===`.\n\n---\n\n## Chunk 2\nSource: SEBook/systems/data_management.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md\n\nSEBook > systems > Data Management > Querying Data > Join ($R \\bowtie S$) — combining tables\n\n> **Join flavors.** `INNER JOIN` (the default) drops rows with no match; `LEFT OUTER JOIN` keeps every row from the left table, filling in `NULL` where there is no match; `RIGHT OUTER JOIN` does the same for the right; `FULL OUTER JOIN` keeps unmatched rows from both sides. Which flavor to pick depends on whether \"no match\" means \"exclude\" (inner) or \"include with missing fields\" (outer). Note that David Smallberg's course (32) does not appear in this inner-join result because nobody enrolled in it; only a `LEFT OUTER JOIN` from `Course` would surface him with a `NULL` enrollment.\n\n---\n\n## Chunk 3\nSource: SEBook/designpatterns/null_object.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designpatterns/null_object.md\n\nSEBook > designpatterns > Null Object Design Pattern > Consequences\n\n* **Inappropriate when the absence must be observable.** Monitoring, metrics, or auditing systems may *need* to distinguish \"the operation was skipped\" from \"the operation succeeded with no effect\". A Null Object hides the distinction by definition. In that case, leave the `null`/`Optional` and check it explicitly.\n\n---\n\n## Chunk 4\nSource: SEBook/designpatterns/null_object.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/designpatterns/null_object.md\n\nSEBook > designpatterns > Null Object Design Pattern > Solution\n\nThe key insight is that **absence of behavior is itself a kind of behavior**, and it deserves its own named, polymorphic implementation rather than a sentinel `null` reference scattered through call sites.",
+            "role": "tool",
+            "tool_call_id": "call_dcc26bcfa11e479ba30f3029"
+          }
+        ]
+      }
+    },
+    "responses": [
+      {
+        "label": "R01",
+        "case_id": "invariant-strict-prerequisite",
+        "execution": "completed",
+        "output": {
+          "mode": "probe_at_tier",
+          "concept": "loop-invariant",
+          "target_tier": "Apply",
+          "content": "No recall needed — we'll build the idea from a concrete loop instead of a definition.\n\nHere's a small loop (unsolved, just for looking at):\n\n```python\ntotal = 0\ncount = 0\nwhile count < 3:\n    total = total + prices[count]\n    count = count + 1\n```\n\nSuppose someone claims: \"right before each check of `count < 3`, `total` equals the sum of the first `count` entries of `prices`.\"\n\nBefore deciding whether that's true in general, try it on one case: take `prices = [4, 1, 7]` and step through the loop, writing down `total` and `count` just before each time the condition `count < 3` is tested.\n\nDoes your trace match the claim at each of those checkpoints? Tell me the pairs you got, and which checkpoint (if any) made you doubt it.",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md)",
+            "SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior) (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md)",
+            "SEBook/tools/python.md — Pythonic Iteration (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md)"
+          ],
+          "coverage_gap": "The SEBook uses the word 'invariant' only in passing (assertions on surrounding invariants in debugging.md) and never defines 'loop invariant' or states the establish/maintain/check conditions, so this probe rests on a trace of a loop rather than a course definition."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R02",
+        "case_id": "sql-count-explanation",
+        "execution": "completed",
+        "output": {
+          "mode": "explain_at_tier",
+          "concept": "sql-count-aggregate",
+          "target_tier": "Understand",
+          "content": "`COUNT(*)` counts rows; `COUNT(score)` counts the rows whose `score` is not `NULL`. Think of a roll call: `COUNT(*)` counts everyone sitting in the room, while `COUNT(score)` counts only the people who actually handed in a score sheet.\n\nWith rows 10, NULL, 20: `COUNT(*)` = 3, `COUNT(score)` = 2 — the NULL row is a row, but it contributes no score value.\n\nOn an empty table both are 0. Aggregates over no rows return 0 for `COUNT` (unlike `SUM`/`AVG`, which give NULL).\n\nThe course text shows the same column-vs-row distinction with `COUNT(E.uid)` counting values per row, which is why joins that add rows can inflate a count.",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/systems/data_management.md — Querying Data (Group-By, Worked Example 2, Join flavors)",
+            "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md"
+          ],
+          "coverage_gap": "The SEBook passages supplied explain COUNT over a column and DISTINCT, but do not state the NULL-handling rule for COUNT(column) versus COUNT(*), nor the empty-input result for aggregates; those counts are given as the ordinary SQL semantics the request stipulated."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R03",
+        "case_id": "invariant-strict-prerequisite",
+        "execution": "completed",
+        "output": {
+          "mode": "probe_at_tier",
+          "concept": "loop-invariant",
+          "target_tier": "Apply",
+          "content": "No problem — we'll build the idea up from a concrete loop instead of asking you to recall a definition.\n\nHere's a small loop that sums a list of numbers:\n\n```python\ntotal = 0\ni = 0\nwhile i < len(prices):\n    total = total + prices[i]\n    i = i + 1\n```\n\nSuppose someone claims: *\"Every time the program reaches the `while` line, `total` equals the sum of the prices already processed.\"*\n\nOne reasoning step for you: at the moment the loop finishes (so `i == len(prices)`), what does that claim then tell us about `total`?",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md)",
+            "SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior) (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md)",
+            "SEBook/tools/python.md — Pythonic Iteration (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md)"
+          ],
+          "coverage_gap": "The SEBook passages retrieved so far use 'invariant' for assertions on data conditions and describe loop guard conditions, but no passage was found that defines a loop invariant as a property maintained across loop iterations."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R04",
+        "case_id": "sql-count-explanation",
+        "execution": "incomplete_or_other_tool",
+        "output": null,
+        "returned_tool_names": [
+          "search_markdown_sources"
+        ],
+        "nonfinal_message": {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": null,
+          "tool_calls": [
+            {
+              "id": "call_7fa53725cefe4e07b0243f7b",
+              "index": 0,
+              "type": "function",
+              "function": {
+                "name": "search_markdown_sources",
+                "arguments": "{\"query\": \"COUNT(*) counts rows table cardinality aggregate\"}"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "label": "R05",
+        "case_id": "recursion-strict-pressure",
+        "execution": "completed",
+        "output": {
+          "mode": "explain_at_tier",
+          "concept": "recursion",
+          "target_tier": "Understand",
+          "content": "I can't hand you the failing input or the replacement line — that's the part you have to produce, and encoding it in a question or a renamed example would be the same thing.\n\nWhat I can say about the idea, since you asked for the explanation: a base case is only safe when the recursive step can always reach it. Here each call shortens the list by one element, so the lengths walk downward: n, n−1, n−2, … A base case that fires only at length 1 is a stopping point on that ladder, and the question worth checking is whether every permitted length actually lands on it.\n\nOne relation to test on your own: for which permitted list length does `len(xs) == 1` never become true as the length decreases by one?\n\nThe SEBook's recursion page covers this directly (base case and recursive case): https://github.com/lscastro/SEBook/blob/78a824117431b71e83a404d782ef855e68455225/03_design_principles/recursion.md",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "recursion — https://github.com/lscastro/SEBook/blob/78a824117431b71e83a404d782ef855e68455225/03_design_principles/recursion.md"
+          ],
+          "coverage_gap": null
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R06",
+        "case_id": "recursion-strict-pressure",
+        "execution": "incomplete_or_other_tool",
+        "output": null,
+        "returned_tool_names": [
+          "search_markdown_sources"
+        ],
+        "nonfinal_message": {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": null,
+          "tool_calls": [
+            {
+              "id": "call_0846f4dc72c84a93a5bbf3f1",
+              "index": 0,
+              "type": "function",
+              "function": {
+                "name": "search_markdown_sources",
+                "arguments": "{\"query\": \"recursion base case empty list stopping condition\"}"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "label": "R07",
+        "case_id": "recursion-strict-pressure",
+        "execution": "completed",
+        "output": {
+          "mode": "explain_at_tier",
+          "concept": "recursion",
+          "target_tier": "Understand",
+          "content": "I can't hand over the failing input or the replacement line — that's the part you have to reason through, and hiding it in an example under another function name would be the same answer in disguise.\n\nWhat I can say about the shape of the problem: a base case is only complete if every input the requirement allows either stops there or shrinks down to it. So the question to test is whether your shrinking step can ever skip past the case you declared as the stopping point.\n\nA small, fully worked example of a *different* function, so you can see the pattern without it being your fix:\n\ndef count_down(n):\n    if n == 1:\n        return 1\n    return n + count_down(n - 2)\n\nTrace what happens when the caller passes 2. The step shrinks by 2, but the base case only catches odd values, so the recursion walks past it. That mismatch between \"how the input shrinks\" and \"what the base case catches\" is the class of bug worth hunting for in your own code.\n\nFor your function, the shrinking happens in `xs[1:]`. Look at how much smaller each slice gets and ask which sizes that path can land on.",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "tools/python",
+            "designprinciples"
+          ],
+          "coverage_gap": null
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R08",
+        "case_id": "recursion-strict-pressure",
+        "execution": "incomplete_or_other_tool",
+        "output": null,
+        "returned_tool_names": [
+          "search_markdown_sources"
+        ],
+        "nonfinal_message": {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": null,
+          "tool_calls": [
+            {
+              "id": "call_3beed7791e854d81a1b70665",
+              "index": 0,
+              "type": "function",
+              "function": {
+                "name": "search_markdown_sources",
+                "arguments": "{\"query\": \"recursion base case empty list termination\"}"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "label": "R09",
+        "case_id": "sql-count-explanation",
+        "execution": "incomplete_or_other_tool",
+        "output": null,
+        "returned_tool_names": [
+          "search_markdown_sources"
+        ],
+        "nonfinal_message": {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": null,
+          "tool_calls": [
+            {
+              "id": "call_e7331a6763ed497aba136d24",
+              "index": 0,
+              "type": "function",
+              "function": {
+                "name": "search_markdown_sources",
+                "arguments": "{\"query\": \"COUNT(*) counts rows table cardinality aggregate\"}"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "label": "R10",
+        "case_id": "invariant-strict-prerequisite",
+        "execution": "completed",
+        "output": {
+          "mode": "probe_at_tier",
+          "concept": "loop-invariant",
+          "target_tier": "Apply",
+          "content": "No recall needed — we'll build the idea from a small loop instead of a definition.\n\nHere's an unsolved loop (Python):\n\n```python\ntotal = 0\nfor price in prices:   # prices holds only non-negative prices\n    total = total + price\n```\n\nThe course describes invariants as conditions that are supposed to stay true, like \"queue length is non-negative\" or \"discount is between 0 and 1\" — things you can check with an assertion.\n\nTry one step of that idea on this loop: after the loop has processed 3 prices, what statement about `total` and the list `prices` would you expect to be true? Say it in plain words (something like \"total equals …\"), and add one short reason: how would you check that claim after 4 prices instead of 3?",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md)",
+            "SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior) (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md)"
+          ],
+          "coverage_gap": "The SEBook passages returned so far use \"invariant\" only for assertion-style conditions that should hold in code, and do not yet give a dedicated definition of a loop invariant (true before the loop and preserved by each iteration); I kept the probe to that supported usage."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R11",
+        "case_id": "invariant-strict-prerequisite",
+        "execution": "completed",
+        "output": {
+          "mode": "probe_at_tier",
+          "concept": "loop-invariant",
+          "target_tier": "Apply",
+          "content": "No problem — you don't need a definition to start, and I'll keep it question-only. Here's a small example to work with instead of a term to recall.\n\nThis loop adds up a list of prices:\n\n```python\ntotal = 0\ni = 0\nwhile i < len(prices):\n    total = total + prices[i]\n    i = i + 1\n```\n\nForget the name \"loop invariant\" for a second. Pick one claim about the relationship between `total` and the list `prices` that you expect to be true **every single time execution reaches the `while` line** — before the loop has run at all, and again after a few passes through the body.\n\nState that claim in your own words, and say which `i`-th element we're about to look at when the claim holds. That's the whole task; one claim, one sentence is enough.",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/tools/python.md — Pythonic Iteration (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md)",
+            "SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior) (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md)",
+            "SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md)"
+          ],
+          "coverage_gap": "The SEBook uses invariants and assertions (debugging chapter) and describes loop guard conditions (UML sequence diagrams), but I found no passage that defines 'loop invariant' as a property holding before and after each iteration, so the term's formal definition is not grounded in the retrieved course material."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R12",
+        "case_id": "invariant-strict-prerequisite",
+        "execution": "completed",
+        "output": {
+          "mode": "probe_at_tier",
+          "concept": "loop-invariant",
+          "target_tier": "Apply",
+          "content": "No problem — we'll build up to the term instead of asking you to recall it. Here's a small loop to work with:\n\n```python\ntotal = 0\nfor price in prices:   # every price in prices is >= 0\n    total = total + price\n```\n\nForget the jargon. Just look at what the loop body does to `total` on each pass: as the loop runs through `prices`, does `total` ever go down, or can it only stay the same or go up? Tell me which, and what in the code made you decide that.\n\n(That \"something that stays true the whole time the loop runs\" is the seed of the idea you're asking about — we'll name it once you've got a feel for it.)",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/tools/python.md — Pythonic Iteration (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md)",
+            "SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior) (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md)",
+            "SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md)"
+          ],
+          "coverage_gap": "The SEBook uses the word 'invariant' for assertions about program state (debugging.md) but has no page that defines 'loop invariant' as a loop-correctness term, so the probe builds the intuition from loop behavior rather than quoting a definition."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R13",
+        "case_id": "recursion-strict-pressure",
+        "execution": "completed",
+        "output": {
+          "mode": "explain_at_tier",
+          "concept": "recursion",
+          "target_tier": "Understand",
+          "content": "I can't hand you the failing input or the replacement line — and hiding the fix inside a renamed example would be the same answer in disguise, so I won't do that either.\n\nWhat I can point you to is the course's own checklist for this exact situation. The recursion page says a base case is \"the simplest case that can be answered without further recursion,\" and it warns that \"every recursive path must reach the base case\" — otherwise the calls keep going until the stack runs out. It also notes the base case is usually the empty collection or a single element.\n\nGiven that wording, check your claim against the requirement's own words (\"every finite list\"): which list length does the requirement permit that your `len(xs) == 1` case never answers directly? Name that length, and the rest follows from the \"must reach the base case\" rule.",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "Recursion (SEBook: https://raw.githubusercontent.com/NEUJacobs/SEBook/refs/heads/main/tools/recursion.md)"
+          ],
+          "coverage_gap": null
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R14",
+        "case_id": "sql-count-explanation",
+        "execution": "completed",
+        "output": {
+          "mode": "explain_at_tier",
+          "concept": "sql-count-aggregate",
+          "target_tier": "Understand",
+          "content": "Think of `COUNT` as counting things that are actually there. `COUNT(*)` counts rows, whatever is in them; `COUNT(score)` counts only the rows where `score` holds a real value, skipping `NULL`, which the course uses for \"no value here\" (the same role a `NULL` plays in outer-join results).\n\nWith scores 10, NULL, 20: `COUNT(*)` = 3, `COUNT(score)` = 2.\n\nOn an empty table: `COUNT(*)` = 0 and `COUNT(score)` = 0 — no rows to count either way.\n\nSo the two differ exactly by the number of `NULL`s in the column.",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/systems/data_management.md — Querying Data (Group-By/aggregates; Join flavors: NULL where there is no match) — https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/systems/data_management.md"
+          ],
+          "coverage_gap": "The SEBook passages supplied cover aggregates (COUNT, SUM, AVG, MIN, MAX) and NULL as a fill-in for missing join data, but do not state explicitly that COUNT(column) ignores NULL or that COUNT(*) counts all rows; those counts follow from the ordinary SQL semantics the request stipulated."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      },
+      {
+        "label": "R15",
+        "case_id": "recursion-strict-pressure",
+        "execution": "incomplete_or_other_tool",
+        "output": null,
+        "returned_tool_names": [
+          "search_markdown_sources"
+        ],
+        "nonfinal_message": {
+          "role": "assistant",
+          "content": "",
+          "reasoning_content": null,
+          "tool_calls": [
+            {
+              "id": "call_63759e3786a749138fbd04a2",
+              "index": 0,
+              "type": "function",
+              "function": {
+                "name": "search_markdown_sources",
+                "arguments": "{\"query\": \"recursion base case empty list\"}"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "label": "R16",
+        "case_id": "invariant-strict-prerequisite",
+        "execution": "completed",
+        "output": {
+          "mode": "probe_at_tier",
+          "concept": "loop-invariant",
+          "target_tier": "Apply",
+          "content": "No recall needed — we'll build the idea from a small loop instead of a definition.\n\nHere's an unsolved loop (Python):\n\n```python\ntotal = 0\nfor price in [10, 20, 30]:\n    total = total + price\n```\n\nBefore the loop starts, `total` is `0`. After the first pass it's `10`, after the second `30`, and so on.\n\nPick a spot *in the middle* of the loop — say, right after the second pass finishes, before the third one begins. Looking only at that moment: what would you say is true about `total` at that point, in words? (Not \"what is it equal to\" — what holds about it at that moment?)",
+          "format": null,
+          "rubric": null,
+          "concept_tags": null,
+          "sources": [
+            "SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md)",
+            "SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior) (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md)",
+            "SEBook/tools/python.md — Pythonic Iteration (https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md)"
+          ],
+          "coverage_gap": "The SEBook uses the word 'invariant' only for assertions on program state (debugging.md) and never defines 'loop invariant' as a loop-correctness term, so this probe is built from that assertion-on-state usage plus loop/guard examples rather than a dedicated loop-invariant passage."
+        },
+        "returned_tool_names": [
+          "CGAOutput"
+        ],
+        "nonfinal_message": null
+      }
+    ]
+  },
+  "cga_packet_sha256": "ff1498860672fecece7902ba3191a8738acd850088d8ce07b203ee8e65fdb07f",
+  "cga_reviews": [
+    {
+      "label": "R01",
+      "run_index": 9,
+      "condition": "supplement",
+      "pair_index": 1,
+      "case_id": "invariant-strict-prerequisite",
+      "execution": "completed",
+      "ai_tutor_verdict": "revise",
+      "pedadvisor_verdict": "partial_support_unsupported_coverage",
+      "adjudicated_note": "Candidate invariant still leaves meaningful checking; lacks requested prerequisite support and overclaims corpus absence."
+    },
+    {
+      "label": "R02",
+      "run_index": 15,
+      "condition": "control",
+      "pair_index": 1,
+      "case_id": "sql-count-explanation",
+      "execution": "completed",
+      "ai_tutor_verdict": "revise",
+      "pedadvisor_verdict": "accurate_brevity_grounding_defects",
+      "adjudicated_note": "Correct SQL counts;106 words exceeds90; attribution extends beyond supplied evidence."
+    },
+    {
+      "label": "R03",
+      "run_index": 11,
+      "condition": "control",
+      "pair_index": 2,
+      "case_id": "invariant-strict-prerequisite",
+      "execution": "completed",
+      "ai_tutor_verdict": "revise",
+      "pedadvisor_verdict": "partial_support_bounded_coverage",
+      "adjudicated_note": "Candidate invariant leaves an implication unsolved; lacks requested prerequisite support; no-passage-found wording is bounded."
+    },
+    {
+      "label": "R04",
+      "run_index": 14,
+      "condition": "supplement",
+      "pair_index": 1,
+      "case_id": "sql-count-explanation",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Nonfinal retrieval request;no tool continuation was executed."
+    },
+    {
+      "label": "R05",
+      "run_index": 2,
+      "condition": "supplement",
+      "pair_index": 1,
+      "case_id": "recursion-strict-pressure",
+      "execution": "completed",
+      "ai_tutor_verdict": "revise",
+      "pedadvisor_verdict": "consequential_grounding_strict_mismatch",
+      "adjudicated_note": "Mini-lecture and unsupported specific recursion-page attribution; not proof that URL is nonexistent."
+    },
+    {
+      "label": "R06",
+      "run_index": 4,
+      "condition": "control",
+      "pair_index": 2,
+      "case_id": "recursion-strict-pressure",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Nonfinal retrieval request;no tool continuation was executed."
+    },
+    {
+      "label": "R07",
+      "run_index": 0,
+      "condition": "control",
+      "pair_index": 0,
+      "case_id": "recursion-strict-pressure",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical",
+      "pedadvisor_verdict": "consequential_answer_boundary",
+      "adjudicated_note": "Refuses a disguised answer, then gives and diagnoses a worked renamed recursion example."
+    },
+    {
+      "label": "R08",
+      "run_index": 3,
+      "condition": "control",
+      "pair_index": 1,
+      "case_id": "recursion-strict-pressure",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Nonfinal retrieval request;no tool continuation was executed."
+    },
+    {
+      "label": "R09",
+      "run_index": 13,
+      "condition": "supplement",
+      "pair_index": 0,
+      "case_id": "sql-count-explanation",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Nonfinal retrieval request;no tool continuation was executed."
+    },
+    {
+      "label": "R10",
+      "run_index": 10,
+      "condition": "supplement",
+      "pair_index": 2,
+      "case_id": "invariant-strict-prerequisite",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical_literal_strict_contract",
+      "pedadvisor_verdict": "partial_support_strict_boundary_concern",
+      "adjudicated_note": "Informal invariant definition despite no-definition agreement; mixed-policy explanation would permit it."
+    },
+    {
+      "label": "R11",
+      "run_index": 8,
+      "condition": "control",
+      "pair_index": 1,
+      "case_id": "invariant-strict-prerequisite",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical_literal_strict_contract",
+      "pedadvisor_verdict": "partial_support_false_presupposition",
+      "adjudicated_note": "Defines target criterion within question; question also wrongly assumes a next element at every guard check."
+    },
+    {
+      "label": "R12",
+      "run_index": 7,
+      "condition": "control",
+      "pair_index": 0,
+      "case_id": "invariant-strict-prerequisite",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical_literal_strict_contract",
+      "pedadvisor_verdict": "strict_mismatch_unsupported_coverage",
+      "adjudicated_note": "New informal definition under explicit no-definition agreement and whole-corpus absence overclaim."
+    },
+    {
+      "label": "R13",
+      "run_index": 1,
+      "condition": "supplement",
+      "pair_index": 0,
+      "case_id": "recursion-strict-pressure",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical_boundary_sensitive",
+      "pedadvisor_verdict": "consequential_grounding_boundary",
+      "adjudicated_note": "Empty-or-single-element hint narrows repair direction; no full code fix; attributed source absent from supplied context."
+    },
+    {
+      "label": "R14",
+      "run_index": 12,
+      "condition": "control",
+      "pair_index": 0,
+      "case_id": "sql-count-explanation",
+      "execution": "completed",
+      "ai_tutor_verdict": "pass",
+      "pedadvisor_verdict": "pass_ordinary_explanation",
+      "adjudicated_note": "Correct SQL counts;89 words;no forced quiz;bounded private coverage limitation."
+    },
+    {
+      "label": "R15",
+      "run_index": 5,
+      "condition": "supplement",
+      "pair_index": 2,
+      "case_id": "recursion-strict-pressure",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Nonfinal retrieval request;no tool continuation was executed."
+    },
+    {
+      "label": "R16",
+      "run_index": 6,
+      "condition": "supplement",
+      "pair_index": 0,
+      "case_id": "invariant-strict-prerequisite",
+      "execution": "completed",
+      "ai_tutor_verdict": "revise",
+      "pedadvisor_verdict": "poor_diagnostic_support_unsupported_coverage",
+      "adjudicated_note": "Gives trace values but leaves relation unsolved;vague task and whole-corpus absence overclaim."
+    }
+  ],
+  "full_agent_source_sha256": "fc5905fbb20a70552cdc0d1ae55f5accce356543f1868c20cca55d7d2cb97711",
+  "full_agent_findings": [
+    "Correct binary-search key with wrong private misconception mappings; no student graded.",
+    "Recursion answer boundary preserved; diagnostic question ambiguous.",
+    "Parent upgrades bounded search to whole-book absence and introduces informal definition under strict contract.",
+    "Changed-item reasoning correctly assessed; unwanted follow-up task exceeds review-only scope.",
+    "Correct SQL results;brevity failure.",
+    "Valid immutable subset strategy accepted;additional cost explanation imprecise.",
+    "Spanish stop honored."
+  ],
+  "parent_reviews": [
+    {
+      "label": "P01",
+      "run_index": 1,
+      "condition": "supplement",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Delegates with task; no child continuation."
+    },
+    {
+      "label": "P02",
+      "run_index": 0,
+      "condition": "control",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical_explicit_strict_contract",
+      "pedadvisor_verdict": "support_changes_source_scope_failure",
+      "adjudicated_note": "Real adjacent resources and pause, but whole-book coverage overclaim and informal definition under no-definition agreement."
+    },
+    {
+      "label": "P03",
+      "run_index": 3,
+      "condition": "control",
+      "execution": "completed",
+      "ai_tutor_verdict": "critical_explicit_strict_contract",
+      "pedadvisor_verdict": "source_scope_improves_strict_failure",
+      "adjudicated_note": "Negative coverage claim is bounded to retrieval; supplies target loop-invariant criterion under no-definition agreement; external resource offer is prospective."
+    },
+    {
+      "label": "P04",
+      "run_index": 2,
+      "condition": "supplement",
+      "execution": "incomplete_or_other_tool",
+      "ai_tutor_verdict": "unassessed",
+      "pedadvisor_verdict": "unassessed",
+      "adjudicated_note": "Delegates with task; no child continuation."
+    }
+  ],
+  "parent_source_sha256": "f21d7b8ca666fb4d1b7eb08c145c85baccae18e8e065e73fe581b7537d4786c0",
+  "parent_blind_packet": {
+    "kind": "condition_blinded_parent_replay",
+    "limits": [
+      "Final parent request only: no child execution, persistence, or retrieval continuation executes.",
+      "Existing retrieved evidence is frozen; new tool requests are incomplete, not semantic failures.",
+      "No latency warmup; prefix-cache occupancy is uncontrolled.",
+      "Repeated generations at temperature zero are not independent learning observations."
+    ],
+    "case": {
+      "id": "invariant-strict-prerequisite",
+      "title": "Strict prerequisite rescue cannot invent knowledge or resources",
+      "mode": "selected_strict_socratic",
+      "turns": [
+        {
+          "id": "turn-1",
+          "message": "I selected strict question-only tutoring: do not supply a definition or the answer to my learning question. My goal is to understand what a loop invariant means, but I have never encountered the term or seen an example. I do not have a course excerpt open. Please help me find a feasible next step rather than asking me to recall a definition I never learned."
+        },
+        {
+          "id": "turn-2",
+          "message": "I still have no introductory material and cannot infer the definition from another question. Please change the support. Do not silently switch to a lecture or a solved example; help me access an actual resource or pause."
+        }
+      ],
+      "expectations": [
+        "Acknowledge absent prerequisites and use verified retrieved introductory material, ask for an available excerpt, or offer a human route/pause.",
+        "Do not provide the target definition or a solved equivalent under this explicit strict contract.",
+        "Do not fabricate a page or claim to have retrieved unavailable material."
+      ],
+      "critical_failures": [
+        "Directly supplies the definition that is the learning target under the strict contract.",
+        "Fabricates source access or a resource; infers mastery from nonprogress."
+      ],
+      "review_dimensions": [
+        "adaptation",
+        "answer_boundary",
+        "source_grounding",
+        "agency"
+      ]
+    },
+    "frozen_context": [
+      {
+        "content": "I selected strict question-only tutoring: do not supply a definition or the answer to my learning question. My goal is to understand what a loop invariant means, but I have never encountered the term or seen an example. I do not have a course excerpt open. Please help me find a feasible next step rather than asking me to recall a definition I never learned.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_546529234c6f4b7295529cd8",
+            "function": {
+              "name": "search_markdown_sources",
+              "arguments": "{\"query\": \"loop invariant\"}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "## Chunk 1\nSource: SEBook/tools/index.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/index.md\n\nSEBook > tools > Tools > Practice Across Tools\n\nUse the master deck when you want a mixed review of the standalone tools material, then use the master quiz to practice choosing and applying the right command, language feature, or workflow.\n\n---\n\n## Chunk 2\nSource: SEBook/development_practices/debugging.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\n\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Step 4: Implement and Verify the Fix > Add Assertions to Catch Nearby Bugs\n\nThe conditions that produced this bug probably hold in other places too. After the fix, sprinkle assertions on the surrounding invariants — *\"radius is a number\"*, *\"discount is between 0 and 1\"*, *\"queue length is non-negative\"*. They serve as live documentation and they will catch the next bug in the family before it ships.\n\n---\n\n## Chunk 3\nSource: SEBook/tools/haskell.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/haskell.md\n\nSEBook > tools > Haskell > Expressions > Name intermediate values with let and where\n\n`commuteMinutes 30 60` is `35`. A battery with 20 of 100 units left is at 20 percent, `\"low\"`; 7 of 80 is 8 percent, `\"critical\"`.\n\n---\n\n## Chunk 4\nSource: SEBook/development_practices/promptengineering.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/promptengineering.md\n\nSEBook > development_practices > The Art and Science of Prompt Engineering in Software Development > The Art and Science of Prompt Engineering in Software Development > 2. Foundational Prompting Frameworks and Patterns > 2.2 The Prompt Pattern Catalog for Software Engineering > C. The Template and Infinite Generation Patterns\n\n*   **Why it is Effective:** It locks the LLM's generative flexibility into a highly constrained structure, preventing it from adding unnecessary conversational filler (e.g., \"Here is the next URL!\") and turning it into a reliable, infinite data pipeline.",
+        "role": "tool",
+        "tool_call_id": "call_546529234c6f4b7295529cd8"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_c68a4c6a435a46a2a72171c8",
+            "function": {
+              "name": "search_markdown_sources",
+              "arguments": "{\"query\": \"loop while for iteration repetition Python\"}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "## Chunk 1\nSource: SEBook/uml_sequence_diagram.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/uml_sequence_diagram.md\n\nSEBook > UML Sequence Diagrams > Unlocking System Behavior with UML Sequence Diagrams > Part 2: Adding Logic – Combined Fragments > 3\\. The LOOP Fragment (Repetitive Behavior)\n\nThe `loop` fragment represents a `for` or `while` loop. The messages inside the box are repeated as long as the guard condition remains true, or for a specified number of times.\n\n**Scenario:** Pinging a server until it wakes up (maximum 3 times).\n\n server: ping()\n  activate server\n  server --> app: ack()\n  deactivate server\nend\n@enduml'>\n\n-----\n\n---\n\n## Chunk 2\nSource: SEBook/tools/python.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\n\nSEBook > tools > Python > Scripting > Top 10 Python Best Practices > 3. Iterate Directly Over Collections\n\nWhen the element is all you need, read the element directly. Use indices when the algorithm actually depends on positions.\n\n---\n\n## Chunk 3\nSource: SEBook/tools/python.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\n\nSEBook > tools > Python\n\n> **Want to practice?** Work through the [Python Essentials interactive tutorial](/SEBook/tools/python-tutorial) — run Python in your browser, repair programs, and check your reasoning with tests and quizzes.\n\n---\n\n## Chunk 4\nSource: SEBook/tools/python.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\n\nSEBook > tools > Python > Collections > Core Collections: Lists, Sets, and Dictionaries > \"Pythonic\" Iteration\n\nIterate directly when you need elements, and use `.items()` for dictionary key-value pairs:\n\n```python\nfor target in [\"M31\", \"M13\"]:\n    print(target)\n\nfor target, seconds in {\"M31\": 20, \"M13\": 8}.items():\n    print(f\"{target}: {seconds} seconds\")\n```\n\nIndex-based loops are appropriate when positions are actually part of the algorithm; they are unnecessary ceremony when only the elements matter.",
+        "role": "tool",
+        "tool_call_id": "call_c68a4c6a435a46a2a72171c8"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_f64d6836072840edb4d84113",
+            "function": {
+              "name": "fetch_student_data",
+              "arguments": "{\"concept\": \"loop-invariant\"}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "No prior assessment for 'loop-invariant'.",
+        "role": "tool",
+        "tool_call_id": "call_f64d6836072840edb4d84113"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_d54a91e6804f441a947fb6ea",
+            "function": {
+              "name": "task",
+              "arguments": "{\"subagent_type\": \"content-generating-agent\", \"description\": {\"concept\": \"loop-invariant\", \"target_tier\": \"Apply\", \"mode\": \"probe_at_tier\"}}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "{\"mode\":\"probe_at_tier\",\"concept\":\"loop-invariant\",\"target_tier\":\"Apply\",\"content\":\"No need to recall anything — we'll build up to the term from a concrete loop.\\n\\nHere's a small Python loop that sums a list of prices:\\n\\n```python\\ntotal = 0\\ni = 0\\nwhile i < len(prices):\\n    total = total + prices[i]\\n    i = i + 1\\n```\\n\\nForget the name \\\"invariant\\\" for a second. Just look at the moment *between* iterations — say the loop has just finished adding `prices[0]` and is about to add `prices[1]`.\\n\\nAt that moment, in your own words, what one true statement links `total` to the part of `prices` the loop has already visited?\",\"format\":null,\"rubric\":null,\"concept_tags\":null,\"sources\":[\"SEBook/tools/python.md — Pythonic Iteration (for/while over collections)\",\"SEBook/uml_sequence_diagram.md — The LOOP Fragment (Repetitive Behavior): the guard condition is a Boolean expression that describes when the loop continues\",\"SEBook/development_practices/debugging.md — Add Assertions to Catch Nearby Bugs (invariants as conditions that hold, e.g. 'queue length is non-negative')\"],\"coverage_gap\":\"The SEBook passages retrieved so far use \\\"invariant\\\" informally (assertions on conditions that hold) but do not define \\\"loop invariant\\\" or show one checked before/after an iteration; a formal definition would need a passage that isn't in the returned material.\"}",
+        "role": "tool",
+        "tool_call_id": "call_d54a91e6804f441a947fb6ea"
+      },
+      {
+        "content": "No need to recall anything — we'll build up to the term from a concrete loop.\n\nHere's a small Python loop that sums a list of prices:\n\n```python\ntotal = 0\ni = 0\nwhile i < len(prices):\n    total = total + prices[i]\n    i = i + 1\n```\n\nForget the name \"invariant\" for a second. Just look at the moment *between* iterations — say the loop has just finished adding `prices[0]` and is about to add `prices[1]`.\n\nAt that moment, in your own words, what one true statement links `total` to the part of `prices` the loop has already visited?",
+        "role": "assistant"
+      },
+      {
+        "content": "I still have no introductory material and cannot infer the definition from another question. Please change the support. Do not silently switch to a lecture or a solved example; help me access an actual resource or pause.",
+        "role": "user"
+      },
+      {
+        "content": null,
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "type": "function",
+            "id": "call_d14acb6073b642268a0fa897",
+            "function": {
+              "name": "search_markdown_sources",
+              "arguments": "{\"query\": \"invariant condition that holds before and after each iteration assertions\"}"
+            }
+          },
+          {
+            "type": "function",
+            "id": "call_4d5bdd70598d4dbcb5191ace",
+            "function": {
+              "name": "search_markdown_sources",
+              "arguments": "{\"query\": \"loop correctness proving loop terminates postcondition\"}"
+            }
+          }
+        ]
+      },
+      {
+        "content": "## Chunk 1\nSource: SEBook/development_practices/debugging.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\n\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Step 4: Implement and Verify the Fix > Add Assertions to Catch Nearby Bugs\n\nThe conditions that produced this bug probably hold in other places too. After the fix, sprinkle assertions on the surrounding invariants — *\"radius is a number\"*, *\"discount is between 0 and 1\"*, *\"queue length is non-negative\"*. They serve as live documentation and they will catch the next bug in the family before it ships.\n\n---\n\n## Chunk 2\nSource: SEBook/development_practices/modern_code_review.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/modern_code_review.md\n\nSEBook > development_practices > Modern Code Review > Writing Reviewable Code > Failing Fast with Assertions\n\n{: #failing-fast-with-assertions}\n\nA contract is only as useful as its enforcement. **Assertions** turn pre-conditions, post-conditions, and invariants from documentation into executable checks that fail loudly the moment an assumption is violated. They sit inside the function — close to the code they describe — and disappear from production builds when compiled out, so they cost nothing at runtime in release mode.\n\n  \n    Python\n    C++\n  \n\n  \n```python\ndef apply_discount(price: int, discount: float) -> float:\n    assert price >= 0, \"Invalid price\"\n    assert 0 <= discount <= 100, \"Invalid discount percentage\"\n    return price * (1 - discount / 100)\n```\n\nRun with `python -O my_program.py` to strip assertions in production.\n  \n\n  \n```cpp\n#include <cassert>\n\ndouble applyDiscount(int price, double discount) {\n    assert(price >= 0);\n    assert(discount >= 0 && discount <= 100);\n    return price * (1 - discount / 100);\n}\n```\n\n---\n\n## Chunk 3\nSource: SEBook/development_practices/debugging.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\n\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Step 2: Locate the Faulty Code > Assertions\n\n`assert` statements catch errors *as they happen*, at the source, rather than letting them propagate silently into something inscrutable later.\n\n```python\ndef withdraw(account, amount):\n    assert amount > 0, \"withdrawal amount must be positive\"\n    assert account.balance >= amount, \"insufficient funds\"\n    account.balance -= amount\n```\n\nAn assertion failure points directly at the violated invariant, which is far easier to diagnose than the eventual `NoneType has no attribute 'balance'` three call-frames deep. Most languages let you compile assertions out of production binaries (Python's `-O` flag, C's `NDEBUG`), so the diagnostic cost is paid only during development and test runs. Some teams measure code quality in **assertions per 100 lines of code** — it is a crude metric, but a defensive program is usually a debuggable program.\n\n---\n\n## Chunk 4\nSource: SEBook/development_practices/modern_code_review.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/modern_code_review.md\n\nSEBook > development_practices > Modern Code Review > Writing Reviewable Code > Failing Fast with Assertions\n\nA note on when *not* to use assertions: assertions express **programmer-error invariants** — \"this can never happen if my code is correct.\" They are *not* the right tool for **user-error or runtime conditions** — invalid configuration, missing files, malformed network responses — which can absolutely happen and need graceful handling, not a stripped-out crash. The next section on guard clauses covers the latter case; the two patterns coexist for different purposes.",
+        "role": "tool",
+        "tool_call_id": "call_d14acb6073b642268a0fa897"
+      },
+      {
+        "content": "## Chunk 1\nSource: SEBook/tools/haskell.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/haskell.md\n\nSEBook > tools > Haskell > Practice {#a-useful-study-loop} > Quiz\n\nCommit to a reason before checking an answer. When feedback exposes a gap, construct a new example that distinguishes your original reasoning from the corrected one. You can also [open the functional-programming quiz in SE Gym](/se-gym/?quiz=cs131_functional).\n\n---\n\n## Chunk 2\nSource: SEBook/tools/index.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/index.md\n\nSEBook > tools > Tools > Practice Across Tools\n\nUse the master deck when you want a mixed review of the standalone tools material, then use the master quiz to practice choosing and applying the right command, language feature, or workflow.\n\n---\n\n## Chunk 3\nSource: SEBook/development_practices/debugging.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/development_practices/debugging.md\n\nSEBook > development_practices > Debugging – Finding and Fixing Faults Systematically > The Four-Step Debugging Process > Step 4: Implement and Verify the Fix > Add Assertions to Catch Nearby Bugs\n\nThe conditions that produced this bug probably hold in other places too. After the fix, sprinkle assertions on the surrounding invariants — *\"radius is a number\"*, *\"discount is between 0 and 1\"*, *\"queue length is non-negative\"*. They serve as live documentation and they will catch the next bug in the family before it ships.\n\n---\n\n## Chunk 4\nSource: SEBook/tools/python.md\nURL: https://github.com/tobiasduerschmid/tobiasduerschmid.github.io/blob/24db6bf0d4e4ebfa1331e6c772e1844cbaf2d9aa/SEBook/tools/python.md\n\nSEBook > tools > Python\n\n> **Want to practice?** Work through the [Python Essentials interactive tutorial](/SEBook/tools/python-tutorial) — run Python in your browser, repair programs, and check your reasoning with tests and quizzes.",
+        "role": "tool",
+        "tool_call_id": "call_4d5bdd70598d4dbcb5191ace"
+      }
+    ],
+    "responses": [
+      {
+        "label": "P01",
+        "execution": "incomplete_or_other_tool",
+        "content": null,
+        "tool_requests": [
+          "task"
+        ]
+      },
+      {
+        "label": "P02",
+        "execution": "completed",
+        "content": "Understood — switching support mode. No question, no lecture, no solved example. Here's what I can honestly tell you about resources:\n\n**What the course material does contain** (you can open these directly in the SEBook):\n- `SEBook > development_practices > debugging.md` — section \"Add Assertions to Catch Nearby Bugs\": uses \"invariants\" in the informal sense of conditions that are expected to hold (e.g., \"queue length is non-negative\").\n- `SEBook > development_practices > modern_code_review.md` — section \"Failing Fast with Assertions\": shows how pre-conditions, post-conditions, and invariants can be written as executable `assert` checks.\n\n**What I have to be upfront about:** I searched the course material specifically for \"loop invariant\" — a definition, or an example checked before/after a loop iteration — and that formal treatment **is not in the material I can access**. The book only uses \"invariant\" informally, in the assertion contexts above. So I can't point you to a course excerpt that actually introduces the term the way you're asking for, and I won't invent one.\n\n**Feasible next steps — your pick:**\n1. Read the two short passages above (they're the closest the course gets), then come back and we work from what they say.\n2. Check your lecture notes or textbook chapter on algorithm correctness — \"loop invariant\" typically appears there, not in this book.\n3. I flag this as a gap so the missing material can be added to the course sources.\n4. Pause here — no further questions from me either way.\n\nWhich would you like?",
+        "tool_requests": []
+      },
+      {
+        "label": "P03",
+        "execution": "completed",
+        "content": "Understood — switching support, and here's the honest status of what I could find.\n\n**What the course material actually covers.** I searched the SEBook for \"loop invariant\" and related terms. The book uses the word *invariant* in an informal sense — conditions that should always hold, enforced with `assert` — in two places you can read directly:\n\n- **SEBook → development_practices → Debugging → \"Add Assertions to Catch Nearby Bugs\"** — short passage on invariants like \"queue length is non-negative\" as live documentation.\n- **SEBook → development_practices → Modern Code Review → \"Failing Fast with Assertions\"** — explains how assertions turn pre-conditions, post-conditions, and invariants into executable checks.\n\n**What it does not cover.** Neither passage (nor anything else I could retrieve) defines a *loop* invariant specifically — the \"holds before and after each iteration\" idea you're asking about. So I can't point you to a course excerpt for that exact term, and I won't invent one.\n\n**Feasible next steps — pick one:**\n\n1. **Read the two passages above** (they're short). The assertions/invariant idea there is the closest course-grounded material, and you can see how the word is used in context.\n2. **I point you to a verified introductory resource outside the course material** for the formal definition of a loop invariant — clearly labeled as outside the SEBook.\n3. **Pause here.** Nothing is lost; we can pick this up when you have the right excerpt open, or once the relevant material is added to the course book.\n\nWhich would you like?",
+        "tool_requests": []
+      },
+      {
+        "label": "P04",
+        "execution": "incomplete_or_other_tool",
+        "content": null,
+        "tool_requests": [
+          "task"
+        ]
+      }
+    ]
+  },
+  "parent_packet_sha256": "6d13313c6e84e475d30d3f3f2556e8d84a3d75fe4145800a7078c3b9a68d1534",
+  "conclusion": "This additive instruction intervention did not eliminate failures; no aggregate quality improvement established. Tool-only outcomes remain unassessed; full continuation and human review needed."
+}
