@@ -1,0 +1,112 @@
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/functional_validators.py:835: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...480e-b64d-fcd9bbdc0cc3'), input_type=EdbotContext])
+  function=lambda v, h: h(v), schema=original_schema
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...480e-b64d-fcd9bbdc0cc3'), input_type=EdbotContext])
+  return self.__pydantic_serializer__.to_python(
+Turn for profile-454e8f1f-3da0-480e-b64d-fcd9bbdc0cc3 failed
+Traceback (most recent call last):
+  File "/home/duerschmid/edbot/src/edbot/service.py", line 138, in chat_turn
+    async for chunk, metadata in agent.astream(
+    ...<35 lines>...
+        held += chunk.text
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/main.py", line 3458, in astream
+    loop.after_tick()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/_loop.py", line 692, in after_tick
+    self.updated_channels = apply_writes(
+                            ~~~~~~~~~~~~^
+        self.checkpoint,
+        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        self.trigger_to_nodes,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/_algo.py", line 319, in apply_writes
+    if channels[chan].update(vals) and next_version is not None:
+       ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/channels/last_value.py", line 64, in update
+    raise InvalidUpdateError(msg)
+langgraph.errors.InvalidUpdateError: At key 'conversation': Can receive only one value per step. Use an Annotated key to handle multiple values.
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE
+measured socratic-pressure/select: 28.31s, 5 model calls, success=False
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/functional_validators.py:835: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4f25-8a00-252339539df4'), input_type=EdbotContext])
+  function=lambda v, h: h(v), schema=original_schema
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4f25-8a00-252339539df4'), input_type=EdbotContext])
+  return self.__pydantic_serializer__.to_python(
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/functional_validators.py:835: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4f25-8a00-252339539df4'), input_type=EdbotContext])
+  function=lambda v, h: h(v), schema=original_schema
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4f25-8a00-252339539df4'), input_type=EdbotContext])
+  return self.__pydantic_serializer__.to_python(
+Turn for profile-37cdf90a-3dd8-4f25-8a00-252339539df4 failed
+Traceback (most recent call last):
+  File "/home/duerschmid/edbot/src/edbot/service.py", line 138, in chat_turn
+    async for chunk, metadata in agent.astream(
+    ...<35 lines>...
+        held += chunk.text
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/main.py", line 3458, in astream
+    loop.after_tick()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/_loop.py", line 692, in after_tick
+    self.updated_channels = apply_writes(
+                            ~~~~~~~~~~~~^
+        self.checkpoint,
+        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        self.trigger_to_nodes,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/_algo.py", line 319, in apply_writes
+    if channels[chan].update(vals) and next_version is not None:
+       ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/channels/last_value.py", line 64, in update
+    raise InvalidUpdateError(msg)
+langgraph.errors.InvalidUpdateError: At key 'conversation': Can receive only one value per step. Use an Annotated key to handle multiple values.
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE
+measured missing-prerequisite/gap: 20.02s, 6 model calls, success=False
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/functional_validators.py:835: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4b61-9408-56a3cc45f2d1'), input_type=EdbotContext])
+  function=lambda v, h: h(v), schema=original_schema
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4b61-9408-56a3cc45f2d1'), input_type=EdbotContext])
+  return self.__pydantic_serializer__.to_python(
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/functional_validators.py:835: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4b61-9408-56a3cc45f2d1'), input_type=EdbotContext])
+  function=lambda v, h: h(v), schema=original_schema
+/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `none` - serialized value may not be as expected [field_name='context', input_value=EdbotContext(student_id='...4b61-9408-56a3cc45f2d1'), input_type=EdbotContext])
+  return self.__pydantic_serializer__.to_python(
+Turn for profile-11adcfc7-e8b5-4b61-9408-56a3cc45f2d1 failed
+Traceback (most recent call last):
+  File "/home/duerschmid/edbot/src/edbot/service.py", line 138, in chat_turn
+    async for chunk, metadata in agent.astream(
+    ...<35 lines>...
+        held += chunk.text
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/main.py", line 3458, in astream
+    loop.after_tick()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/_loop.py", line 692, in after_tick
+    self.updated_channels = apply_writes(
+                            ~~~~~~~~~~~~^
+        self.checkpoint,
+        ^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        self.trigger_to_nodes,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/pregel/_algo.py", line 319, in apply_writes
+    if channels[chan].update(vals) and next_version is not None:
+       ~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/duerschmid/edbot/.venv/lib/python3.13/site-packages/langgraph/channels/last_value.py", line 64, in update
+    raise InvalidUpdateError(msg)
+langgraph.errors.InvalidUpdateError: At key 'conversation': Can receive only one value per step. Use an Annotated key to handle multiple values.
+For troubleshooting, visit: https://docs.langchain.com/oss/python/langgraph/errors/INVALID_CONCURRENT_GRAPH_UPDATE
+measured accessibility-stop/accessible: 21.78s, 6 model calls, success=False
+Wrote /home/duerschmid/edbot/output/profiling/tutoring-candidate-v6-typed.json; execution=failed; quality=not_reviewed

@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "kind": "cpu_only_grammar_compatibility_proof",
+  "recorded_at": "2026-10-18T11:52:09.641378+00:00",
+  "execution_date": "2026-10-18",
+  "provenance": "Assembled from captured stdout and exact inputs of completed read-only SSH CPU checks in this task. Those checks did not emit a JSON report. No remote execution was repeated while saving this report.",
+  "host": "archeslab.cs.ucla.edu",
+  "python": "~/.local/share/edbot/sglang-flash-next/bin/python",
+  "versions": {
+    "xgrammar": {
+      "version": "0.2.7",
+      "evidence": "Queried installed distribution in the CPU check"
+    },
+    "sglang": {
+      "version": "0.5.21",
+      "evidence": "Existing environment-flash-next-benchmark.json and pinned source review; SGLang was not imported by this check"
+    },
+    "local_schema_generation": {
+      "pydantic": "2.13.4",
+      "langchain-core": "1.5.4"
+    }
+  },
+  "settings": {
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "OMP_NUM_THREADS": "1"
+    },
+    "compiler": {
+      "max_threads": 1,
+      "cache_enabled": false
+    },
+    "tokenizer_info": {
+      "encoded_vocab": "256 one-byte tokens bytes([0]) through bytes([255]), then b\"<eos>\"",
+      "vocab_type": "RAW",
+      "stop_token_ids": [
+        256
+      ]
+    },
+    "matcher": {
+      "terminate_without_stop_token": true
+    },
+    "acceptance": "GrammarMatcher.accept_string(test_string) and GrammarMatcher.is_terminated()",
+    "model_format": "qwen_3_coder",
+    "reasoning": false,
+    "strict": true
+  },
+  "serial_child_test": {
+    "tool": {
+      "type": "function",
+      "function": {
+        "name": "CGAOutput",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "content"
+          ],
+          "additionalProperties": false
+        },
+        "strict": true
+      }
+    },
+    "tool_choice": "required",
+    "test_strings": {
+      "single_call": "<tool_call>\n<function=CGAOutput>\n<parameter=content>One question</parameter>\n</function>\n</tool_call>",
+      "two_calls": "<tool_call>\n<function=CGAOutput>\n<parameter=content>One question</parameter>\n</function>\n</tool_call>\n<tool_call>\n<function=CGAOutput>\n<parameter=content>One question</parameter>\n</function>\n</tool_call>"
+    },
+    "results": [
+      {
+        "parallel_tool_calls": true,
+        "single_call_accepted": true,
+        "two_calls_accepted": true,
+        "compile_s_rounded": 0.0033,
+        "compiled_memory_bytes": 37020
+      },
+      {
+        "parallel_tool_calls": false,
+        "single_call_accepted": true,
+        "two_calls_accepted": false,
+        "compile_s_rounded": 0.0004,
+        "compiled_memory_bytes": 21488
+      }
+    ],
+    "cuda_not_initialized_after_test": true,
+    "application_scope": "SERIAL_CHILD_TOOL_CALLS affects CompleteContentMiddleware: CGA always, UCA only with DETERMINISTIC_ASSESSMENT_SAVE enabled. Legitimate multiple child tools also become sequential generations."
+  },
+  "typed_task_followup": {
+    "implementation_status": "not implemented",
+    "schema_generation": "Two outer Pydantic models pair a literal subagent_type with description: UCAInput or description: CGAInput. Public convert_to_openai_tool(model)[\"function\"][\"parameters\"] dereferences each branch. Combine the complete branches with anyOf.",
+    "tool": {
+      "type": "function",
+      "function": {
+        "name": "task",
+        "parameters": {
+          "anyOf": [
+            {
+              "properties": {
+                "subagent_type": {
+                  "const": "understanding-checking-agent",
+                  "type": "string"
+                },
+                "description": {
+                  "properties": {
+                    "concept": {
+                      "type": "string"
+                    },
+                    "invocation_context": {
+                      "enum": [
+                        "answer_submission",
+                        "practice_request",
+                        "followup_clarification",
+                        "new_evidence",
+                        "cadence_backstop",
+                        "cold_start",
+                        "other"
+                      ],
+                      "type": "string"
+                    },
+                    "answer_submission": {
+                      "anyOf": [
+                        {
+                          "properties": {
+                            "question_text": {
+                              "title": "Question Text",
+                              "type": "string"
+                            },
+                            "rubric": {
+                              "title": "Rubric",
+                              "type": "string"
+                            },
+                            "student_answer": {
+                              "title": "Student Answer",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "question_text",
+                            "rubric",
+                            "student_answer"
+                          ],
+                          "title": "AnswerSubmission",
+                          "type": "object"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "default": null
+                    }
+                  },
+                  "required": [
+                    "concept",
+                    "invocation_context"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "subagent_type",
+                "description"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "subagent_type": {
+                  "const": "content-generating-agent",
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "concept": {
+                          "title": "Concept",
+                          "type": "string"
+                        },
+                        "target_tier": {
+                          "enum": [
+                            "Remember",
+                            "Understand",
+                            "Apply",
+                            "Analyze",
+                            "Evaluate",
+                            "Create"
+                          ],
+                          "title": "Target Tier",
+                          "type": "string"
+                        },
+                        "mode": {
+                          "const": "generate_question",
+                          "default": "generate_question",
+                          "title": "Mode",
+                          "type": "string"
+                        },
+                        "format_constraint": {
+                          "anyOf": [
+                            {
+                              "enum": [
+                                "multiple_choice",
+                                "short_answer",
+                                "code_writing",
+                                "code_tracing"
+                              ],
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "default": null,
+                          "description": "None lets the CGA choose the format",
+                          "title": "Format Constraint"
+                        },
+                        "prior_questions": {
+                          "default": [],
+                          "description": "Recent questions asked by AI and the answer the student gave with its rubric",
+                          "items": {
+                            "properties": {
+                              "question_text": {
+                                "title": "Question Text",
+                                "type": "string"
+                              },
+                              "rubric": {
+                                "title": "Rubric",
+                                "type": "string"
+                              },
+                              "student_answer": {
+                                "title": "Student Answer",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "question_text",
+                              "rubric",
+                              "student_answer"
+                            ],
+                            "title": "AnswerSubmission",
+                            "type": "object"
+                          },
+                          "title": "Prior Questions",
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "concept",
+                        "target_tier"
+                      ],
+                      "title": "GenerateQuestionInput",
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "concept": {
+                          "title": "Concept",
+                          "type": "string"
+                        },
+                        "target_tier": {
+                          "enum": [
+                            "Remember",
+                            "Understand",
+                            "Apply",
+                            "Analyze",
+                            "Evaluate",
+                            "Create"
+                          ],
+                          "title": "Target Tier",
+                          "type": "string"
+                        },
+                        "mode": {
+                          "const": "explain_at_tier",
+                          "default": "explain_at_tier",
+                          "title": "Mode",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "concept",
+                        "target_tier"
+                      ],
+                      "title": "ExplainAtTierInput",
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "concept": {
+                          "title": "Concept",
+                          "type": "string"
+                        },
+                        "target_tier": {
+                          "enum": [
+                            "Remember",
+                            "Understand",
+                            "Apply",
+                            "Analyze",
+                            "Evaluate",
+                            "Create"
+                          ],
+                          "title": "Target Tier",
+                          "type": "string"
+                        },
+                        "mode": {
+                          "const": "probe_at_tier",
+                          "default": "probe_at_tier",
+                          "title": "Mode",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "concept",
+                        "target_tier"
+                      ],
+                      "title": "ProbeAtTierInput",
+                      "type": "object"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "subagent_type",
+                "description"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "strict": true
+      }
+    },
+    "schema_canonical_sha256": "b29bb379f8e8a033f9ea2dae1ac21c73831a7097f378167fb9321a0153a155fa",
+    "tool_choice": "auto",
+    "parallel_tool_calls": false,
+    "test_cases": [
+      {
+        "subagent_type": "understanding-checking-agent",
+        "description": {
+          "concept": "recursion",
+          "invocation_context": "new_evidence"
+        },
+        "test_string": "<tool_call>\n<function=task>\n<parameter=subagent_type>understanding-checking-agent</parameter>\n<parameter=description>{\"concept\": \"recursion\", \"invocation_context\": \"new_evidence\"}</parameter>\n</function>\n</tool_call>",
+        "accepted": true
+      },
+      {
+        "subagent_type": "understanding-checking-agent",
+        "description": {
+          "concept": "recursion",
+          "target_tier": "Apply",
+          "mode": "probe_at_tier"
+        },
+        "test_string": "<tool_call>\n<function=task>\n<parameter=subagent_type>understanding-checking-agent</parameter>\n<parameter=description>{\"concept\": \"recursion\", \"target_tier\": \"Apply\", \"mode\": \"probe_at_tier\"}</parameter>\n</function>\n</tool_call>",
+        "accepted": false
+      },
+      {
+        "subagent_type": "content-generating-agent",
+        "description": {
+          "concept": "recursion",
+          "target_tier": "Apply",
+          "mode": "probe_at_tier"
+        },
+        "test_string": "<tool_call>\n<function=task>\n<parameter=subagent_type>content-generating-agent</parameter>\n<parameter=description>{\"concept\": \"recursion\", \"target_tier\": \"Apply\", \"mode\": \"probe_at_tier\"}</parameter>\n</function>\n</tool_call>",
+        "accepted": true
+      },
+      {
+        "subagent_type": "content-generating-agent",
+        "description": {
+          "concept": "recursion",
+          "invocation_context": "new_evidence"
+        },
+        "test_string": "<tool_call>\n<function=task>\n<parameter=subagent_type>content-generating-agent</parameter>\n<parameter=description>{\"concept\": \"recursion\", \"invocation_context\": \"new_evidence\"}</parameter>\n</function>\n</tool_call>",
+        "accepted": false
+      }
+    ],
+    "compiled_memory_bytes": 202392,
+    "cuda_not_initialized_after_test": true,
+    "constraints": [
+      "Keep executable task(description: str, subagent_type: str) and existing object-to-normalized-JSON validation.",
+      "RequireContentAfterAssessment must select the complete CGA branch; its current root properties enum mutation does not support an anyOf root.",
+      "Do not use an independent description union, which permits the observed subagent/input mismatch.",
+      "Preserve current input defaults and runtime validation; test sync/async dispatch, structured object arguments, prior string/checkpoint compatibility, persistence task identity and the forced-CGA path before enabling."
+    ],
+    "earlier_exploratory_result": "The same wrappers exported directly as a referenced oneOf compiled and matched the same four cases, but XGrammar warned that it fell back to anyOf. The saved final proposal uses disjoint, reference-free anyOf branches and emitted no such warning."
+  },
+  "validation": {
+    "local_suite": {
+      "command": ".venv/bin/python -m unittest discover -s tests -v",
+      "tests": 149,
+      "result": "passed",
+      "elapsed_s": 11.464
+    },
+    "git_diff_check": "passed",
+    "http_fixture_checks": [
+      "Both child requests serialize parallel_tool_calls=false.",
+      "Disabling the flag preserves original requests and leaves the parent routing constraint independent.",
+      "A server ignoring the setting still gets the framework multiple-structured-response error and correction; neither rejected output is selected.",
+      "A real tool mixed with premature structured output still executes before a new complete output is accepted."
+    ]
+  },
+  "source_sha256": {
+    "src/edbot/interface_def.py": "8fac60f005addc370727dffe2a523ff2a5e78005e61736a277db57f79bcc69cf",
+    "src/edbot/middleware/direct_content.py": "24d65ff2bd13f6aaf952179dc1177525b1ff9461992ff950ddf754b560a78b1b",
+    "src/edbot/model_config.py": "d83a9e96cb7f92da352d845ff30f5bd506330695d7e183a2eb82a35f3afc4ee5",
+    "scripts/profile_agent.py": "dbabfe132032803b84e447aab4a63d4afcf6bbcb45e9cbe7370f10f6749d08d8",
+    "tests/test_child_tool_policy.py": "13c48397dae80c3b05fe3381dd3c1e638cbe5c5c20d93f82822a1db8dffae73a",
+    "output/profiling/environment-flash-next-benchmark.json": "4ac5ec87f131e8ad02de3f4088bd6db6be7f610f40a250208834bf021520834f",
+    "output/profiling/tutoring-candidate-v4-targeted.json": "3148c3754319917f10f2a93f453f2b693f5646651402d3e5cbbce24f55d2c6ac"
+  },
+  "source_pointers": [
+    "https://github.com/sgl-project/sglang/blob/v0.5.21/python/sglang/srt/function_call/base_format_detector.py#L355-L393",
+    "https://github.com/sgl-project/sglang/blob/v0.5.21/python/sglang/srt/function_call/function_call_parser.py#L259-L335",
+    "https://github.com/mlc-ai/xgrammar/blob/v0.2.7/python/xgrammar/builtin_structural_tag.py",
+    "https://github.com/mlc-ai/xgrammar/blob/v0.2.7/cpp/json_schema_converter.cc",
+    "https://github.com/mlc-ai/xgrammar/blob/v0.2.7/python/xgrammar/compiler.py"
+  ],
+  "limitations": [
+    "CPU grammar matching only: no model loading, inference, CUDA initialization, GPU work, or server change.",
+    "Synthetic byte vocabulary verifies grammar acceptance, not production-tokenizer mask behavior or model compliance.",
+    "Compiler milliseconds are not serving latency or evidence of an end-to-end speedup.",
+    "No isolated throughput or teaching-quality comparison was performed by this check.",
+    "Remote package/source files were not hashed; pinned source URLs, observed package version and local source/report hashes identify the evidence."
+  ]
+}

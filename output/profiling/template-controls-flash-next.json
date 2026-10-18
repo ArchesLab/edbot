@@ -1,0 +1,80 @@
+{
+  "observed_at": "2026-10-18T11:33:17.366601+00:00",
+  "model_revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+  "source_url": "https://huggingface.co/nvidia/Qwen3.8-Flash-Next-NVFP4/blob/fc694b54fb0174e0913e6adf86691ef85a4ead47/chat_template.jinja",
+  "sha256": "c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041",
+  "lines": [
+    {
+      "line": 45,
+      "text": "{%- set reasoning_instructions = '' %}"
+    },
+    {
+      "line": 46,
+      "text": "{%- if enable_thinking is undefined or enable_thinking is true %}"
+    },
+    {
+      "line": 47,
+      "text": "    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}"
+    },
+    {
+      "line": 48,
+      "text": "    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}"
+    },
+    {
+      "line": 49,
+      "text": "        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}"
+    },
+    {
+      "line": 50,
+      "text": "    {%- endif %}"
+    },
+    {
+      "line": 51,
+      "text": "    {%- if resolved_reasoning_effort == 'xhigh' %}"
+    },
+    {
+      "line": 52,
+      "text": "        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}"
+    },
+    {
+      "line": 53,
+      "text": "    {%- elif resolved_reasoning_effort == 'low' %}"
+    },
+    {
+      "line": 54,
+      "text": "        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}"
+    },
+    {
+      "line": 55,
+      "text": "    {%- endif %}"
+    },
+    {
+      "line": 164,
+      "text": "    {{- '<|im_start|>assistant\\n' }}"
+    },
+    {
+      "line": 165,
+      "text": "    {%- if enable_thinking is defined and enable_thinking is false %}"
+    },
+    {
+      "line": 166,
+      "text": "        {{- '<think>\\n\\n</think>\\n\\n' }}"
+    },
+    {
+      "line": 167,
+      "text": "    {%- else %}"
+    },
+    {
+      "line": 168,
+      "text": "        {{- '<think>\\n' }}"
+    },
+    {
+      "line": 169,
+      "text": "    {%- endif %}"
+    },
+    {
+      "line": 170,
+      "text": "{%- endif %}"
+    }
+  ]
+}

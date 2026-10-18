@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-18T09:29:51.789450+00:00",
+  "model": "Qwen3.8-Flash-Next-FP4-Local",
+  "tool_schema_policy": "server_default",
+  "expected_server_tool_strict_level": null,
+  "notes": [
+    "Inputs are synthetic; this does not access Edbot student state or retrieval.",
+    "No per-request strict override is sent. Expected server strictness is local intent, not observed server configuration.",
+    "Passing validates these samples, not assessment quality or universal schema enforcement."
+  ],
+  "checks": [
+    {
+      "name": "streamed_chat",
+      "success": true,
+      "error": null,
+      "response": "Recursion needs a base case to provide a termination condition that prevents an infinite loop by allowing the function to stop calling itself and return a concrete value.",
+      "visible_ttft_seconds": 0.1515809849370271,
+      "finish_reason": "stop",
+      "elapsed_seconds": 2.0985062648542225
+    },
+    {
+      "name": "UCAOutput",
+      "success": false,
+      "error": "ValidationError: 1 validation error for UCAOutput\nprior_tier\n  Input should be 'Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate' or 'Create' [type=literal_error, input_value='None', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/literal_error",
+      "prompt": "Return a UCAOutput for concept 'recursion', with no prior assessment. Course material: a base case stops recursion; recursive calls approach that case. Question: Why is a base case needed? Rubric: explains that it stops recursion. Student answer: 'It stops recursive calls when the smallest case is reached.' Use only this evidence; select a supported tier and explain uncertainty.",
+      "tool_calls": [
+        {
+          "name": "UCAOutput",
+          "args": {
+            "concept": "recursion",
+            "prior_tier": "None",
+            "tier": "Understand",
+            "confidence": "high",
+            "rationale": "The student states that the base case stops recursive calls and ties it to reaching the smallest case. This is a correct paraphrase in their own terms that shows comprehension of the base case's role rather than rote recall. No evidence yet of application or deeper analysis of termination conditions.",
+            "answer_judgment": {
+              "verdict": "correct",
+              "note": "Meets the rubric criterion: explains that the base case stops recursion. Adds the accurate detail that it triggers when the smallest/simplest case is reached."
+            }
+          },
+          "id": "call_0fc8710d1491487ca9047680",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "finish_reason": "tool_calls",
+      "elapsed_seconds": 12.070268453098834
+    },
+    {
+      "name": "CGAOutput",
+      "success": true,
+      "error": null,
+      "prompt": "Return a CGAOutput in generate_question mode for concept 'recursion', target tier Apply, with one short_answer question, its rubric, concept tags and sources. Use only this synthetic source, titled 'Synthetic recursion note': A countdown function stops at zero and otherwise calls itself with n - 1. Ask the learner to identify the base case for that function. Keep the answer in the rubric, separate from the student-facing question.",
+      "tool_calls": [
+        {
+          "name": "CGAOutput",
+          "args": {
+            "mode": "generate_question",
+            "concept": "recursion",
+            "target_tier": "Apply",
+            "format": "short_answer",
+            "content": "A countdown function is defined so that it stops when it reaches zero, and otherwise calls itself with n - 1. Given an initial call countdown(5), identify the base case of this function: what condition causes the recursion to stop, and which call triggers it?",
+            "rubric": "Base case: the condition where n == 0 (the function stops at zero). The call countdown(0) triggers the base case, so no further recursive call is made. Expected answer states the stopping condition is n equal to 0 and that countdown(0) is the call that hits it. Full credit: correctly identifies n == 0 as the base case condition. Partial credit: identifies stopping at zero but does not connect it to countdown(0) or the general condition n == 0. No credit: describes the recursive case (calling with n - 1) as the base case, or fails to state a stopping condition.",
+            "concept_tags": [
+              "recursion",
+              "base case",
+              "recursive case",
+              "countdown function"
+            ],
+            "sources": [
+              "Synthetic recursion note"
+            ]
+          },
+          "id": "call_eba11931b5e24687b4fe2083",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "finish_reason": "tool_calls",
+      "elapsed_seconds": 20.400037709157914
+    }
+  ],
+  "success": false
+}

@@ -1,0 +1,613 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-18T09:44:06.038865+00:00",
+  "scope": "model_stream_only",
+  "backend": "sglang",
+  "base_url": "http://127.0.0.1:30000/v1",
+  "model": "Qwen3.8-Flash-Next-FP4-Local",
+  "settings": {
+    "max_tokens": 512,
+    "thinking": false,
+    "temperature": 0,
+    "seed": 42,
+    "context_length": 32768,
+    "warmups": 1,
+    "repeats": 3,
+    "timeout_seconds": 120,
+    "cache_mode": "reuse",
+    "cache_condition": "prefix_reuse_permitted"
+  },
+  "serving_config": {
+    "MODEL_PRESET": "flash-next",
+    "MODEL_NAME": "Qwen3.8-Flash-Next-FP4-Local",
+    "MODEL_PATH": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+    "MODEL_REVISION": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+    "DRAFT_MODEL_PATH": null,
+    "DRAFT_MODEL_REVISION": null,
+    "SGLANG_VERSION": "0.5.21",
+    "SGLANG_SOURCE_REVISION": null,
+    "FLASHINFER_VERSION": "0.6.18",
+    "FLASHINFER_CACHE_PACKAGE": "https://github.com/flashinfer-ai/flashinfer/releases/download/v0.6.18/flashinfer_jit_cache-0.6.18%2Bcu130-cp39-abi3-manylinux_2_28_aarch64.whl#sha256=c97664eab2f21a01f6b8d24d10ba33631a1a64b981f788c3f61d81ebbf905970",
+    "ENABLE_SPECULATION": true,
+    "SPECULATIVE_ALGORITHM": "NEXTN",
+    "MEM_FRACTION_STATIC": 0.85,
+    "MAX_RUNNING_REQUESTS": 2,
+    "MAX_TOTAL_TOKENS": 131072,
+    "CONTEXT_LENGTH": 32768,
+    "CHUNKED_PREFILL_SIZE": 2048,
+    "KV_CACHE_DTYPE": "auto",
+    "MAMBA_RADIX_CACHE_STRATEGY": "extra_buffer",
+    "MAMBA_CACHE_SLOTS_PER_REQUEST": 5,
+    "ENABLE_THINKING": false,
+    "COMPILER_JOBS": 1,
+    "TOOL_STRICT_LEVEL": 2,
+    "ACTIVE_SPECULATIVE_ALGORITHM": "NEXTN",
+    "MAMBA_SSM_DTYPE": "float32",
+    "PLE_OFFLOAD_BACKEND": "file",
+    "PLE_DIRECTORY_POLICY": "fresh owned directory per launch"
+  },
+  "server_info": {
+    "status": "verified",
+    "observed": {
+      "model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "context_length": 32768,
+      "revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "max_running_requests": 2,
+      "max_total_tokens": 131072,
+      "chunked_prefill_size": 2048,
+      "page_size": 64,
+      "served_model_name": "Qwen3.8-Flash-Next-FP4-Local",
+      "enable_cache_report": true,
+      "attention_backend": "flashinfer",
+      "fp4_gemm_runner_backend": "flashinfer_cutlass",
+      "cuda_graph_max_bs_decode": 2,
+      "speculative_algorithm": "EAGLE",
+      "speculative_draft_model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "speculative_draft_model_revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_dspark_block_size": null,
+      "moe_runner_backend": "flashinfer_cutlass",
+      "max_mamba_cache_size": 10,
+      "mamba_ssm_dtype": "float32",
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "ple_offload_embedding": true,
+      "ple_offload_backend": "file",
+      "version": "0.5.21"
+    },
+    "mismatches": [],
+    "missing_fields": [],
+    "error": null,
+    "live_model": {
+      "model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "served_model_name": "Qwen3.8-Flash-Next-FP4-Local"
+    }
+  },
+  "error": null,
+  "notes": [
+    "Initial requests are separated, but are not necessarily cold: residency and prefix cache state are unknown.",
+    "Warm runs reuse each prompt, so prefix caching may contribute. No cache flush, unload, or server restart is performed.",
+    "TTFT starts at the HTTP request and ends at the first non-whitespace answer text; reasoning is excluded.",
+    "Completion tokens can include reasoning. Completion tokens per elapsed second includes load/prefill/network time; it is not decode throughput.",
+    "Usage and server timings are nullable when omitted. Medians exclude failed, truncated, and warmup runs; sample counts show missing metrics.",
+    "Local serving intent and allowlisted actual server metadata are separate; missing fields remain unverified. Observed mismatches stop generation. Record other GPU workloads separately.",
+    "Equal output budgets do not guarantee equal output lengths or quality. This does not measure retrieval, agent loops, or complete Edbot replies."
+  ],
+  "cases": {
+    "short": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a computer science tutor. Answer clearly and accurately in at most 150 words."
+        },
+        {
+          "role": "user",
+          "content": "Explain why a queue is useful for handling incoming print jobs. Give one concrete example and one limitation."
+        }
+      ],
+      "prompt_sha256": "1faa13d3a763e9d0c4c5ccfe80224c61a17b4d0bc1b32b98a837e4d59f78d55f",
+      "runs": [
+        {
+          "ttft_visible_seconds": 0.3763356329873204,
+          "elapsed_seconds": 7.281469506910071,
+          "prompt_tokens": 58,
+          "cached_prompt_tokens": null,
+          "completion_tokens": 171,
+          "completion_tokens_per_elapsed_second": 23.484270563479257,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A queue is ideal for print jobs because it enforces First-In-First-Out (FIFO) ordering, ensuring fairness and preventing starvation. Printers are single-resource devices; without a queue, concurrent requests would cause data corruption or lost jobs. The queue buffers requests, allowing the printer to process them sequentially at its own pace.\n\n**Concrete Example:** In an office, if Alice and Bob both send documents to the network printer simultaneously, the queue ensures Alice’s job (submitted first) prints completely before Bob’s begins, preventing mixed pages.\n\n**Limitation:** A standard queue lacks priority handling. If a critical, urgent document arrives after a massive 100-page report, it must wait for the entire report to finish. This \"head-of-line blocking\" can cause unacceptable delays for time-sensitive tasks, requiring a priority queue instead.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "f68bdff6cf604aab8fa8666958f461f8",
+            "object": "chat.completion.chunk",
+            "created": 1792316653,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 58,
+              "total_tokens": 229,
+              "completion_tokens": 171,
+              "prompt_tokens_details": null,
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.5384615384615384,
+                "spec_accept_length": 2.6307692307692307,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 105,
+                "spec_num_proposed_drafts": 195,
+                "spec_verify_ct": 65,
+                "spec_correct_drafts_histogram": [
+                  14,
+                  18,
+                  12,
+                  21
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "initial",
+          "index": 1
+        },
+        {
+          "ttft_visible_seconds": 0.27411759085953236,
+          "elapsed_seconds": 7.594216554891318,
+          "prompt_tokens": 58,
+          "cached_prompt_tokens": null,
+          "completion_tokens": 173,
+          "completion_tokens_per_elapsed_second": 22.78049338592713,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A queue is ideal for print jobs because it enforces First-In-First-Out (FIFO) ordering, ensuring fairness and preventing race conditions when multiple users send documents simultaneously. This structure decouples job submission from execution, allowing the printer to process tasks sequentially without losing requests.\n\n**Concrete Example:** In an office, if User A submits a 50-page report and User B submits a 1-page memo, the queue ensures User A’s job prints first. Without a queue, the printer might interleave pages or prioritize the smaller job arbitrarily, causing confusion and potential data loss.\n\n**Limitation:** A standard queue lacks priority handling. If an urgent, one-page contract arrives after a massive, low-priority batch job, it must wait until the entire batch finishes. This can cause unacceptable delays for critical tasks, requiring a priority queue instead.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "ae77a6d3f9084564a5738f6ad73fae79",
+            "object": "chat.completion.chunk",
+            "created": 1792316660,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 58,
+              "total_tokens": 231,
+              "completion_tokens": 173,
+              "prompt_tokens_details": null,
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.46296296296296297,
+                "spec_accept_length": 2.4027777777777777,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 100,
+                "spec_num_proposed_drafts": 216,
+                "spec_verify_ct": 72,
+                "spec_correct_drafts_histogram": [
+                  22,
+                  18,
+                  14,
+                  18
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "warm",
+          "index": 2
+        },
+        {
+          "ttft_visible_seconds": 0.26421808381564915,
+          "elapsed_seconds": 6.77533964603208,
+          "prompt_tokens": 58,
+          "cached_prompt_tokens": null,
+          "completion_tokens": 165,
+          "completion_tokens_per_elapsed_second": 24.353022670476875,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A queue is ideal for print jobs because it enforces First-In-First-Out (FIFO) ordering, ensuring fairness and preventing race conditions when multiple users send documents simultaneously. This structure decouples job submission from execution, allowing the printer to process tasks sequentially without overwhelming the system.\n\n**Concrete Example:** In an office, if User A submits a 50-page report and User B submits a 1-page memo, the queue ensures User A’s job starts first. The printer processes pages in the exact order received, maintaining predictable service levels.\n\n**Limitation:** Standard queues lack priority handling. If a critical, urgent document arrives after a long queue of low-priority tasks, it must wait until all preceding jobs finish. This can cause unacceptable delays for time-sensitive materials, requiring more complex priority queues instead.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "52d1a9cc199744b98e3ea3b4828a9d99",
+            "object": "chat.completion.chunk",
+            "created": 1792316667,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 58,
+              "total_tokens": 223,
+              "completion_tokens": 165,
+              "prompt_tokens_details": null,
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.4925373134328358,
+                "spec_accept_length": 2.462686567164179,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 99,
+                "spec_num_proposed_drafts": 201,
+                "spec_verify_ct": 67,
+                "spec_correct_drafts_histogram": [
+                  20,
+                  14,
+                  14,
+                  19
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "warm",
+          "index": 3
+        },
+        {
+          "ttft_visible_seconds": 0.2629645599517971,
+          "elapsed_seconds": 6.240844086045399,
+          "prompt_tokens": 58,
+          "cached_prompt_tokens": null,
+          "completion_tokens": 163,
+          "completion_tokens_per_elapsed_second": 26.11826184930175,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A queue is ideal for print jobs because it enforces First-In-First-Out (FIFO) ordering, ensuring fairness and preventing race conditions when multiple users send documents simultaneously. This structure decouples job submission from execution, allowing the printer to process tasks sequentially without losing requests.\n\n**Concrete Example:** In an office, if User A submits a 50-page report and User B submits a 1-page memo, the queue ensures User A’s job starts first. The printer processes the entire report before beginning the memo, maintaining predictable order.\n\n**Limitation:** Standard queues lack priority handling. If a critical, urgent document arrives after a long queue of low-priority tasks, it must wait until all preceding jobs finish. This can cause unacceptable delays for time-sensitive materials, requiring a priority queue instead.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "3e89c3c8d26f4e29bcf84631114ed651",
+            "object": "chat.completion.chunk",
+            "created": 1792316673,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 58,
+              "total_tokens": 221,
+              "completion_tokens": 163,
+              "prompt_tokens_details": null,
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.5128205128205128,
+                "spec_accept_length": 2.5076923076923077,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 100,
+                "spec_num_proposed_drafts": 195,
+                "spec_verify_ct": 65,
+                "spec_correct_drafts_histogram": [
+                  17,
+                  16,
+                  12,
+                  20
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "warm",
+          "index": 4
+        }
+      ],
+      "summary": {
+        "successful_warm_runs": 3,
+        "failed_warm_runs": 0,
+        "medians": {
+          "ttft_visible_seconds": 0.26421808381564915,
+          "elapsed_seconds": 6.77533964603208,
+          "prompt_tokens": 58,
+          "cached_prompt_tokens": null,
+          "completion_tokens": 165,
+          "completion_tokens_per_elapsed_second": 24.353022670476875,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null
+        },
+        "metric_sample_counts": {
+          "ttft_visible_seconds": 3,
+          "elapsed_seconds": 3,
+          "prompt_tokens": 3,
+          "cached_prompt_tokens": 0,
+          "completion_tokens": 3,
+          "completion_tokens_per_elapsed_second": 3,
+          "load_seconds": 0,
+          "prompt_eval_seconds": 0,
+          "decode_seconds": 0,
+          "server_prompt_tokens_per_second": 0,
+          "server_decode_tokens_per_second": 0
+        }
+      }
+    },
+    "long": {
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a computer science tutor. Answer clearly and accurately in at most 150 words."
+        },
+        {
+          "role": "user",
+          "content": "Use the following course notes.\n\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\nA queue is first-in, first-out. A stack is last-in, first-out.\nAn array-backed queue can use a circular buffer with head and tail indices.\nA producer adds work while a consumer removes work. A bounded queue has finite capacity.\nWhen a bounded queue is full, adding an item requires an explicit policy such as blocking\nthe producer, rejecting the item, or dropping an older item. These policies have different\nconsequences for reliability. Concurrent updates require appropriate synchronization.\n\nExplain why a bounded queue can help a web server handle a burst of requests. Describe what should happen when the queue is full and justify your policy."
+        }
+      ],
+      "prompt_sha256": "98f17b800cc92aa757737b354bfbcf9598117ccabf71fdcdf35d89fcfe5c52cc",
+      "runs": [
+        {
+          "ttft_visible_seconds": 3.8603306349832565,
+          "elapsed_seconds": 10.28546167910099,
+          "prompt_tokens": 6539,
+          "cached_prompt_tokens": null,
+          "completion_tokens": 158,
+          "completion_tokens_per_elapsed_second": 15.361488373539895,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A bounded queue helps a web server handle request bursts by acting as a buffer between incoming traffic and processing capacity. It absorbs temporary spikes, allowing the server to process requests at a steady rate rather than crashing under load. This prevents resource exhaustion and maintains system stability.\n\nWhen the queue is full, the best policy is to **reject the new item** (often returning an HTTP 503 Service Unavailable). This approach prioritizes system reliability and fairness. Blocking the producer would stall the network thread, potentially causing a deadlock or cascading failure. Dropping older items violates the first-in, first-out principle, unfairly penalizing earlier requests. Rejecting new requests provides immediate feedback to clients, allowing them to retry later, while ensuring the server continues to serve existing queued requests efficiently.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "0a4537acb26a46828639cba03519e59f",
+            "object": "chat.completion.chunk",
+            "created": 1792316684,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 6539,
+              "total_tokens": 6697,
+              "completion_tokens": 158,
+              "prompt_tokens_details": null,
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.559322033898305,
+                "spec_accept_length": 2.6779661016949152,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 99,
+                "spec_num_proposed_drafts": 177,
+                "spec_verify_ct": 59,
+                "spec_correct_drafts_histogram": [
+                  15,
+                  11,
+                  11,
+                  22
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "initial",
+          "index": 1
+        },
+        {
+          "ttft_visible_seconds": 0.20940081612206995,
+          "elapsed_seconds": 6.185619357042015,
+          "prompt_tokens": 6539,
+          "cached_prompt_tokens": 6528,
+          "completion_tokens": 144,
+          "completion_tokens_per_elapsed_second": 23.279802989503917,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A bounded queue helps a web server handle request bursts by acting as a buffer between incoming traffic and processing capacity. It absorbs temporary spikes, allowing the server to process requests at a steady rate rather than crashing under load. This prevents resource exhaustion and maintains system stability.\n\nWhen the queue is full, the server should **reject** new items (e.g., return HTTP 503 Service Unavailable). This policy is justified because it provides immediate feedback to clients, preventing indefinite blocking of producers (which could deadlock the server) and avoiding the silent data loss associated with dropping older items. Rejection preserves the integrity of already queued work while signaling the client to retry later, ensuring predictable reliability and preventing cascading failures.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "141c8fa349034418bc94703e2d0d9ed5",
+            "object": "chat.completion.chunk",
+            "created": 1792316690,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 6539,
+              "total_tokens": 6683,
+              "completion_tokens": 144,
+              "prompt_tokens_details": {
+                "cached_tokens": 6528
+              },
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.4745762711864407,
+                "spec_accept_length": 2.440677966101695,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 84,
+                "spec_num_proposed_drafts": 177,
+                "spec_verify_ct": 59,
+                "spec_correct_drafts_histogram": [
+                  19,
+                  11,
+                  14,
+                  15
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "warm",
+          "index": 2
+        },
+        {
+          "ttft_visible_seconds": 0.20009137387387455,
+          "elapsed_seconds": 7.273306439863518,
+          "prompt_tokens": 6539,
+          "cached_prompt_tokens": 6528,
+          "completion_tokens": 167,
+          "completion_tokens_per_elapsed_second": 22.960671515874385,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A bounded queue helps a web server handle request bursts by acting as a buffer between incoming traffic and processing capacity. It decouples the rate at which requests arrive from the rate at which the server can process them, preventing the system from being overwhelmed by sudden spikes.\n\nWhen the queue is full, the server must apply an explicit policy. I recommend **rejecting the new item** (returning an HTTP 503 Service Unavailable). This policy preserves system stability by preventing memory exhaustion and ensuring that already queued requests are processed reliably. Unlike blocking the producer, which could cause thread starvation or timeouts, rejection provides immediate feedback to the client, allowing them to retry later. Dropping older items is generally undesirable for web requests as it violates the expectation that submitted work will be processed, potentially leading to data loss or inconsistent states.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "a281ee0dbc7a4a8b9fc47bae7aa365f1",
+            "object": "chat.completion.chunk",
+            "created": 1792316697,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 6539,
+              "total_tokens": 6706,
+              "completion_tokens": 167,
+              "prompt_tokens_details": {
+                "cached_tokens": 6528
+              },
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.4782608695652174,
+                "spec_accept_length": 2.420289855072464,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 99,
+                "spec_num_proposed_drafts": 207,
+                "spec_verify_ct": 69,
+                "spec_correct_drafts_histogram": [
+                  21,
+                  13,
+                  19,
+                  16
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "warm",
+          "index": 3
+        },
+        {
+          "ttft_visible_seconds": 0.1987862919922918,
+          "elapsed_seconds": 6.277554111089557,
+          "prompt_tokens": 6539,
+          "cached_prompt_tokens": 6528,
+          "completion_tokens": 165,
+          "completion_tokens_per_elapsed_second": 26.284122299881208,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null,
+          "status": "ok",
+          "output_text": "A bounded queue helps a web server handle request bursts by acting as a buffer between incoming traffic and processing capacity. It absorbs temporary spikes, allowing the server to process requests at a steady rate rather than crashing under load. This prevents resource exhaustion and maintains system stability.\n\nWhen the queue is full, the best policy is to **reject the item** (returning an HTTP 503 Service Unavailable error). This approach prioritizes system reliability and responsiveness. Blocking the producer would tie up server threads, potentially causing a deadlock or total service outage. Dropping older items violates the first-in, first-out principle and may discard valid, pending requests. Rejecting new requests provides immediate feedback to clients, allowing them to retry later, while ensuring the server continues to process existing work efficiently without degrading performance for current users.",
+          "reasoning_characters": 0,
+          "raw_metadata": {
+            "id": "0de5a7784a0e4aec9a15d107e33e3a4a",
+            "object": "chat.completion.chunk",
+            "created": 1792316703,
+            "model": "Qwen3.8-Flash-Next-FP4-Local",
+            "usage": {
+              "prompt_tokens": 6539,
+              "total_tokens": 6704,
+              "completion_tokens": 165,
+              "prompt_tokens_details": {
+                "cached_tokens": 6528
+              },
+              "reasoning_tokens": 0
+            },
+            "sglext": {
+              "spec_tokens_details": {
+                "spec_accept_rate": 0.5396825396825397,
+                "spec_accept_length": 2.619047619047619,
+                "spec_cap_length": 0.0,
+                "spec_block_accept_length": 0.0,
+                "spec_num_correct_drafts": 102,
+                "spec_num_proposed_drafts": 189,
+                "spec_verify_ct": 63,
+                "spec_correct_drafts_histogram": [
+                  17,
+                  10,
+                  16,
+                  20
+                ],
+                "spec_cap_lens_histogram": []
+              }
+            }
+          },
+          "error": null,
+          "cache_salt": null,
+          "finish_reason": "stop",
+          "phase": "warm",
+          "index": 4
+        }
+      ],
+      "summary": {
+        "successful_warm_runs": 3,
+        "failed_warm_runs": 0,
+        "medians": {
+          "ttft_visible_seconds": 0.20009137387387455,
+          "elapsed_seconds": 6.277554111089557,
+          "prompt_tokens": 6539,
+          "cached_prompt_tokens": 6528,
+          "completion_tokens": 165,
+          "completion_tokens_per_elapsed_second": 23.279802989503917,
+          "load_seconds": null,
+          "prompt_eval_seconds": null,
+          "decode_seconds": null,
+          "server_prompt_tokens_per_second": null,
+          "server_decode_tokens_per_second": null
+        },
+        "metric_sample_counts": {
+          "ttft_visible_seconds": 3,
+          "elapsed_seconds": 3,
+          "prompt_tokens": 3,
+          "cached_prompt_tokens": 3,
+          "completion_tokens": 3,
+          "completion_tokens_per_elapsed_second": 3,
+          "load_seconds": 0,
+          "prompt_eval_seconds": 0,
+          "decode_seconds": 0,
+          "server_prompt_tokens_per_second": 0,
+          "server_decode_tokens_per_second": 0
+        }
+      }
+    }
+  }
+}

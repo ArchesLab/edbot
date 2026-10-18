@@ -1,0 +1,161 @@
+{
+  "timestamp_utc": "2026-10-18T08:24:53Z",
+  "purpose": "Check memory savings and embedding consistency before choosing a smaller context",
+  "inputs": [
+    "information hiding and coupling in student records modules",
+    "representation independence and stable public interfaces",
+    "assess understanding of information hiding versus encapsulation",
+    "SEBook > development_practices > The Art and Science of Prompt Engineering in Software Development > The Art and Science of Prompt Engineering in Software Development > 2. Foundational Prompting Frameworks and Patterns > 2.2 The Prompt Pattern Catalog for Software Engineering > B. The Question Refinement & Cognitive Verifier Patterns\n\n*   **Motivation:** Developers often know what they want to achieve but lack the specific domain vocabulary (e.g., in cybersecurity or cloud architecture) to ask the right question.\n*   **How it Works:** Instead of asking the LLM for a direct answer, the developer prompts the LLM to interrogate *them* first, forcing the AI to gather the missing context it needs to provide a mathematically or logically sound answer.\n*   **Example Prompt:** *\"When I ask you a question, generate three additional questions that would help you give a more accurate answer. When I have answered the three questions, combine the answers to produce the final answer to my original question\"* [White2023].\n*   **Example (Security Focus):** *\"Whenever I ask a question about a software artifact\u2019s security, suggest a better version of the question that incorporates specific security risks in the framework I am using, and ask me if I would like to use your refined question\"* [White2023]."
+  ],
+  "conditions": [
+    {
+      "context": 40960,
+      "elapsed_s": 0.7221488992217928,
+      "resident_models": {
+        "models": [
+          {
+            "name": "qwen3-embedding:8b",
+            "model": "qwen3-embedding:8b",
+            "size": 12154474331,
+            "digest": "64b933495768fbd3b87c20583d379728a07471e0c66733a9df87cd1901b3c44b",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen3",
+              "families": [
+                "qwen3"
+              ],
+              "parameter_size": "7.6B",
+              "quantization_level": "Q4_K_M"
+            },
+            "expires_at": "2319-01-28T00:12:05.641371706-08:00",
+            "size_vram": 12154474331,
+            "context_length": 40960
+          }
+        ]
+      },
+      "metadata": {
+        "load_duration": 62097653,
+        "total_duration": 680991384,
+        "prompt_eval_count": 298
+      },
+      "top4_ids": [
+        [
+          "c4a49c5f-5fa8-4663-a593-448c827a8696",
+          "3540c4dd-53c5-4a79-9fdf-6bc96f049db8",
+          "e8bd9de9-7516-475d-9cb3-944bfc303b27",
+          "8b09f077-9486-47e2-9ed1-b216fc4387ce"
+        ],
+        [
+          "8ba67ba0-589e-41dd-9298-3704a539d2e0",
+          "520f7371-2d24-4735-89fd-0e1f50abf4a4",
+          "d2fb30c4-5901-45fc-b13b-7df2053f676f",
+          "e7333935-efa6-4206-9860-7d0e2314bc5a"
+        ],
+        [
+          "3540c4dd-53c5-4a79-9fdf-6bc96f049db8",
+          "5680e246-1316-4f17-887b-6e4b34aea09e",
+          "e9617184-04b4-428b-9256-da1a86d1cb63",
+          "9cde4ff5-b3e1-41c8-82fd-17acf67a84a7"
+        ],
+        [
+          "b62e8711-2fcf-47d5-8eee-9967a0818527",
+          "0427e716-7971-43d2-ab4d-d44a75a54d4d",
+          "f38b652c-0260-456d-b26a-ee880f1a8200",
+          "67705658-42cc-4420-bd91-3cb5cedf5755"
+        ]
+      ]
+    },
+    {
+      "context": 8192,
+      "elapsed_s": 4.5991644819732755,
+      "resident_models": {
+        "models": [
+          {
+            "name": "qwen3-embedding:8b",
+            "model": "qwen3-embedding:8b",
+            "size": 7188418395,
+            "digest": "64b933495768fbd3b87c20583d379728a07471e0c66733a9df87cd1901b3c44b",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen3",
+              "families": [
+                "qwen3"
+              ],
+              "parameter_size": "7.6B",
+              "quantization_level": "Q4_K_M"
+            },
+            "expires_at": "2319-01-28T00:12:10.255854503-08:00",
+            "size_vram": 7188418395,
+            "context_length": 8192
+          }
+        ]
+      },
+      "metadata": {
+        "load_duration": 4151186702,
+        "total_duration": 4596007389,
+        "prompt_eval_count": 298
+      },
+      "top4_ids": [
+        [
+          "c4a49c5f-5fa8-4663-a593-448c827a8696",
+          "3540c4dd-53c5-4a79-9fdf-6bc96f049db8",
+          "e8bd9de9-7516-475d-9cb3-944bfc303b27",
+          "8b09f077-9486-47e2-9ed1-b216fc4387ce"
+        ],
+        [
+          "8ba67ba0-589e-41dd-9298-3704a539d2e0",
+          "520f7371-2d24-4735-89fd-0e1f50abf4a4",
+          "d2fb30c4-5901-45fc-b13b-7df2053f676f",
+          "e7333935-efa6-4206-9860-7d0e2314bc5a"
+        ],
+        [
+          "3540c4dd-53c5-4a79-9fdf-6bc96f049db8",
+          "5680e246-1316-4f17-887b-6e4b34aea09e",
+          "e9617184-04b4-428b-9256-da1a86d1cb63",
+          "9cde4ff5-b3e1-41c8-82fd-17acf67a84a7"
+        ],
+        [
+          "b62e8711-2fcf-47d5-8eee-9967a0818527",
+          "0427e716-7971-43d2-ab4d-d44a75a54d4d",
+          "f38b652c-0260-456d-b26a-ee880f1a8200",
+          "67705658-42cc-4420-bd91-3cb5cedf5755"
+        ]
+      ]
+    }
+  ],
+  "comparison": {
+    "cosine_by_input": [
+      1.0,
+      1.0000001192092896,
+      1.0,
+      1.000000238418579
+    ],
+    "max_abs_difference_by_input": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "same_top4_by_input": [
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "corpus_fingerprint": {
+    "sebook_sha": "3fef6d4752e62a2a9dbe6e558561ab1e518096fe",
+    "embedding_model": "qwen3-embedding:8b",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "pipeline_version": 1
+  },
+  "max_corpus_utf8_bytes": 1307,
+  "notes": [
+    "Both conditions sent truncate=false, so oversized inputs would fail rather than truncate.",
+    "Weights were loading in SGLang concurrently; these timings are not an isolated latency comparison.",
+    "Same top four on these examples does not establish retrieval equivalence for every possible query."
+  ]
+}

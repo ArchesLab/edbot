@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-18T11:58:22.611429+00:00",
+  "scope": "resident_20_state_server_during_full_v5_tutoring_evaluation_after_cache_probe",
+  "host_memory": {
+    "MemTotal_kib": 127598832,
+    "MemAvailable_kib": 20072596,
+    "SwapTotal_kib": 16777212,
+    "SwapFree_kib": 11596400
+  },
+  "observed_serving": {
+    "status": "ready",
+    "version": "0.5.21",
+    "max_mamba_cache_size": 20,
+    "max_total_tokens": 131072,
+    "max_running_requests": 2,
+    "context_length": 32768
+  },
+  "engine_memory": [
+    {
+      "weight": 78.594,
+      "kvcache": 3.095,
+      "startup_available": 23.332,
+      "token_capacity": 131072,
+      "token_capacity_swa": null,
+      "graph": {
+        "prefill": 0.0,
+        "decode": 0.0,
+        "target_verify": 0.073,
+        "draft_prefill": 0.0,
+        "draft_decode": 0.09,
+        "draft_extend": 0.05
+      }
+    }
+  ],
+  "startup_allocation_evidence": {
+    "flash-next-mtp-on-strict.log": {
+      "observed_at": "2026-10-18T12:02:13.909491+00:00",
+      "sha256_at_observation": "fa3cef214dc037066076dbd3db0fc121b0006a689e4d0e1fb7a8b890ba0e3c6a",
+      "allocation_lines": [
+        "[2026-10-18 02:42:23] Mamba Cache is allocated. max_mamba_cache_size: 10, conv_state size: 0.02GB, ssm_state size: 1.16GB intermediate_ssm_state_cache size: 1.27GB intermediate_conv_window_cache size: 0.01GB "
+      ]
+    },
+    "flash-next-mtp-20-states.log": {
+      "observed_at": "2026-10-18T12:02:13.909491+00:00",
+      "sha256_at_observation": "5c8c84883c05c52d24346de9929a7b5870b767ad42a0d3a273b552d7b7c59dd7",
+      "allocation_lines": [
+        "[2026-10-18 04:53:03] Mamba Cache is allocated. max_mamba_cache_size: 20, conv_state size: 0.04GB, ssm_state size: 2.21GB intermediate_ssm_state_cache size: 1.27GB intermediate_conv_window_cache size: 0.01GB "
+      ]
+    }
+  },
+  "limits": [
+    "Host memory is one observation during another workload, not a peak or controlled before/after measurement.",
+    "Startup allocation lines are exact log excerpts; displayed sizes are rounded.",
+    "Log hashes identify observed snapshots of still-growing service logs."
+  ]
+}

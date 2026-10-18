@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-18T09:43:14.383723+00:00",
+  "model": "Qwen3.8-Flash-Next-FP4-Local",
+  "tool_schema_policy": "server_default",
+  "expected_server_tool_strict_level": 2,
+  "notes": [
+    "Inputs are synthetic; this does not access Edbot student state or retrieval.",
+    "No per-request strict override is sent. Expected server strictness is local intent, not observed server configuration.",
+    "Passing validates these samples, not assessment quality or universal schema enforcement."
+  ],
+  "checks": [
+    {
+      "name": "streamed_chat",
+      "success": true,
+      "error": null,
+      "response": "Recursion requires a base case to halt the chain of recursive calls, preventing infinite loops and ensuring the function eventually returns a value to resolve the stack.",
+      "visible_ttft_seconds": 8.487991826841608,
+      "finish_reason": "stop",
+      "elapsed_seconds": 9.847848859848455
+    },
+    {
+      "name": "UCAOutput",
+      "success": true,
+      "error": null,
+      "prompt": "Return a UCAOutput for concept 'recursion', with no prior assessment. Course material: a base case stops recursion; recursive calls approach that case. Question: Why is a base case needed? Rubric: explains that it stops recursion. Student answer: 'It stops recursive calls when the smallest case is reached.' Use only this evidence; select a supported tier and explain uncertainty.",
+      "tool_calls": [
+        {
+          "name": "UCAOutput",
+          "args": {
+            "concept": "recursion",
+            "prior_tier": null,
+            "tier": "Understand",
+            "confidence": "medium",
+            "rationale": "The student stated the base case stops recursive calls upon reaching the smallest case, matching the rubric criterion that it stops recursion. This shows a grasp of the purpose/meaning of the base case beyond mere recall, though the single-sentence answer provides no evidence of application or deeper analysis.",
+            "answer_judgment": {
+              "verdict": "correct",
+              "note": "Meets the rubric criterion of explaining that the base case stops recursion; also correctly links stopping to reaching the smallest case."
+            }
+          },
+          "id": "call_af4242ec6ea5413faa7a0db4",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "finish_reason": "tool_calls",
+      "elapsed_seconds": 8.303309824084863
+    },
+    {
+      "name": "CGAOutput",
+      "success": true,
+      "error": null,
+      "prompt": "Return a CGAOutput in generate_question mode for concept 'recursion', target tier Apply, with one short_answer question, its rubric, concept tags and sources. Use only this synthetic source, titled 'Synthetic recursion note': A countdown function stops at zero and otherwise calls itself with n - 1. Ask the learner to identify the base case for that function. Keep the answer in the rubric, separate from the student-facing question.",
+      "tool_calls": [
+        {
+          "name": "CGAOutput",
+          "args": {
+            "mode": "generate_question",
+            "concept": "recursion",
+            "target_tier": "Apply",
+            "content": "A countdown function stops at zero and otherwise calls itself with n - 1. Identify the base case for that function.",
+            "format": "short_answer",
+            "rubric": "Answer: The base case is when n reaches zero (n == 0) — the condition under which the function stops and returns without making another recursive call. Full credit (2 pts): correctly identifies n == 0 (or equivalent, e.g., \"when n is zero\") as the base case and notes that it ends the recursion. Partial credit (1 pt): identifies zero but does not connect it to stopping the recursion, or states a vague termination condition. No credit: names the recursive case (n - 1) or a different value.",
+            "concept_tags": [
+              "recursion",
+              "base case",
+              "recursive case",
+              "termination condition"
+            ],
+            "sources": [
+              "Synthetic recursion note"
+            ]
+          },
+          "id": "call_c84cba69966c4d0ab75ea726",
+          "type": "tool_call"
+        }
+      ],
+      "invalid_tool_calls": [],
+      "finish_reason": "tool_calls",
+      "elapsed_seconds": 9.947286664973944
+    }
+  ],
+  "success": true
+}

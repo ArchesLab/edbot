@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "status": "completed_performance_candidate_not_adopted",
+  "recorded_at": "2026-10-18T13:51:00.037628+00:00",
+  "scope": "Buffered one-token request screen; not pure prefill, visible TTFT, or tutor quality.",
+  "sequence": [
+    "A1:2048",
+    "B:4096",
+    "A2:2048"
+  ],
+  "criteria": {
+    "minimum_sum_of_cell_medians_reduction_vs_each_control": 0.1,
+    "maximum_individual_cell_regression_vs_either_control": 0.05,
+    "maximum_control_cell_difference": 0.05,
+    "require_all_22_probes_valid_per_block": true,
+    "require_matching_unsalted_payloads_and_prompt_cache_counts": true,
+    "complete_original_budget_compatibility_required_before_adoption": true
+  },
+  "memory_gate": "No observed OOM or new sustained memory pressure; inspect resident and startup traces separately. Global counters and sampled extrema do not prove causation or exact peaks.",
+  "helper_sha256": "8356efa6d733587681eda0464c52749c290353d6e391b232bf2c00563f011a73",
+  "startup_observer_sha256": "f6268db6dfd4d9b58562e3ab16ae4a019386c33070ea75e7fc17f298f3060eda",
+  "blocks": {
+    "A1": {
+      "path": "output/profiling/prefill-chunk-a1-2048.json",
+      "sha256": "2dcf2dbef6a36dc1f2c210eda9994ba1116f33a9dd0669e837add405949bc9cb",
+      "medians_s": {
+        "parent/fresh": 4.641407561954111,
+        "parent/partial": 1.6167875458486378,
+        "cga/fresh": 3.5673494399525225,
+        "cga/partial": 1.3342127280775458
+      },
+      "memory": {
+        "interval_seconds": 0.5,
+        "max_seconds": 905,
+        "path": "output/profiling/prefill-chunk-a1-2048.memory.jsonl",
+        "started_at": "2026-10-18T13:43:27.190772+00:00",
+        "error": null,
+        "finished_at": "2026-10-18T13:44:27.956788+00:00",
+        "sha256": "0c4acdafd4ab7f692ffcefccf122d98533a203f616834f0a7fd1bd6cf2bcea45",
+        "sample_count": 122,
+        "sampled_min_mem_available_kib": 20341564,
+        "sampled_max_swap_used_kib": 5103864,
+        "vmstat_deltas": {
+          "pswpin": 11,
+          "pswpout": 0,
+          "pgmajfault": 3,
+          "oom_kill": 0
+        },
+        "pressure_total_deltas": {
+          "some": 0,
+          "full": 0
+        }
+      },
+      "matched_control_inputs": true
+    },
+    "B": {
+      "path": "output/profiling/prefill-chunk-b-clean-4096.json",
+      "sha256": "4f93bd626094795f757772e6d311b3eaa5bdd3237c13803d2d40a88f33979d2f",
+      "medians_s": {
+        "parent/fresh": 4.191782660083845,
+        "parent/partial": 1.3810763589572161,
+        "cga/fresh": 3.1020706680137664,
+        "cga/partial": 1.1268507749773562
+      },
+      "memory": {
+        "interval_seconds": 0.5,
+        "max_seconds": 905,
+        "path": "output/profiling/prefill-chunk-b-clean-4096.memory.jsonl",
+        "started_at": "2026-10-18T14:02:51.359647+00:00",
+        "error": null,
+        "finished_at": "2026-10-18T14:03:44.810563+00:00",
+        "sha256": "69e6a7ffcac8defeae67745386cbd4a49475e3c6588e9f83909c45eabb7cfb3e",
+        "sample_count": 108,
+        "sampled_min_mem_available_kib": 20216188,
+        "sampled_max_swap_used_kib": 5196004,
+        "vmstat_deltas": {
+          "pswpin": 442,
+          "pswpout": 0,
+          "pgmajfault": 279,
+          "oom_kill": 0
+        },
+        "pressure_total_deltas": {
+          "some": 0,
+          "full": 0
+        }
+      },
+      "matched_control_inputs": true
+    },
+    "A2": {
+      "path": "output/profiling/prefill-chunk-a2-2048.json",
+      "sha256": "8145f2ba11135a990b576e71793af6fa2ab05b5400b9962da2a8015883378f05",
+      "medians_s": {
+        "parent/fresh": 4.64882453600876,
+        "parent/partial": 1.6439849201124161,
+        "cga/fresh": 3.571886925958097,
+        "cga/partial": 1.3448272170498967
+      },
+      "memory": {
+        "interval_seconds": 0.5,
+        "max_seconds": 905,
+        "path": "output/profiling/prefill-chunk-a2-2048.memory.jsonl",
+        "started_at": "2026-10-18T14:19:22.062930+00:00",
+        "error": null,
+        "finished_at": "2026-10-18T14:20:28.769057+00:00",
+        "sha256": "816f04f019d5855b8af7d04dfd56b8c5e5eb360856a187e150acddef4be6919e",
+        "sample_count": 134,
+        "sampled_min_mem_available_kib": 19831008,
+        "sampled_max_swap_used_kib": 5193896,
+        "vmstat_deltas": {
+          "pswpin": 12816,
+          "pswpout": 134,
+          "pgmajfault": 10973,
+          "oom_kill": 0
+        },
+        "pressure_total_deltas": {
+          "some": 115541,
+          "full": 115525
+        }
+      },
+      "matched_control_inputs": true
+    }
+  },
+  "B_launch": {
+    "launcher_pid": 2661049,
+    "server_pid": 2661051,
+    "unix_timestamp": 1792331306.4977283,
+    "configuration_sha256": "dd2285f0fd2c01fa167ad8450bdfb5a6e701a5c43a69b119f3d426a8e72a8792"
+  },
+  "conclusion": "4096 passed the predeclared numeric one-token screen (12.17% and 12.56% lower summed cell medians versus A1/A2); no complete tutoring latency or quality preservation established. Retain as a performance candidate, not the default. 2048 was restored and verified healthy at experiment completion; both prior-prefetch variants remain disabled. The owner subsequently chose to retain open-ended replies and unchanged study-assignment handling, with the observed quality limits reported. Those policy decisions are settled; high pedagogical quality remains unestablished.",
+  "excluded_blocks": [
+    {
+      "path": "output/profiling/prefill-chunk-b-4096.json",
+      "reason": "Startup health polling overlapped measured requests; retain evidence but repeat with observer stopped."
+    }
+  ],
+  "primary_B": "output/profiling/prefill-chunk-b-clean-4096.json",
+  "screen_comparisons": {
+    "A1": {
+      "sum_of_medians_reduction": 0.1216851567857502,
+      "individual_changes": {
+        "parent/fresh": -0.0968725318491458,
+        "parent/partial": -0.14578983336224238,
+        "cga/fresh": -0.13042702425724473,
+        "cga/partial": -0.15541895886346058
+      }
+    },
+    "A2": {
+      "sum_of_medians_reduction": 0.1255845642901674,
+      "individual_changes": {
+        "parent/fresh": -0.09831342791812647,
+        "parent/partial": -0.15992151627353268,
+        "cga/fresh": -0.13153167154593237,
+        "cga/partial": -0.16208509116190273
+      }
+    }
+  },
+  "B_startup_observation": {
+    "raw_path": "output/profiling/prefill-chunk-b-startup.json",
+    "raw_overlaps_excluded_first_B_block": true,
+    "startup_only_cutoff": "2026-10-18T14:01:03.732816+00:00",
+    "cutoff_meaning": "Start of first benchmark helper, before its HTTP inference. Health had been observed by its separate queue, but exact health timestamp was not captured.",
+    "sample_count_before_cutoff": 1510,
+    "last_pre_benchmark_sample": "2026-10-18T14:01:02.653711+00:00",
+    "sampled_min_available_kib_before_cutoff": 16402032,
+    "vmstat_deltas_before_cutoff": {
+      "pswpin": 540113,
+      "pswpout": 1009968,
+      "pgmajfault": 12927451,
+      "oom_kill": 0
+    },
+    "pressure_usec_deltas_before_cutoff": {
+      "some": 53980710,
+      "full": 53971457
+    },
+    "sampler_caveat": "Nominal0.5s, synchronous health polling can delay samples; sampled extrema and global counters, not exact peaks or process-attributed metrics."
+  },
+  "control_changes": {
+    "parent/fresh": 0.0015980010278449086,
+    "parent/partial": 0.016821860320245463,
+    "cga/fresh": 0.0012719488466022,
+    "cga/partial": 0.007955619631694999
+  },
+  "numeric_screen_pass": true,
+  "completed_at": "2026-10-18T14:23:41.803666+00:00",
+  "original_budget_checks": {
+    "candidate": {
+      "path": "output/profiling/original-budget-compatibility-B4096.json",
+      "sha256": "d7e88e38fcb7d2295e3e01f8580b9c8eaf3c6d97cfb3706d0e5e8da76365f31f",
+      "execution": "completed",
+      "schema_valid_terminal_expected_outputs": 3,
+      "critical_semantic_finding": "CGA rubric calls a detached copy or iterator promise-preserving despite a public live-list contract."
+    },
+    "control": {
+      "path": "output/profiling/original-budget-compatibility-A2048.json",
+      "sha256": "4ed633858b857175eb01f7324775c03c1d7ed821c6098e66064502253ff1f4a0",
+      "execution": "failed_narrow_terminal_output_expectation",
+      "attempted_requests": 2,
+      "http_and_tool_schema_valid_requests": 2,
+      "uca_attempted": false,
+      "reason": "CGA returned a valid search_markdown_sources call rather than immediate CGAOutput. No tool executed; control stopped without retry. This is not a parser/API failure and provides no paired final rubric."
+    }
+  },
+  "A2_startup": {
+    "path": "output/profiling/prefill-chunk-a2-startup.json",
+    "sha256": "c7131c00a8efc96903a524cd9b70cddffc622240d59840867571f679c58f8f13",
+    "observer_sha256": "e1397a938dcc4892de5663fc05f361c7332a84c76ad292481e2b90dabd7be517",
+    "observer_finished_before_benchmark": true
+  },
+  "restored_runtime": {
+    "chunked_prefill_size": 2048,
+    "launcher_pid": 2671846,
+    "server_pid": 2671848,
+    "configuration_sha256": "b8c23a0ef9b13fbace3a9e334ab49acfbfc7c5c0f5c9b6a23f31c8bb0eb74fbf",
+    "chat_health": 200,
+    "embedding_resident": "qwen3-embedding:8b",
+    "embedding_context_length": 8192
+  },
+  "policy_decision": {
+    "date": "2026-10-18",
+    "tutoring": "Keep concise explanations; use Socratic practice and hints.",
+    "delivery": "Retain open-ended replies; reviewed-content restriction declined.",
+    "study_assignment": "Keep existing handling unchanged.",
+    "quality": "Report known answer disclosure, technical/rubric errors and evidence-attribution limitations; decisions do not establish quality preservation."
+  }
+}

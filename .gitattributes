@@ -1,0 +1,2 @@
+# Keep captured evidence verbatim and collapse it in GitHub's default diff view.
+output/profiling/** linguist-generated=true -whitespace

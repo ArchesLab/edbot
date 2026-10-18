@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-18T09:49:51.554516+00:00",
+  "server_pid": 2406763,
+  "launcher_pid": 2406762,
+  "server_environment": {
+    "SGLANG_TOOL_STRICT_LEVEL": "2",
+    "MAX_JOBS": "1"
+  },
+  "corpus_fingerprint": {
+    "sebook_sha": "3fef6d4752e62a2a9dbe6e558561ab1e518096fe",
+    "embedding_model": "qwen3-embedding:8b",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "pipeline_version": 1
+  },
+  "same_corpus_as_baseline": true,
+  "app_file_sha256": {
+    "src/edbot/edbot_agent.py": "f62c0a42c552a920446c696a86205f033efd77a020972f474f83695c0e4c2cf4",
+    "src/edbot/chat_model.py": "d01a0ba7b14b1ae5bff3b96a4915073ee590af1bcd6c03a7f0c4b87cbfb43ede",
+    "src/edbot/embedding_model.py": "61062752e46f8ddf6e93ee5751c44ae0e24d1c8fa391e3ab85f0be37a7c064e1",
+    "scripts/profile_agent.py": "0e088ec636f14fca10f25133f80cc9dd034540a6e94bc4262d0aea12e3b95e04"
+  },
+  "same_profiled_app_files_as_baseline": true,
+  "embedding_residency": {
+    "models": [
+      {
+        "name": "qwen3-embedding:8b",
+        "model": "qwen3-embedding:8b",
+        "size": 7188418395,
+        "digest": "64b933495768fbd3b87c20583d379728a07471e0c66733a9df87cd1901b3c44b",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "7.6B",
+          "quantization_level": "Q4_K_M"
+        },
+        "expires_at": "2319-01-28T01:37:00.122124205-08:00",
+        "size_vram": 7188418395,
+        "context_length": 8192
+      }
+    ]
+  },
+  "gpu_processes": [
+    "2340618, /home/duerschmid/.local/share/edbot/tools/ollama-0.35.0/lib/ollama/llama-server",
+    "2406763, /home/duerschmid/.local/share/edbot/sglang-flash-next/bin/python",
+    "2407026, sglang::scheduler"
+  ],
+  "notes": [
+    "Recorded during the final optimized assessment turn; no package changes since the baseline environment report.",
+    "Server model_config and launcher deliberately change speculation and parameter-schema enforcement."
+  ]
+}

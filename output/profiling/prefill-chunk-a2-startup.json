@@ -1,0 +1,25 @@
+{
+  "execution": "health_ready",
+  "started_at": "2026-10-18T14:06:55.180294+00:00",
+  "process_control": false,
+  "interval_seconds": 0.5,
+  "max_seconds": 900,
+  "path": "output/profiling/prefill-chunk-a2-startup.memory.jsonl",
+  "error": null,
+  "observed_ready_after_s": 744.7144980400335,
+  "finished_at": "2026-10-18T14:19:19.896927+00:00",
+  "sha256": "12699b391afc26c391e94173a7283c38595a938cd84f77a3f1844eec24d3d75b",
+  "sample_count": 1475,
+  "sampled_min_mem_available_kib": 17631796,
+  "sampled_max_swap_used_kib": 5212504,
+  "vmstat_deltas": {
+    "pswpin": 520638,
+    "pswpout": 966265,
+    "pgmajfault": 12935380,
+    "oom_kill": 0
+  },
+  "pressure_total_deltas": {
+    "some": 53337292,
+    "full": 53323562
+  }
+}

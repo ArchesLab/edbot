@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-18T09:24:11.081396+00:00",
+  "server_packages": {
+    "sglang": "0.5.21",
+    "torch": "2.13.0",
+    "flashinfer-python": "0.6.18",
+    "flashinfer-jit-cache": "0.6.18+cu130",
+    "sgl-kernel": null,
+    "transformers": "5.12.1",
+    "triton": "3.7.1",
+    "xgrammar": "0.2.7"
+  },
+  "kernel_packages": {
+    "sglang-kernel": "0.4.7",
+    "kernels": "0.14.1",
+    "quack-kernels": "0.6.4",
+    "kernels-data": "0.16.2",
+    "humming-kernels": "0.1.12"
+  },
+  "corpus_fingerprint": {
+    "sebook_sha": "3fef6d4752e62a2a9dbe6e558561ab1e518096fe",
+    "embedding_model": "qwen3-embedding:8b",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "pipeline_version": 1
+  },
+  "git_commit": "dc3e59bd0765df715faf989fc3245549ad205b2b",
+  "app_file_sha256": {
+    "src/edbot/edbot_agent.py": "f62c0a42c552a920446c696a86205f033efd77a020972f474f83695c0e4c2cf4",
+    "src/edbot/chat_model.py": "d01a0ba7b14b1ae5bff3b96a4915073ee590af1bcd6c03a7f0c4b87cbfb43ede",
+    "src/edbot/embedding_model.py": "61062752e46f8ddf6e93ee5751c44ae0e24d1c8fa391e3ab85f0be37a7c064e1",
+    "scripts/profile_agent.py": "0e088ec636f14fca10f25133f80cc9dd034540a6e94bc4262d0aea12e3b95e04"
+  },
+  "gpu": "NVIDIA GB10, 580.178.04, 60, 36.30 W",
+  "notes": [
+    "MTP-off direct benchmarks complete; synthetic agent baseline running.",
+    "Server uses strict level0/default; next launch evaluates strict level2 alongside MTP."
+  ]
+}

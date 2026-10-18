@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-10-18T09:46:17.798671+00:00",
+  "backend": "sglang",
+  "platform": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "python": "3.13.16",
+  "versions": {
+    "deepagents": "0.7.5",
+    "langchain-core": "1.5.4",
+    "langchain-openai": "1.5.1",
+    "langchain-ollama": "1.1.0"
+  },
+  "requested_configuration": {
+    "model": "Qwen3.8-Flash-Next-FP4-Local",
+    "context_length": 32768,
+    "max_output_tokens": 4096,
+    "thinking": false,
+    "temperature": 0,
+    "serving": {
+      "MODEL_PRESET": "flash-next",
+      "MODEL_NAME": "Qwen3.8-Flash-Next-FP4-Local",
+      "MODEL_PATH": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "MODEL_REVISION": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "DRAFT_MODEL_PATH": null,
+      "DRAFT_MODEL_REVISION": null,
+      "SGLANG_VERSION": "0.5.21",
+      "SGLANG_SOURCE_REVISION": null,
+      "FLASHINFER_VERSION": "0.6.18",
+      "FLASHINFER_CACHE_PACKAGE": "https://github.com/flashinfer-ai/flashinfer/releases/download/v0.6.18/flashinfer_jit_cache-0.6.18%2Bcu130-cp39-abi3-manylinux_2_28_aarch64.whl#sha256=c97664eab2f21a01f6b8d24d10ba33631a1a64b981f788c3f61d81ebbf905970",
+      "ENABLE_SPECULATION": true,
+      "SPECULATIVE_ALGORITHM": "NEXTN",
+      "MEM_FRACTION_STATIC": 0.85,
+      "MAX_RUNNING_REQUESTS": 2,
+      "MAX_TOTAL_TOKENS": 131072,
+      "CONTEXT_LENGTH": 32768,
+      "CHUNKED_PREFILL_SIZE": 2048,
+      "KV_CACHE_DTYPE": "auto",
+      "MAMBA_RADIX_CACHE_STRATEGY": "extra_buffer",
+      "MAMBA_CACHE_SLOTS_PER_REQUEST": 5,
+      "ENABLE_THINKING": false,
+      "COMPILER_JOBS": 1,
+      "TOOL_STRICT_LEVEL": 2,
+      "ACTIVE_SPECULATIVE_ALGORITHM": "NEXTN",
+      "MAMBA_SSM_DTYPE": "float32",
+      "PLE_OFFLOAD_BACKEND": "file",
+      "PLE_DIRECTORY_POLICY": "fresh owned directory per launch"
+    },
+    "sglang_stream_usage": true
+  },
+  "notes": [
+    "Local serving intent and allowlisted actual server metadata are separate; missing fields remain unverified. Observed mismatches stop generation.",
+    "Startup includes real SEBook sync/embedding cache loading; it is excluded from turn timing.",
+    "Student state and the agent's writable filesystem are temporary; the SEBook checkout/index cache is shared with the app.",
+    "Visible TTFT includes service holdback and agent/tool work before student-visible text.",
+    "Model and tool spans are inclusive and may overlap; their sums are not a latency breakdown.",
+    "Unknown token counts are null. Model callbacks count logical calls, not hidden HTTP retries.",
+    "Warmups are retained but excluded from medians; each repetition has fresh student state.",
+    "A turn containing any output-limited model generation is excluded from successful latency summaries.",
+    "Responses and agent paths can differ; compare quality, token counts, and call counts alongside latency."
+  ],
+  "startup_s": 2.8370345439761877,
+  "sebook_startup_s": 2.0915603660978377,
+  "turns": [
+    {
+      "scenario": "explanation",
+      "repetition": 0,
+      "warmup": false,
+      "student_id": "profile-ca7c8cf3-33a8-4e47-9fb8-22b552bfaf1f",
+      "prompt": "Explain information hiding using a module that stores student records. Keep it concise.",
+      "response": "Here's information hiding, applied to a student-records module:\n\n**The idea:** every module owns a set of *secrets* — design decisions likely to change — and each secret should be changeable by editing **exactly one module**. The module exposes a small, stable **interface**; the implementation behind it is free to change. (Encapsulation and `private` are just enforcement tools — you can mark everything private and still leak a secret through a name or return type.)\n\n**Step 1 — list the secrets of a `StudentRecords` module:**\n- How records are stored (list, dict, CSV file, SQL table)\n- The internal ID format\n- The grading/GPA formula\n- The transcript output format\n\n**Step 2 — let the interface reveal none of them.** An interface is \"permission to assume\": every public name and return type tells clients something they may start depending on.\n\n```python\n# Leaky: clients learn the storage is SQL, plus the row shape and column names\nclass StudentRecords:\n    def get_student_row(self, table: str) -> sqlite3.Row: ...\n    def get_gpa_using_weighted_average(self, sid: str) -> float: ...\n\n# Hidden: only the domain facts clients actually need\nclass StudentRecords:\n    def find(self, student_id: str) -> StudentProfile: ...\n    def gpa(self, student_id: str) -> float: ...\n    def add(self, profile: StudentProfile) -> None: ...\n```\n\n**Step 3 — run the change test.** Switch storage from CSV to a database, or change the GPA formula. In the leaky version, every caller that touches `sqlite3.Row` or assumes weighted averaging must change too. In the hidden version, only `StudentRecords` changes — that single-module edit is the proof the secret is really hidden.\n\n**Common mistake:** hiding things clients genuinely need to know (whether `find` can fail, whether `add` rejects duplicates). Hide *how* it works; expose *what it guarantees*.\n\nQuick check: in the leaky version, what would break if you renamed a database column?",
+      "visible_ttft_s": 52.47030271589756,
+      "success": true,
+      "error": null,
+      "total_s": 63.59761540289037,
+      "metrics": {
+        "model_call_count": 6,
+        "model_calls": [
+          {
+            "run_id": "01a14e67-b0da-73d3-94c3-ffd96836249e",
+            "parent_run_id": "01a14e67-b0ad-7163-8f7b-2687b19a3271",
+            "name": "ChatOpenAI",
+            "started_at_s": 0.08944492507725954,
+            "duration_s": 7.6068242599722,
+            "error": null,
+            "input_tokens": 7709,
+            "output_tokens": 61,
+            "cached_input_tokens": null,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e67-d175-79b2-96d5-b714d48d5232",
+            "parent_run_id": "01a14e67-d16f-7470-bb62-49a7de236ac8",
+            "name": "ChatOpenAI",
+            "started_at_s": 8.435740933055058,
+            "duration_s": 2.6628104099072516,
+            "error": null,
+            "input_tokens": 8793,
+            "output_tokens": 66,
+            "cached_input_tokens": 7680,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e67-dbf2-7f03-a572-48e0fbb0fab7",
+            "parent_run_id": "01a14e67-dbe8-7ad2-9dae-2989a74707ba",
+            "name": "ChatOpenAI",
+            "started_at_s": 11.120927175041288,
+            "duration_s": 5.253962820861489,
+            "error": null,
+            "input_tokens": 5367,
+            "output_tokens": 66,
+            "cached_input_tokens": null,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e67-f356-7152-b0e9-dc579980326b",
+            "parent_run_id": "01a14e67-f354-7d03-9d00-6bab2dff1bc0",
+            "name": "ChatOpenAI",
+            "started_at_s": 17.109308826969936,
+            "duration_s": 3.917043491033837,
+            "error": null,
+            "input_tokens": 7598,
+            "output_tokens": 75,
+            "cached_input_tokens": 5376,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e68-049b-71b0-92e0-e6d8f641e76c",
+            "parent_run_id": "01a14e68-0496-7c33-8f79-2b9a9cda843a",
+            "name": "ChatOpenAI",
+            "started_at_s": 21.530185926007107,
+            "duration_s": 24.578770294087008,
+            "error": null,
+            "input_tokens": 9466,
+            "output_tokens": 651,
+            "cached_input_tokens": 7552,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e68-64be-7812-b769-af661575eb81",
+            "parent_run_id": "01a14e68-64b4-7da1-a720-d1f28cba485e",
+            "name": "ChatOpenAI",
+            "started_at_s": 46.14089844399132,
+            "duration_s": 17.440763738937676,
+            "error": null,
+            "input_tokens": 9494,
+            "output_tokens": 452,
+            "cached_input_tokens": null,
+            "finish_reason": "stop"
+          }
+        ],
+        "tools": [
+          {
+            "run_id": "01a14e67-ce94-7d51-a674-f8f109de98cb",
+            "parent_run_id": "01a14e67-ce93-7423-8ad2-fa989d74fd17",
+            "name": "fetch_student_data",
+            "started_at_s": 7.699308522045612,
+            "duration_s": 0.015027693938463926,
+            "error": null
+          },
+          {
+            "run_id": "01a14e67-ce9d-72c3-bd9d-f594988db7c3",
+            "parent_run_id": "01a14e67-ce93-7423-8ad2-fa8bef3315fa",
+            "name": "search_markdown_sources",
+            "started_at_s": 7.7081763909664005,
+            "duration_s": 0.7190325269475579,
+            "error": null
+          },
+          {
+            "run_id": "01a14e67-dbdf-7cf0-8cf5-3fc3510bf493",
+            "parent_run_id": "01a14e67-dbdd-7023-84f3-154ac3781cc0",
+            "name": "task",
+            "started_at_s": 11.102060756878927,
+            "duration_s": 35.02494338504039,
+            "error": null
+          },
+          {
+            "run_id": "01a14e67-f07e-7043-b321-e09f2cd6205b",
+            "parent_run_id": "01a14e67-f07c-7a33-a088-572075f8e361",
+            "name": "search_markdown_sources",
+            "started_at_s": 16.380692672915757,
+            "duration_s": 0.7262759960722178,
+            "error": null
+          },
+          {
+            "run_id": "01a14e67-f080-7633-89c1-88c0f658271e",
+            "parent_run_id": "01a14e67-f07c-7a33-a088-573b5c8b5cd3",
+            "name": "search_markdown_sources",
+            "started_at_s": 16.383091503055766,
+            "duration_s": 0.711710600880906,
+            "error": null
+          },
+          {
+            "run_id": "01a14e68-02a8-73e2-a0be-178b49e74544",
+            "parent_run_id": "01a14e68-02a6-7db3-a582-ed767cabae7b",
+            "name": "search_markdown_sources",
+            "started_at_s": 21.031096970895305,
+            "duration_s": 0.4884681850671768,
+            "error": null
+          },
+          {
+            "run_id": "01a14e68-02aa-70e0-87a2-ecd311aa2d4f",
+            "parent_run_id": "01a14e68-02a6-7db3-a582-ed87682ea25a",
+            "name": "search_markdown_sources",
+            "started_at_s": 21.03281479794532,
+            "duration_s": 0.49098647106438875,
+            "error": null
+          }
+        ],
+        "input_tokens": 48427,
+        "output_tokens": 1371,
+        "cached_input_tokens": null,
+        "model_duration_sum_s": 61.46017501479946,
+        "truncated_model_calls": 0
+      }
+    },
+    {
+      "scenario": "practice",
+      "repetition": 0,
+      "warmup": false,
+      "student_id": "profile-ca7c8cf3-33a8-4e47-9fb8-22b552bfaf1f",
+      "prompt": "Give me one short-answer application question about changing that module's storage implementation while preserving its public interface. Do not show the answer.",
+      "response": "Here's your short-answer question:\n\n---\n\nA university's `StudentRecords` module currently stores records in a CSV file. Its public interface is:\n\n```python\nclass StudentRecords:\n    def find(self, student_id: str) -> StudentProfile: ...\n    def gpa(self, student_id: str) -> float: ...\n    def add(self, profile: StudentProfile) -> None: ...\n```\n\nThe registrar now wants the records stored in a SQL database instead, and the public interface above must stay exactly as it is.\n\nAnswer these three short parts:\n\n1. Which module(s) in the system are allowed to change to make this switch happen?\n2. Name **two** things inside the module that you are free to change, and **two** things in the code above you are **not** allowed to change.\n3. Give one concrete way you could *prove* the storage secret is really hidden, without reading the module's source code.\n\nKeep each part to a sentence or two.\n\n---\n\nWrite your answer whenever you're ready and I'll give you feedback on it.",
+      "visible_ttft_s": 72.55809001112357,
+      "success": true,
+      "error": null,
+      "total_s": 77.28287536092103,
+      "metrics": {
+        "model_call_count": 5,
+        "model_calls": [
+          {
+            "run_id": "01a14e68-a8fe-7552-b4ac-e2f431661a5e",
+            "parent_run_id": "01a14e68-a8f7-7c43-856f-e76d9a265794",
+            "name": "ChatOpenAI",
+            "started_at_s": 0.015436742920428514,
+            "duration_s": 2.126662834081799,
+            "error": null,
+            "input_tokens": 9985,
+            "output_tokens": 72,
+            "cached_input_tokens": 9728,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e68-b170-79c3-8e22-d58692a0aa41",
+            "parent_run_id": "01a14e68-b16b-7ba2-8581-adf01236a922",
+            "name": "ChatOpenAI",
+            "started_at_s": 2.176942831138149,
+            "duration_s": 4.602158842841163,
+            "error": null,
+            "input_tokens": 5861,
+            "output_tokens": 66,
+            "cached_input_tokens": null,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e68-c561-7a31-908c-341e3da7e8c0",
+            "parent_run_id": "01a14e68-c558-7b53-b1b9-565695d12caf",
+            "name": "ChatOpenAI",
+            "started_at_s": 7.28232272202149,
+            "duration_s": 3.4238635760266334,
+            "error": null,
+            "input_tokens": 7939,
+            "output_tokens": 71,
+            "cached_input_tokens": 5888,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e68-d4e5-7652-b7ea-ffc156500c3e",
+            "parent_run_id": "01a14e68-d4e2-71f3-b13a-2adb63ac1b82",
+            "name": "ChatOpenAI",
+            "started_at_s": 11.254448899999261,
+            "duration_s": 54.37753941398114,
+            "error": null,
+            "input_tokens": 10049,
+            "output_tokens": 1592,
+            "cached_input_tokens": 7936,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e69-a96a-7de3-940b-9f81802ac23e",
+            "parent_run_id": "01a14e69-a961-7502-a1eb-d87e05b2717b",
+            "name": "ChatOpenAI",
+            "started_at_s": 65.65927263302729,
+            "duration_s": 11.607589221093804,
+            "error": null,
+            "input_tokens": 11589,
+            "output_tokens": 234,
+            "cached_input_tokens": null,
+            "finish_reason": "stop"
+          }
+        ],
+        "tools": [
+          {
+            "run_id": "01a14e68-b152-70e0-93a3-32ca8f91fcc4",
+            "parent_run_id": "01a14e68-b14f-7bd1-86f5-bc50d9972277",
+            "name": "task",
+            "started_at_s": 2.1470124879851937,
+            "duration_s": 63.50166971213184,
+            "error": null
+          },
+          {
+            "run_id": "01a14e68-c36e-73c0-818c-645d8589acd5",
+            "parent_run_id": "01a14e68-c36c-7c63-8d67-7f7379e4380e",
+            "name": "search_markdown_sources",
+            "started_at_s": 6.783307933947071,
+            "duration_s": 0.4892357971984893,
+            "error": null
+          },
+          {
+            "run_id": "01a14e68-c36f-7813-879d-53e8780e2f31",
+            "parent_run_id": "01a14e68-c36d-7491-8066-252871b0b60a",
+            "name": "search_markdown_sources",
+            "started_at_s": 6.784715364919975,
+            "duration_s": 0.48241678602062166,
+            "error": null
+          },
+          {
+            "run_id": "01a14e68-d2c6-7d03-a215-349539210c32",
+            "parent_run_id": "01a14e68-d2c4-7991-922c-071815dd4ce0",
+            "name": "search_markdown_sources",
+            "started_at_s": 10.710986346937716,
+            "duration_s": 0.538813176099211,
+            "error": null
+          },
+          {
+            "run_id": "01a14e68-d2c7-7a31-96e5-3165d299a4a7",
+            "parent_run_id": "01a14e68-d2c4-7991-922c-072be65d584c",
+            "name": "search_markdown_sources",
+            "started_at_s": 10.71222649794072,
+            "duration_s": 0.5370224840007722,
+            "error": null
+          }
+        ],
+        "input_tokens": 45423,
+        "output_tokens": 2035,
+        "cached_input_tokens": null,
+        "model_duration_sum_s": 76.13781388802454,
+        "truncated_model_calls": 0
+      }
+    },
+    {
+      "scenario": "answer",
+      "repetition": 0,
+      "warmup": false,
+      "student_id": "profile-ca7c8cf3-33a8-4e47-9fb8-22b552bfaf1f",
+      "prompt": "I would hide the storage representation inside the module and preserve the public operations and their behavior. Clients should not need to change when I replace the representation.",
+      "response": "You've got the right principle — \"clients should not need to change when I replace the representation\" is exactly the goal. But your answer stays at the principle level; the question wanted it operationalized. Here's what each part should look like:\n\n**Part 1 — which module(s) change?** Exactly one: `StudentRecords`. The procedure is called *change impact analysis*: pick a plausible change (SQL instead of CSV), trace what would have be edited, and count the modules that light up. A well-hidden design lights up **one** module; if callers light up too, the secret is leaking.\n\n**Part 2 — what's free vs. frozen.** Free to change (all inside the module): the storage mechanism (CSV reader → DB connection/driver), the internal record representation (row parsing → ORM objects), the file/table layout, internal helpers for opening or migrating storage. Not allowed to change: the three public names `find`, `gpa`, `add`; their parameter and return types (`str`, `StudentProfile`, `float`, `None`); and the behavior clients rely on. The interface is \"permission to assume\" — once published, every name and type is a fact clients may build on.\n\n**Part 3 — proving it without reading the source.** Run an **implementation-swap test**: keep the client code identical, wire in the SQL-backed implementation instead of the CSV one, and check whether the clients still compile and pass their tests unchanged. Same client code, two implementations. If clients survive the swap untouched, the storage secret is genuinely hidden. (This is also why `private` alone proves nothing: fields can be private while a return type like `sqlite3.Row` still hands the storage decision to every caller.)\n\nQuick check: if `find` were declared `-> sqlite3.Row` instead of `-> StudentProfile`, would your implementation-swap test still pass without touching client code? Why or why not?",
+      "visible_ttft_s": 95.60019315802492,
+      "success": true,
+      "error": null,
+      "total_s": 105.26142564509064,
+      "metrics": {
+        "model_call_count": 12,
+        "model_calls": [
+          {
+            "run_id": "01a14e69-d6e3-79b2-9110-a18c07ff4075",
+            "parent_run_id": "01a14e69-d6de-7852-a603-1094b99704a2",
+            "name": "ChatOpenAI",
+            "started_at_s": 0.01767906593158841,
+            "duration_s": 1.1564737220760435,
+            "error": null,
+            "input_tokens": 11866,
+            "output_tokens": 30,
+            "cached_input_tokens": 11776,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e69-db78-7d03-ad64-716c8022aca2",
+            "parent_run_id": "01a14e69-db71-7ff1-8f51-05063f0e5c03",
+            "name": "ChatOpenAI",
+            "started_at_s": 1.1907552850898355,
+            "duration_s": 13.634300312958658,
+            "error": null,
+            "input_tokens": 11922,
+            "output_tokens": 511,
+            "cached_input_tokens": 11840,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-10e1-7fd0-a5ea-13cd364dd59b",
+            "parent_run_id": "01a14e6a-10d8-77e2-9b15-94b191fdc483",
+            "name": "ChatOpenAI",
+            "started_at_s": 14.863490167073905,
+            "duration_s": 5.387162861879915,
+            "error": null,
+            "input_tokens": 6995,
+            "output_tokens": 64,
+            "cached_input_tokens": null,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-2750-7a12-99ac-43eae331ac0c",
+            "parent_run_id": "01a14e6a-2749-7820-b433-6974d2f7a702",
+            "name": "ChatOpenAI",
+            "started_at_s": 20.606828954070807,
+            "duration_s": 2.2882626079954207,
+            "error": null,
+            "input_tokens": 8015,
+            "output_tokens": 58,
+            "cached_input_tokens": 6976,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-30cc-7cd3-ad7e-dab7ba8972eb",
+            "parent_run_id": "01a14e6a-30c8-78e0-bbd9-ecfdcc341b86",
+            "name": "ChatOpenAI",
+            "started_at_s": 23.034031552029774,
+            "duration_s": 6.444068881915882,
+            "error": null,
+            "input_tokens": 9127,
+            "output_tokens": 161,
+            "cached_input_tokens": 8000,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-4a21-7320-8aa3-815918013518",
+            "parent_run_id": "01a14e6a-4a1c-7640-85c1-e63f00fa02b0",
+            "name": "ChatOpenAI",
+            "started_at_s": 29.519549522083253,
+            "duration_s": 11.506797892972827,
+            "error": null,
+            "input_tokens": 9320,
+            "output_tokens": 326,
+            "cached_input_tokens": 9216,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-772a-7953-bd9a-4765ca8b9f2a",
+            "parent_run_id": "01a14e6a-7724-7733-9a6a-24a9d8d9f5c6",
+            "name": "ChatOpenAI",
+            "started_at_s": 41.04855560208671,
+            "duration_s": 7.841407666914165,
+            "error": null,
+            "input_tokens": 12703,
+            "output_tokens": 66,
+            "cached_input_tokens": null,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-95e1-7310-a1d0-d8d1cc6c87c6",
+            "parent_run_id": "01a14e6a-95dc-7993-92fd-0c03d8d799d3",
+            "name": "ChatOpenAI",
+            "started_at_s": 48.911169189959764,
+            "duration_s": 4.875056062126532,
+            "error": null,
+            "input_tokens": 6125,
+            "output_tokens": 66,
+            "cached_input_tokens": null,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-ab3c-7672-b56d-5dfb206def6f",
+            "parent_run_id": "01a14e6a-ab36-7573-b37f-ec6f6bf9a0ae",
+            "name": "ChatOpenAI",
+            "started_at_s": 54.378418914973736,
+            "duration_s": 3.373015559045598,
+            "error": null,
+            "input_tokens": 8224,
+            "output_tokens": 70,
+            "cached_input_tokens": 6144,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-ba7d-75d2-acbc-92785db23056",
+            "parent_run_id": "01a14e6a-ba74-75b1-97f0-e7538c6125da",
+            "name": "ChatOpenAI",
+            "started_at_s": 58.28325941390358,
+            "duration_s": 3.3195634421426803,
+            "error": null,
+            "input_tokens": 10528,
+            "output_tokens": 55,
+            "cached_input_tokens": 8192,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6a-c7f3-7ac1-b0f3-7ae51a1d90ea",
+            "parent_run_id": "01a14e6a-c7ef-7e71-840c-153c659a2082",
+            "name": "ChatOpenAI",
+            "started_at_s": 61.72983335098252,
+            "duration_s": 25.881255882093683,
+            "error": null,
+            "input_tokens": 11569,
+            "output_tokens": 755,
+            "cached_input_tokens": 10496,
+            "finish_reason": "tool_calls"
+          },
+          {
+            "run_id": "01a14e6b-2d29-7601-89c9-3d2a4d630396",
+            "parent_run_id": "01a14e6b-2d20-7bd0-a914-d26ddf65174b",
+            "name": "ChatOpenAI",
+            "started_at_s": 87.63893926003948,
+            "duration_s": 17.6058203978464,
+            "error": null,
+            "input_tokens": 13502,
+            "output_tokens": 402,
+            "cached_input_tokens": null,
+            "finish_reason": "stop"
+          }
+        ],
+        "tools": [
+          {
+            "run_id": "01a14e69-db6c-71e2-9426-9318e7ab94a1",
+            "parent_run_id": "01a14e69-db6a-79b1-ad69-e97a9e5726b3",
+            "name": "fetch_student_data",
+            "started_at_s": 1.177943805931136,
+            "duration_s": 0.0035755641292780638,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-10c0-72c2-8956-ec148f3206a9",
+            "parent_run_id": "01a14e6a-10bd-7651-b8dd-cacd84e6742c",
+            "name": "task",
+            "started_at_s": 14.830141600919887,
+            "duration_s": 26.209102706052363,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-25f0-7073-9ccf-49530f7f6649",
+            "parent_run_id": "01a14e6a-25ef-7ad3-9209-dff3e7611c8b",
+            "name": "fetch_student_data",
+            "started_at_s": 20.25414094608277,
+            "duration_s": 0.003439868800342083,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-25f1-73d1-913f-dd8490ed06ff",
+            "parent_run_id": "01a14e6a-25ef-7ad3-9209-e0092c4cf120",
+            "name": "search_markdown_sources",
+            "started_at_s": 20.255288700107485,
+            "duration_s": 0.34153490094468,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-3044-7bf2-8287-6d09b7591c9e",
+            "parent_run_id": "01a14e6a-3043-7de3-92fe-53fdb4a46f7d",
+            "name": "search_markdown_sources",
+            "started_at_s": 22.89855339890346,
+            "duration_s": 0.13001834298484027,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-49fb-7130-affc-7a0cfdb6409a",
+            "parent_run_id": "01a14e6a-49fa-7091-8ade-d2b48089288d",
+            "name": "update_student_model",
+            "started_at_s": 29.481788141885772,
+            "duration_s": 0.030991337029263377,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-95ce-73e0-87b3-ad3daef082ce",
+            "parent_run_id": "01a14e6a-95cd-7853-a04e-c3deb3aeb6c5",
+            "name": "task",
+            "started_at_s": 48.892403879901394,
+            "duration_s": 38.73450775700621,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-a8f0-78c1-817a-53b99be1b10d",
+            "parent_run_id": "01a14e6a-a8ee-7f62-bba0-670f12223fe5",
+            "name": "search_markdown_sources",
+            "started_at_s": 53.79006497608498,
+            "duration_s": 0.5808464728761464,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-a8f2-7131-bb85-23abe9d65923",
+            "parent_run_id": "01a14e6a-a8ef-7620-b8a0-0904124398f9",
+            "name": "search_markdown_sources",
+            "started_at_s": 53.79210435692221,
+            "duration_s": 0.5791104990057647,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-b86f-73d1-ba5d-04c9fead1a93",
+            "parent_run_id": "01a14e6a-b86d-7140-ad9a-594a0d171e1c",
+            "name": "search_markdown_sources",
+            "started_at_s": 57.757852328941226,
+            "duration_s": 0.5157646059524268,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-b872-70f0-9363-633317c0d735",
+            "parent_run_id": "01a14e6a-b86d-7140-ad9a-59348f029070",
+            "name": "search_markdown_sources",
+            "started_at_s": 57.759966446086764,
+            "duration_s": 0.5102718980051577,
+            "error": null
+          },
+          {
+            "run_id": "01a14e6a-c77a-7270-aeb2-be26f914ffb8",
+            "parent_run_id": "01a14e6a-c778-7e83-a7b4-e4caa3eecece",
+            "name": "search_markdown_sources",
+            "started_at_s": 61.60797929391265,
+            "duration_s": 0.11651729908771813,
+            "error": null
+          }
+        ],
+        "input_tokens": 119896,
+        "output_tokens": 2564,
+        "cached_input_tokens": null,
+        "model_duration_sum_s": 103.3131852899678,
+        "truncated_model_calls": 0
+      }
+    }
+  ],
+  "error": null,
+  "server_info": {
+    "status": "verified",
+    "observed": {
+      "model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "context_length": 32768,
+      "revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "kv_cache_dtype": "auto",
+      "mem_fraction_static": 0.85,
+      "max_running_requests": 2,
+      "max_total_tokens": 131072,
+      "chunked_prefill_size": 2048,
+      "page_size": 64,
+      "served_model_name": "Qwen3.8-Flash-Next-FP4-Local",
+      "enable_cache_report": true,
+      "attention_backend": "flashinfer",
+      "fp4_gemm_runner_backend": "flashinfer_cutlass",
+      "cuda_graph_max_bs_decode": 2,
+      "speculative_algorithm": "EAGLE",
+      "speculative_draft_model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "speculative_draft_model_revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "speculative_num_steps": 3,
+      "speculative_eagle_topk": 1,
+      "speculative_num_draft_tokens": 4,
+      "speculative_dspark_block_size": null,
+      "moe_runner_backend": "flashinfer_cutlass",
+      "max_mamba_cache_size": 10,
+      "mamba_ssm_dtype": "float32",
+      "mamba_radix_cache_strategy": "extra_buffer",
+      "ple_offload_embedding": true,
+      "ple_offload_backend": "file",
+      "version": "0.5.21"
+    },
+    "mismatches": [],
+    "missing_fields": [],
+    "error": null,
+    "live_model": {
+      "model_path": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "served_model_name": "Qwen3.8-Flash-Next-FP4-Local"
+    }
+  },
+  "git_commit": "dc3e59bd0765df715faf989fc3245549ad205b2b",
+  "git_dirty": true,
+  "summary": {
+    "explanation": {
+      "successful_turns": 1,
+      "failed_turns": 0,
+      "total_s_median": 63.59761540289037,
+      "visible_ttft_s_median": 52.47030271589756
+    },
+    "practice": {
+      "successful_turns": 1,
+      "failed_turns": 0,
+      "total_s_median": 77.28287536092103,
+      "visible_ttft_s_median": 72.55809001112357
+    },
+    "answer": {
+      "successful_turns": 1,
+      "failed_turns": 0,
+      "total_s_median": 105.26142564509064,
+      "visible_ttft_s_median": 95.60019315802492
+    }
+  }
+}
