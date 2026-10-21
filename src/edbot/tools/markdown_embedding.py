@@ -14,6 +14,9 @@ from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from edbot.embedding_model import create_embedding_model
+from edbot.model_config import EMBEDDING_MODEL_NAME
+
 logger = logging.getLogger(__name__)
 
 REPO_URL = "https://github.com/tobiasduerschmid/tobiasduerschmid.github.io.git"
@@ -30,7 +33,7 @@ STORE_PATH = CACHE_DIR / "store.json" # dumped InMemoryVectorStore -> saving vec
 FINGERPRINT_PATH = CACHE_DIR / "fingerprint.json" # what STORE_PATH was built from
 
 # Embedding settings: changing any of these invalidates the saved store
-EMBEDDING_MODEL = "qwen3-embedding:8b"
+EMBEDDING_MODEL = EMBEDDING_MODEL_NAME
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 # Bump when the loading/cleaning/splitting code changes in a way that alters the chunks
@@ -247,7 +250,7 @@ def load_sebook_store() -> InMemoryVectorStore:
     Cached, so the work (git sync, then load or rebuild) happens once per process.
     """
     fingerprint = build_fingerprint(sync_repo())
-    embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL)
+    embeddings = create_embedding_model()
 
     if store_is_current(fingerprint):
         try:

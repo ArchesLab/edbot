@@ -4,7 +4,7 @@ import logging
 from collections.abc import AsyncIterator
 import aiosqlite
 from pydantic import BaseModel
-from langchain_core.messages import AIMessageChunk
+from langchain_core.messages import AIMessage, AIMessageChunk
 from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.store.sqlite.aio import AsyncSqliteStore
@@ -95,10 +95,8 @@ STATUS_FOR_TOOL = {
 }
 DEFAULT_STATUS = "Thinking…"
 
-# Tool calls only show up at the end of a model message, so text at the start of a message
-# might be a preamble to a tool call ("Let me look that up") rather than the reply. Hold back
-# this many characters of each message; drop them if a tool call follows, else start streaming
-REPLY_HOLDBACK_CHARS = 200
+# Tool calls can arrive after an arbitrarily long parent preamble. Hold the
+# complete message until its tool status and finish reason are known.
 
 TURN_TIMEOUT_SECONDS = 600 # a hung Ollama otherwise blocks the turn forever
 
@@ -113,7 +111,7 @@ def _is_orchestrator_output(chunk, metadata) -> bool:
     graph such as a subagent, whose namespace contains "|".
     """
     return (
-        isinstance(chunk, AIMessageChunk)
+        isinstance(chunk, AIMessage)
         and metadata.get("langgraph_node") == "model"
         and "|" not in (metadata.get("langgraph_checkpoint_ns") or "")
     )
@@ -130,7 +128,6 @@ async def chat_turn(student_id: str, message: str) -> AsyncIterator[TurnEvent]:
 
     message_id = None  # the orchestrator message currently streaming
     held = ""          # its text not yet sent to the student
-    live = False       # True once it passed the holdback and is streaming as the reply
     calls_tools = False
 
     try:
@@ -148,17 +145,24 @@ async def chat_turn(student_id: str, message: str) -> AsyncIterator[TurnEvent]:
                 if not _is_orchestrator_output(chunk, metadata):
                     continue
 
+                if chunk.response_metadata.get("finish_reason") == "length":
+                    raise ValueError("Reply reached its output limit; no complete reply is available")
+                # A complete middleware/model message can carry invalid calls
+                # without stream fragments. Partial chunks may still become
+                # valid JSON, so only reject complete messages here.
+                if not isinstance(chunk, AIMessageChunk) and chunk.invalid_tool_calls:
+                    raise ValueError("Reply returned an invalid tool call; no complete reply is available")
+
                 if chunk.id != message_id:
-                    # The previous message finished without a tool call, so short text it held was a reply
+                    # Only a completed, tool-free parent message is public.
                     if held and not calls_tools:
                         yield TextDelta(text=held)
-                    message_id, held, live, calls_tools = chunk.id, "", False, False
+                    message_id, held, calls_tools = chunk.id, "", False
 
-                if chunk.tool_call_chunks:
-                    if live:
-                        logger.warning("Orchestrator called a tool after its text was streamed to %s", student_id)
+                tool_calls = getattr(chunk, "tool_call_chunks", None) or chunk.tool_calls
+                if tool_calls:
                     calls_tools, held = True, ""
-                    for tool_call in chunk.tool_call_chunks:
+                    for tool_call in tool_calls:
                         # Tool calls stream in pieces; only the first piece of each carries the name
                         status = STATUS_FOR_TOOL.get(tool_call.get("name") or "", DEFAULT_STATUS)
                         if tool_call.get("name") and status != last_status:
@@ -167,13 +171,7 @@ async def chat_turn(student_id: str, message: str) -> AsyncIterator[TurnEvent]:
 
                 if calls_tools or not chunk.text:
                     continue
-                if live:
-                    yield TextDelta(text=chunk.text)
-                    continue
                 held += chunk.text
-                if len(held) >= REPLY_HOLDBACK_CHARS:
-                    yield TextDelta(text=held)
-                    held, live = "", True
 
         if held and not calls_tools:
             yield TextDelta(text=held)

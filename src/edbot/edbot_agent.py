@@ -7,23 +7,23 @@ import logging
 from pathlib import Path
 import yaml
 from pydantic import TypeAdapter
-from edbot import tools, middleware, interface_def
+from edbot import tools, middleware, interface_def, model_config
 from edbot.tools.markdown_embedding import load_sebook_store
 
 from deepagents import create_deep_agent
 from deepagents.backends import FilesystemBackend
-from langchain_ollama import ChatOllama
+from edbot.chat_model import create_chat_model
+from edbot.middleware.direct_content import CompleteContentMiddleware, DirectContentMiddleware
+from edbot.middleware.assessment_result import AssessmentResultMiddleware, assessment_prompt
+from edbot.middleware.assessment_prior import PrefetchAssessmentPrior
+from edbot.middleware.content_after_assessment import RequireContentAfterAssessment
+from edbot.middleware.course_evidence import CaptureCourseEvidence
+from edbot.middleware.focused_cga_prompt import FocusedCGAPrompt
+from edbot.tutor_harness import tutor_middleware
 from langchain.agents.structured_output import ToolStrategy
 
 ROOT_DIR = Path(__file__).parent # src/edbot
-MODEL_NAME = "qwen3.8:27b" # Shared by the orchestrator and all subagents
-NUM_CTX = 32768 # Ollama context window, in tokens
 backend = FilesystemBackend(root_dir=ROOT_DIR)
-
-# ollama serve
-# ollama pull <model>
-# ollama list
-# ollama run <name-of-model>
 
 def load_subagents(config_path: Path) -> list:
     """Load subagent definitions from YAML and wire up tools."""
@@ -56,13 +56,25 @@ def load_subagents(config_path: Path) -> list:
             "system_prompt": (ROOT_DIR / spec["system_prompt_path"]).read_text(),
             "response_format": ToolStrategy(schemas[spec["response_format"]]),
             # Shows the subagent the student conversation passed down from the orchestrator
-            "middleware": [middleware.InjectConversationMiddleware()]
+            "middleware": [middleware.InjectConversationMiddleware(),
+                           *(tutor_middleware(backend) if model_config.REDUCED_TUTOR_HARNESS else [])]
         }
 
         if "tools" in spec:
             subagent["tools"] = [ available_tools[t] for t in spec["tools"]]
         if "input_schema" in spec:
             middleware.SUBAGENT_INPUT_SCHEMAS[name] = TypeAdapter(schemas[spec["input_schema"]])
+
+        if name == "content-generating-agent":
+            if model_config.REDUCED_TUTOR_HARNESS:
+                subagent["middleware"].insert(0, FocusedCGAPrompt(subagent["system_prompt"]))
+            subagent["middleware"].append(CompleteContentMiddleware())
+        elif name == "understanding-checking-agent" and model_config.DETERMINISTIC_ASSESSMENT_SAVE:
+            subagent["tools"] = [tool for tool in subagent["tools"] if tool.name != "update_student_model"]
+            subagent["system_prompt"] = assessment_prompt(subagent["system_prompt"])
+            if model_config.PREFETCH_ASSESSMENT_PRIOR:
+                subagent["middleware"][0] = PrefetchAssessmentPrior(subagent["system_prompt"])
+            subagent["middleware"].append(CompleteContentMiddleware(output_tool="UCAOutput", reject_tool_errors=True))
 
         subagents.append(subagent)
     return subagents
@@ -73,9 +85,8 @@ def create_edbot_agent(checkpointer=None, store=None):
     Pass a checkpointer to save conversations between turns, and a store for the student model
     (see service.get_agent). Runs must pass context=EdbotContext(student_id=...).
     """
-    # ChatOllama has no built-in profile, so without max_input_tokens deepagents assumes a
-    # 170k-token window and never summarizes before Ollama silently truncates the prompt
-    model = ChatOllama(model=MODEL_NAME, num_ctx=NUM_CTX, profile={"max_input_tokens": NUM_CTX})
+    # One client and context profile are inherited by every subagent.
+    model = create_chat_model()
     # Sync SEBook and load (or rebuild) its embeddings now, so the first search doesn't wait on it
     load_sebook_store()
 
@@ -89,9 +100,10 @@ def create_edbot_agent(checkpointer=None, store=None):
         # The orchestrator reads the student model and question log but never writes them
         tools=[tools.search_markdown_sources, tools.fetch_student_data, tools.fetch_recent_questions],
         system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
-        # question_log_middleware goes after the validator, so it only sees valid subagent inputs
-        middleware=[middleware.ConversationMiddleware(), middleware.log_subagent_calls, middleware.validate_subagent_input,
-                    middleware.question_log_middleware],
+        middleware=[*(tutor_middleware(backend, include_memory=True) if model_config.REDUCED_TUTOR_HARNESS else []),
+                    middleware.ConversationMiddleware(), CaptureCourseEvidence(), middleware.log_subagent_calls,
+                    middleware.validate_subagent_input, middleware.question_log_middleware, AssessmentResultMiddleware(),
+                    RequireContentAfterAssessment(), DirectContentMiddleware()],
         model=model,
         checkpointer=checkpointer,
         store=store,
@@ -137,7 +149,7 @@ async def run_cli(student_id: str):
 
 def setup_logging(verbosity: int):
     """Send logs to stderr. edbot's own loggers get the chosen level; libraries stay at WARNING
-    (httpx alone would log every Ollama request at INFO)."""
+    (httpx alone would log every model request at INFO)."""
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     level = {0: logging.WARNING, 1: logging.INFO}.get(verbosity, logging.DEBUG)
     logging.getLogger("edbot").setLevel(level)
