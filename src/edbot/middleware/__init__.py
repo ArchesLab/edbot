@@ -2,3 +2,4 @@
 from .conversation_history import ConversationMiddleware, InjectConversationMiddleware
 from .validate_input import SUBAGENT_INPUT_SCHEMAS, validate_subagent_input
 from .log_subagent_calls import log_subagent_calls
+from .question_log import question_log_middleware

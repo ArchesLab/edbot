@@ -1,3 +1,4 @@
 from .get_conversation_history import get_conversation_history
 from .search_markdown_sources import search_markdown_sources
 from .student_model import fetch_student_data, update_student_model
+from .question_log import fetch_recent_questions
