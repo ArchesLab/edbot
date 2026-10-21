@@ -97,12 +97,12 @@ def create_edbot_agent(checkpointer=None, store=None):
         skills=["./skills/"],
         subagents=load_subagents(ROOT_DIR / "subagents.yaml"),
         backend=backend,
-        # The orchestrator reads the student model but never writes it
-        tools=[tools.search_markdown_sources, tools.fetch_student_data],
+        # The orchestrator reads the student model and question log but never writes them
+        tools=[tools.search_markdown_sources, tools.fetch_student_data, tools.fetch_recent_questions],
         system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
         middleware=[*(tutor_middleware(backend, include_memory=True) if model_config.REDUCED_TUTOR_HARNESS else []),
                     middleware.ConversationMiddleware(), CaptureCourseEvidence(), middleware.log_subagent_calls,
-                    middleware.validate_subagent_input, AssessmentResultMiddleware(),
+                    middleware.validate_subagent_input, middleware.question_log_middleware, AssessmentResultMiddleware(),
                     RequireContentAfterAssessment(), DirectContentMiddleware()],
         model=model,
         checkpointer=checkpointer,

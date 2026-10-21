@@ -1,12 +1,16 @@
 from dataclasses import dataclass
 from datetime import datetime
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, model_validator
 from typing import Literal, Optional, Union
 
 BloomTier = Literal["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"]
 QuestionFormat = Literal["multiple_choice", "short_answer", "code_writing", "code_tracing"]
 Confidence = Literal["high", "medium", "low"]
 
+
+########################
+# Shared Student Model #
+########################
 # Per-turn runtime context: set once by chat_turn(), handed to every tool (including tools inside
 # subagents) as runtime.context. A dataclass rather than a BaseModel so it's never saved in checkpoints
 @dataclass(frozen=True) # object is read-only, not a Pydantic type, not saved in context
@@ -24,6 +28,28 @@ class StudentModelEntry(BaseModel):
     assessed_at: datetime = Field(description="Set by code when saved")
     assessed_at_turn: int = Field(description="Student message count when assessed, for the cadence check")
     assessment_count: int = Field(description="Times this concept has been assessed, 1 on the first")
+
+#################################
+# Shared Question-Logging Model #
+#################################
+class QuestionLogEntry(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    question_id: str            # generate ID, the store key
+    concept: str
+    tier: BloomTier
+    format: QuestionFormat
+    question_text: str          # what the student saw
+    rubric: str
+    concept_tags: list[str] = []
+    asked_at: datetime
+    asked_at_turn: int
+    # filled in later, once the student answers
+    student_answer: Optional[str] = None
+    verdict: Optional[Literal["correct", "partially_correct", "incorrect"]] = None
+    judgment_note: Optional[str] = None
+    answered_at_turn: Optional[int] = None
+
 
 class Message(BaseModel):
     model_config = ConfigDict(frozen=True)
@@ -56,8 +82,16 @@ class UCAInput(BaseModel):
     
     concept: str
     invocation_context: Literal["answer_submission", "practice_request", "followup_clarification", "new_evidence", "cadence_backstop", "cold_start", "other"]
-    # Conversation history isn't passed here: ConversationMiddleware hands it to subagents through state
+    question_id: Optional[str] = None       # which logged question the student is answering
+    student_answer: Optional[str] = None    # the student's answer to question_id
+    # Filled from the question log by QuestionLogMiddleware when question_id is set
     answer_submission: Optional[AnswerSubmission] = None
+
+    @model_validator(mode="after")
+    def _question_id_needs_answer(self):
+        if self.question_id and not self.student_answer:
+            raise ValueError("question_id is set, so student_answer is required")
+        return self
 
 class AnswerJudgment(BaseModel):
     model_config = ConfigDict(frozen=True)
