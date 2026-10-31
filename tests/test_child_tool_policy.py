@@ -66,10 +66,11 @@ class ChildToolPolicyTests(unittest.IsolatedAsyncioTestCase):
             with self.subTest(enabled=enabled):
                 events, _, server = await self.run_graph([
                     http_task(UCA, "assessment"), tool_reply("UCAOutput", ASSESSMENT),
-                    http_task(CGA, "content"), tool_reply("CGAOutput", CONTENT), text_reply("One useful question.")],
+                    http_task(CGA, "content"), tool_reply("CGAOutput", CONTENT)],
                     enabled=enabled)
                 self.assertEqual(events[-1].type, "done", events)
-                self.assertEqual(len(server.requests), 5)
+                # An ungraded assessment followed by content is delivered directly, without a parent rewrite
+                self.assertEqual(len(server.requests), 4)
                 for index in (1, 3):
                     payload = server.requests[index][1]
                     self.assertEqual(payload.get("parallel_tool_calls"), False if enabled else None)

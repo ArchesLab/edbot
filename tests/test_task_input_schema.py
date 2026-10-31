@@ -93,6 +93,8 @@ class TaskSchemaTests(unittest.IsolatedAsyncioTestCase):
                     for role, value in ((UCA, CGA_INPUT), (CGA, UCA_INPUT),
                                         (UCA, {"concept": "recursion"}), ("general-purpose", UCA_INPUT)):
                         self.assertFalse(validator.is_valid(task_args(role, value)))
+                    # QuestionLogMiddleware fills prior_questions; the parent must not spend a generation on it
+                    self.assertNotIn("prior_questions", json.dumps(schema))
                     self.assertEqual(convert_to_openai_tool(request.tools[0]), original_descriptor)
         self.assertIs(task.args_schema, original_schema)
         self.assertEqual(convert_to_openai_tool(task), original_descriptor)
@@ -145,15 +147,15 @@ class TaskSchemaTests(unittest.IsolatedAsyncioTestCase):
                     schema = descriptor["parameters"]
                     self.assertEqual(schema["type"], "object")
                     self.assertEqual(schema["properties"]["description"]["type"], "string")
-                    self.assertEqual(schema["properties"]["subagent_type"]["enum"],
-                                     [CGA] if constrained else sorted([UCA, CGA]))
+                    # The post-assessment guard leaves the advertised schema unchanged
+                    self.assertEqual(schema["properties"]["subagent_type"]["enum"], sorted([UCA, CGA]))
                     self.assertEqual(set(schema["required"]), {"description", "subagent_type"})
                     self.assertNotIn("anyOf", schema)
                     self.assertIn(CGA, descriptor["description"])
                     self.assertNotIn("parallel_tool_calls", seen[0].model_settings)
                     self.assertNotIn("tool_choice", requests[0], "Installed ChatOllama ignores this hint")
                     if constrained:
-                        self.assertEqual(seen[0].tool_choice, {"type": "function", "function": {"name": "task"}})
+                        self.assertEqual(seen[0].tool_choice, "required")
                     # ChatOllama parses nested JSON strings; the existing task
                     # validator already normalizes this object back to a string.
                     self.assertEqual(result.result[0].tool_calls[0]["args"], task_args(CGA, CGA_INPUT))
@@ -214,9 +216,16 @@ class TaskSchemaTests(unittest.IsolatedAsyncioTestCase):
         for sync in (False, True):
             for legacy in (False, True):
                 for role, value, expected in (
-                    (UCA, UCA_INPUT, {**UCA_INPUT, "answer_submission": None}),
+                    # The validator fills every UCAInput default; QuestionLogMiddleware hides question_id and
+                    # student_answer from the UCA afterward
+                    (UCA, UCA_INPUT, {**UCA_INPUT, "question_id": None, "student_answer": None, "answer_submission": None}),
                     (CGA, CGA_INPUT, CGA_INPUT),
                     (CGA, {"concept": "recursion", "target_tier": "Apply"},
+                     {"concept": "recursion", "target_tier": "Apply", "mode": "generate_question",
+                      "format_constraint": None, "prior_questions": []}),
+                    # A parent-supplied copy is dropped, so QuestionLogMiddleware fills it from the log
+                    (CGA, {"concept": "recursion", "target_tier": "Apply", "prior_questions": [
+                        {"question_text": "Copied question", "rubric": "PRIVATE_RUBRIC", "student_answer": "x"}]},
                      {"concept": "recursion", "target_tier": "Apply", "mode": "generate_question",
                       "format_constraint": None, "prior_questions": []}),
                 ):
@@ -256,29 +265,21 @@ class TaskSchemaTests(unittest.IsolatedAsyncioTestCase):
                                   await mw.awrap_tool_call(request, async_handler))
                         self.assertEqual((result.status, result.tool_call_id), ("error", "rejected"))
 
-    async def test_pending_assessment_selects_complete_cga_branch_sync_and_async(self):
+    async def test_pending_assessment_keeps_the_typed_task_schema_sync_and_async(self):
         for sync in (False, True):
             with self.subTest(sync=sync):
+                unconstrained = await self.advertised(model_request(assessed()), sync=sync)
                 changed = await self.advertised(model_request(assessed()), sync=sync, constrained=True)
-                schema = changed.tools[0]["function"]["parameters"]
-                self.assertEqual(schema["properties"]["subagent_type"].get("const"), CGA)
-                validator = Draft202012Validator(schema)
-                self.assertTrue(validator.is_valid(task_args(CGA, CGA_INPUT)))
-                self.assertFalse(validator.is_valid(task_args(UCA, UCA_INPUT)))
-                self.assertFalse(validator.is_valid(task_args(CGA, UCA_INPUT)))
-                self.assertEqual(changed.tool_choice, {"type": "function", "function": {"name": "task"}})
+                # Narrowing the schema would change the rendered prompt; _check enforces the CGA route instead
+                self.assertEqual(changed.tools, unconstrained.tools)
+                self.assertEqual(changed.tool_choice, "required")
                 self.assertFalse(changed.model_settings["parallel_tool_calls"])
 
-    async def test_pending_assessment_rejects_missing_or_ambiguous_cga_branch(self):
-        branch = {"type": "object", "properties": {"subagent_type": {"const": CGA}}}
-        for branches in ([], [branch, deepcopy(branch)]):
-            with self.subTest(branches=branches):
-                descriptor = {"type": "function", "function": {"name": "task",
-                              "parameters": {"anyOf": branches}}}
-                request = model_request(assessed(), tools=[descriptor])
-                with self.assertRaisesRegex(ValueError, "CGA branch"):
-                    RequireContentAfterAssessment().wrap_model_call(request,
-                        lambda _: self.fail("Ambiguous schema reached the model"))
+    async def test_pending_assessment_rejects_a_missing_task_tool(self):
+        request = model_request(assessed(), tools=[])
+        with self.assertRaisesRegex(ValueError, "task is unavailable"):
+            RequireContentAfterAssessment().wrap_model_call(request,
+                lambda _: self.fail("A request without task reached the model"))
 
     async def test_object_then_legacy_replay_keeps_assessment_receipt_identity(self):
         store = InMemoryStore()
@@ -311,14 +312,15 @@ class TaskSchemaTests(unittest.IsolatedAsyncioTestCase):
                 tool_reply("task", task_args(UCA, UCA_INPUT, legacy=legacy)),
                 tool_reply("UCAOutput", ASSESSMENT),
                 tool_reply("task", task_args(CGA, CGA_INPUT, legacy=legacy)),
-                tool_reply("CGAOutput", CONTENT), text_reply("One final question.")
+                tool_reply("CGAOutput", CONTENT)
             ]) as server, patch.object(edbot_agent, "load_sebook_store"):
                 graph = edbot_agent.create_edbot_agent(store=InMemoryStore())
                 result = await graph.ainvoke({"messages": [HumanMessage(content="Give me a hint.")]},
                     config={"configurable": {"thread_id": "typed-task-test"}},
                     context=EdbotContext(student_id="typed-task-test"))
-                self.assertEqual(result["messages"][-1].content, "One final question.")
-                self.assertEqual(len(server.requests), 5)
+                # An ungraded assessment followed by content is delivered directly
+                self.assertEqual(result["messages"][-1].content, CONTENT["content"])
+                self.assertEqual(len(server.requests), 4)
                 initial = next(t for t in server.requests[0][1]["tools"] if t["function"]["name"] == "task")
                 schema = initial["function"]["parameters"]
                 self.assertIn("anyOf", schema)
@@ -327,11 +329,8 @@ class TaskSchemaTests(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue(validator.is_valid(task_args(UCA, UCA_INPUT)))
                 self.assertFalse(validator.is_valid(task_args(UCA, CGA_INPUT)))
                 constrained = server.requests[2][1]
-                self.assertEqual([t["function"]["name"] for t in constrained["tools"]], ["task"])
-                schema = constrained["tools"][0]["function"]["parameters"]
-                self.assertEqual(schema["properties"]["subagent_type"]["const"], CGA)
-                self.assertTrue(Draft202012Validator(schema).is_valid(task_args(CGA, CGA_INPUT)))
-                self.assertEqual(constrained["tool_choice"], {"type": "function", "function": {"name": "task"}})
+                self.assertEqual(constrained["tools"], server.requests[0][1]["tools"])
+                self.assertEqual(constrained["tool_choice"], "required")
                 for index, expected in ((1, {**UCA_INPUT, "answer_submission": None}), (3, CGA_INPUT)):
                     self.assertEqual(json.loads(server.requests[index][1]["messages"][-1]["content"]), expected)
 

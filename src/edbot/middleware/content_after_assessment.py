@@ -5,10 +5,11 @@ already-misrouted stop still reaches CGA, whose existing contract requires closu
 Post-CGA parent synthesis remains available. Rejected terminal output raises
 inside the model wrapper, before graph state commits it; there is no hidden
 generation retry that could flush an earlier streamed answer into public output.
-"""
-from copy import deepcopy
-import json
 
+The parent's tools are left exactly as advertised. The chat template renders tools
+at the start of the prompt, and SGLang renders only the named tool for a named
+tool_choice, so narrowing either would discard the parent's cached prefix.
+"""
 from langchain.agents.middleware import AgentMiddleware
 from langchain.agents.middleware.types import ExtendedModelResponse, ModelResponse
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
@@ -22,6 +23,10 @@ from edbot.student_model import normalize_concept
 
 _UCA, _CGA = "understanding-checking-agent", "content-generating-agent"
 _INPUTS = {_UCA: TypeAdapter(UCAInput), _CGA: TypeAdapter(CGAInput)}
+# "required" admits any advertised tool. Lookups are harmless before routing, so let a
+# bounded number through; the guard applies again to the following generation.
+_LOOKUPS = {"search_markdown_sources", "fetch_student_data", "fetch_recent_questions"}
+_MAX_LOOKUPS = 2
 
 
 def _input(call):
@@ -87,50 +92,39 @@ def _pending(messages):
 _UCA_OUTPUT, _CGA_OUTPUT = TypeAdapter(UCAOutput), TypeAdapter(CGAOutput)
 
 
+def _lookups_since(messages, index):
+    """Parent generations after the assessment result that only called lookup tools."""
+    return sum(1 for message in messages[index + 1:]
+               if isinstance(message, AIMessage) and message.tool_calls
+               and all(call["name"] in _LOOKUPS for call in message.tool_calls))
+
+
 def _constrain(request):
     if not model_config.REQUIRE_CONTENT_AFTER_ASSESSMENT:
         return request, None
-    pending = _pending(request.state.get("messages", []))
+    messages = request.state.get("messages", [])
+    pending = _pending(messages)
     if pending is None:
         return request, None
     concept, status = pending
     if status["attempts"] >= 2:
         raise ValueError("Content generation failed after two attempts following assessment")
-    for tool in request.tools:
-        descriptor = deepcopy(convert_to_openai_tool(tool))
-        if descriptor.get("function", {}).get("name") == "task":
-            break
-    else:
+    if not any(convert_to_openai_tool(tool).get("function", {}).get("name") == "task" for tool in request.tools):
         raise ValueError("Assessment requires the content specialist, but task is unavailable")
-    function = descriptor["function"]
-    parameters = function["parameters"]
-    if "anyOf" in parameters:
-        branches = [branch for branch in parameters["anyOf"]
-                    if branch.get("properties", {}).get("subagent_type", {}).get("const") == _CGA]
-        if len(branches) != 1:
-            raise ValueError("Assessment requires exactly one typed CGA branch")
-        function["parameters"] = branches[0]
-    else:
-        # Legacy/non-reduced callers still advertise a string description.
-        parameters["properties"]["subagent_type"]["enum"] = [_CGA]
-    function["description"] = (
-        f"Generate student-facing content for assessed concept {json.dumps(concept)}. "
-        "Use the content-generating-agent and a JSON description matching CGAInput. "
-        "Choose its mode and target tier under the existing tutoring rules. Honor the "
-        "student's conversation and assistance contract, including requests to stop."
-    )
     settings = request.model_settings
     # ChatOllama ignores tool_choice and its client rejects parallel_tool_calls.
-    # Keep the named request and enforce the same causal boundary in _check.
+    # Keep the request and enforce the same causal boundary in _check.
     if not isinstance(request.model, ChatOllama):
         settings = {**settings, "parallel_tool_calls": False}
-    return request.override(tools=[descriptor], tool_choice={"type": "function", "function": {"name": "task"}},
-                            model_settings=settings), concept
+    # "required" rules out a terminal reply without changing the rendered prompt; _check enforces the route.
+    return request.override(tool_choice="required", model_settings=settings), (
+        concept, _lookups_since(messages, status["after"]) < _MAX_LOOKUPS)
 
 
-def _check(response, concept):
-    if concept is None:
+def _check(response, constraint):
+    if constraint is None:
         return response
+    concept, lookups_allowed = constraint
     inner = response.model_response if isinstance(response, ExtendedModelResponse) else response
     messages = inner.result if isinstance(inner, ModelResponse) else [inner]
     if len(messages) != 1 or not isinstance(messages[0], AIMessage):
@@ -140,6 +134,8 @@ def _check(response, concept):
             or len(message.tool_calls) != 1):
         raise ValueError("Assessment must be followed by one complete content-specialist task")
     call = message.tool_calls[0]
+    if call["name"] in _LOOKUPS and call.get("id") and lookups_allowed:
+        return response
     if (call["name"] != "task" or not call.get("id") or call["args"].get("subagent_type") != _CGA
             or set(call["args"]) != {"subagent_type", "description"}):
         raise ValueError("Assessment requires the content specialist before a terminal reply")

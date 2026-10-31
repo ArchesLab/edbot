@@ -1,5 +1,6 @@
-"""Deliver a complete CGA-only reply without a redundant parent model generation."""
+"""Deliver a complete CGA reply without a redundant parent model generation."""
 import json
+import logging
 from dataclasses import replace
 
 from langchain.agents.middleware import AgentMiddleware
@@ -10,20 +11,61 @@ from langgraph.types import Command
 from pydantic import TypeAdapter, ValidationError
 
 from edbot import model_config
-from edbot.interface_def import CGAInput, CGAOutput
+from edbot.interface_def import CGAInput, CGAOutput, UCAInput, UCAOutput
 
 
 _CGA_INPUT = TypeAdapter(CGAInput)
 _CGA_NAME = "content-generating-agent"
+_UCA_NAME = "understanding-checking-agent"
+
+logger = logging.getLogger(__name__)
+
+
+def _fallback(reason: str) -> None:
+    """Record why a finished CGA reply still goes through the parent's synthesis."""
+    logger.info("Direct content delivery skipped: %s", reason)
+    return None
+
+
+def _uncovered_reason(call, messages, output: CGAOutput) -> str | None:
+    """Why an earlier task's result isn't reflected in the CGA's reply, or None when it is.
+
+    An ungraded assessment has no feedback to add. A graded one is covered only
+    when the CGA received the verdict (CGA_ANSWER_FEEDBACK) and reports addressing
+    that same verdict; otherwise the parent's synthesis still has to add it.
+    """
+    if call["args"].get("subagent_type") != _UCA_NAME or not call.get("id"):
+        return f"earlier {call['args'].get('subagent_type')} task"
+    result = next((message for message in messages if isinstance(message, ToolMessage)
+                   and message.tool_call_id == call["id"]), None)
+    if result is None or result.status != "success" or not isinstance(result.content, str):
+        return "assessment did not succeed"
+    try:
+        raw_input = call["args"].get("description")
+        uca_input = (UCAInput.model_validate_json(raw_input) if isinstance(raw_input, str)
+                     else UCAInput.model_validate(raw_input))
+        uca_output = UCAOutput.model_validate_json(result.content)
+    except (ValidationError, ValueError, TypeError) as e:
+        return f"unreadable assessment: {e}"
+    judgment = uca_output.answer_judgment
+    if uca_input.question_id is None and judgment is None:
+        return None if output.feedback_verdict is None else "verdict reported for an ungraded assessment"
+    if not model_config.CGA_ANSWER_FEEDBACK:
+        return "graded assessment and CGA_ANSWER_FEEDBACK is off"
+    if judgment is None:
+        return "answer submitted but the assessment has no answer_judgment"
+    if output.feedback_verdict != judgment.verdict:
+        return f"feedback_verdict {output.feedback_verdict!r} does not match verdict {judgment.verdict!r}"
+    return None
 
 
 def _direct_content(request) -> AIMessage | None:
-    """Fail closed to ordinary synthesis unless this turn has one complete CGA task.
+    """Fail closed to ordinary synthesis unless this turn ends with one complete CGA task.
 
     Read actual graph messages, never student-supplied JSON or a summarization's
-    approximation of the turn. Assessment and multi-task turns still need the
-    parent's synthesis. The original tool result remains in the checkpoint so
-    its private rubric is available for a later answer submission.
+    approximation of the turn. Earlier tasks this turn are allowed only when each
+    is an assessment the CGA's reply covers; other multi-task turns still need
+    the parent's synthesis.
 
     DeepAgents does not expose the child's finish reason in its task result.
     Schema validation here cannot certify generation completeness or pedagogy;
@@ -48,52 +90,57 @@ def _direct_content(request) -> AIMessage | None:
             or not call.get("id") or result.tool_call_id != call["id"] or result.status != "success"
             or result.name not in (None, "task")):
         return None
-    # Earlier tasks may contain assessment feedback or content to combine. Even
-    # a failed task is left to the parent, which owns correction and recovery.
-    task_calls = [tool_call for message in current if isinstance(message, AIMessage)
-                  for tool_call in message.tool_calls if tool_call["name"] == "task"]
-    if len(task_calls) != 1:
-        return None
     if any(isinstance(message, AIMessage) and (
         message.invalid_tool_calls or message.response_metadata.get("finish_reason") == "length"
     ) for message in current):
-        return None
+        return _fallback("invalid or output-limited generation this turn")
     if any(isinstance(message, ToolMessage) and message.status != "success" for message in current):
-        return None
+        return _fallback("failed tool result this turn")
 
     try:
         raw_input = call["args"].get("description")
         if isinstance(raw_input, str):
             raw_input = json.loads(raw_input)
         if not isinstance(raw_input, dict) or set(call["args"]) != {"subagent_type", "description"}:
-            return None
+            return _fallback("unexpected task arguments")
         cga_input = _CGA_INPUT.validate_python(raw_input)
         if set(raw_input) - set(type(cga_input).model_fields):
-            return None
+            return _fallback(f"unknown CGA input fields {set(raw_input) - set(type(cga_input).model_fields)}")
         if not isinstance(result.content, str):
-            return None
+            return _fallback("non-text CGA result")
         raw_output = json.loads(result.content)
-        if not isinstance(raw_output, dict) or set(raw_output) - set(CGAOutput.model_fields):
-            return None
+        # QuestionLogMiddleware adds question_id to a logged generate_question result
+        if not isinstance(raw_output, dict) or set(raw_output) - set(CGAOutput.model_fields) - {"question_id"}:
+            return _fallback("CGA result is not a CGAOutput object")
         output = CGAOutput.model_validate(raw_output)
-    except (ValidationError, ValueError, TypeError):
-        return None
+    except (ValidationError, ValueError, TypeError) as e:
+        return _fallback(f"invalid CGA input or output: {e}")
 
     if ((output.mode, output.concept, output.target_tier)
             != (cga_input.mode, cga_input.concept, cga_input.target_tier)):
-        return None
-    if (not output.content.strip() or output.coverage_gap is not None or not output.sources
-            or any(not source.strip() for source in output.sources)):
-        return None
+        return _fallback("CGA output mode, concept or tier differs from its input")
+    if not output.content.strip() or output.coverage_gap is not None:
+        return _fallback(f"empty content or coverage_gap {output.coverage_gap!r}")
     if output.mode == "generate_question":
-        if (output.format is None or not output.rubric or not output.rubric.strip()
-                or not output.concept_tags or output.concept not in output.concept_tags
+        if output.format is None:
+            return _fallback("question has no format")
+        if (not output.concept_tags or output.concept not in output.concept_tags
                 or any(not tag.strip() for tag in output.concept_tags)):
-            return None
+            return _fallback(f"question concept_tags {output.concept_tags!r} lack concept {output.concept!r}")
         if cga_input.format_constraint is not None and output.format != cga_input.format_constraint:
-            return None
-    elif any(value is not None for value in (output.format, output.rubric, output.concept_tags)):
-        return None
+            return _fallback("question format differs from format_constraint")
+    elif any(value is not None for value in (output.format, output.concept_tags)):
+        return _fallback("question-only fields set outside generate_question")
+
+    # Earlier tasks may contain answer feedback or content to combine. Even
+    # a failed task is left to the parent, which owns correction and recovery.
+    earlier_tasks = [tool_call for message in current[:-2] if isinstance(message, AIMessage)
+                     for tool_call in message.tool_calls if tool_call["name"] == "task"]
+    for tool_call in earlier_tasks:
+        if reason := _uncovered_reason(tool_call, current, output):
+            return _fallback(reason)
+    if output.feedback_verdict is not None and len(earlier_tasks) != 1:
+        return _fallback(f"feedback_verdict set with {len(earlier_tasks)} earlier tasks")
 
     # Return a normal assistant message from the model node: LangGraph persists
     # and streams it, and the public history uses the same exact content.

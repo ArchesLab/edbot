@@ -23,7 +23,7 @@ UCA, CGA = "understanding-checking-agent", "content-generating-agent"
 ASSESSMENT = {"concept": "recursion", "prior_tier": None, "tier": "Understand", "confidence": "low",
               "rationale": "PRIVATE_ASSESSMENT: the learner identified a stopping case."}
 CONTENT = {"concept": "recursion", "mode": "explain_at_tier", "target_tier": "Understand",
-           "content": "PRIVATE_PARALLEL_CONTENT", "sources": []}
+           "content": "PRIVATE_PARALLEL_CONTENT"}
 
 
 def request(name="task"):
@@ -173,8 +173,8 @@ class ParallelChildContextTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(parent_requests), 5)
         self.assertNotEqual(parent_requests[2].get("parallel_tool_calls"), False)
         constrained = parent_requests[3]
-        self.assertEqual(constrained["tool_choice"], {"type": "function", "function": {"name": "task"}})
-        self.assertEqual(constrained["tools"][0]["function"]["parameters"]["properties"]["subagent_type"]["const"], CGA)
+        self.assertEqual(constrained["tool_choice"], "required")
+        self.assertEqual(constrained["tools"], parent_requests[2]["tools"])
         expected_public = ["Earlier public question.", "Earlier public reply.", "Recursion needs a stopping case."]
         expected_evidence = [{"query": query, "path_prefix": "", "content": content} for query, content in passages.items()]
         for child in child_requests:

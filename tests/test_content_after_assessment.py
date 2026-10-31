@@ -18,7 +18,7 @@ CGA = "content-generating-agent"
 ASSESSMENT = {"concept": "recursion", "prior_tier": None, "tier": "Understand", "confidence": "low",
               "rationale": "Internal assessment evidence."}
 CONTENT = {"mode": "explain_at_tier", "concept": "recursion", "target_tier": "Understand",
-           "content": "What changes when the argument reaches the stopping case?", "sources": ["Fixture source"]}
+           "content": "What changes when the argument reaches the stopping case?"}
 TASK_TOOL = {"type": "function", "function": {"name": "task", "description": "Delegate to a specialist.",
     "parameters": {"type": "object", "properties": {
         "description": {"type": "string"}, "subagent_type": {"type": "string"}},
@@ -62,7 +62,7 @@ class ContentRoutingTests(unittest.TestCase):
         self.flag.start()
         self.addCleanup(self.flag.stop)
 
-    def test_pending_assessment_restricts_only_model_descriptor_and_preserves_original_request(self):
+    def test_pending_assessment_requires_a_tool_call_without_changing_the_advertised_tools(self):
         mw, request = load_middleware(self), model_request(assessed())
         requests = []
         def handler(checked):
@@ -70,14 +70,27 @@ class ContentRoutingTests(unittest.TestCase):
             return ModelResponse(result=[task_message(CGA, "content")])
         mw.wrap_model_call(request, handler)
         constrained = requests[0]
-        self.assertEqual(constrained.tool_choice, {"type": "function", "function": {"name": "task"}})
+        # A named tool_choice or narrowed tools would change the rendered prompt and its cached prefix
+        self.assertEqual(constrained.tool_choice, "required")
         self.assertFalse(constrained.model_settings["parallel_tool_calls"])
         self.assertEqual(constrained.model_settings["temperature"], 0)
-        self.assertEqual(len(constrained.tools), 1)
-        descriptor = constrained.tools[0]["function"]
-        self.assertEqual(descriptor["parameters"]["properties"]["subagent_type"]["enum"], [CGA])
-        self.assertEqual(request.tools, [TASK_TOOL])
+        self.assertEqual(constrained.tools, [TASK_TOOL])
         self.assertIsNone(request.tool_choice)
+
+    def test_lookups_before_content_are_allowed_twice(self):
+        mw, messages = load_middleware(self), assessed()
+        for number in range(2):
+            lookup = AIMessage(content="", tool_calls=[{"name": "search_markdown_sources", "id": f"lookup-{number}",
+                                                        "type": "tool_call", "args": {"query": "recursion"}}])
+            response = ModelResponse(result=[lookup])
+            self.assertIs(mw.wrap_model_call(model_request(messages), lambda _: response), response)
+            messages = messages + [lookup, ToolMessage(content="Passage", tool_call_id=f"lookup-{number}")]
+        another = AIMessage(content="", tool_calls=[{"name": "fetch_student_data", "id": "lookup-2",
+                                                     "type": "tool_call", "args": {"concept": "recursion"}}])
+        with self.assertRaisesRegex(ValueError, "content specialist"):
+            mw.wrap_model_call(model_request(messages), lambda _: ModelResponse(result=[another]))
+        response = ModelResponse(result=[task_message(CGA, "content")])
+        self.assertIs(mw.wrap_model_call(model_request(messages), lambda _: response), response)
 
     def test_only_matching_successful_current_turn_assessments_activate_guard(self):
         mw = load_middleware(self)
@@ -197,22 +210,20 @@ class ContentRoutingGraphTests(unittest.IsolatedAsyncioTestCase):
             snapshot = await graph.aget_state(service.config_for(student))
         return events, history, snapshot, server
 
-    async def test_happy_route_forces_serialized_cga_tool_and_preserves_parent_synthesis(self):
+    async def test_happy_route_keeps_parent_prompt_and_delivers_ungraded_content_directly(self):
         route = http_task(CGA, "content")
         route["deltas"].insert(1, {"content": "SECRET_PREAMBLE"})
         events, history, _, server = await self.run_turn([
             http_task(UCA, "assessment"), tool_reply("UCAOutput", ASSESSMENT), route,
-            tool_reply("CGAOutput", CONTENT), text_reply("What does the stopping case return?")], buffered=False)
+            tool_reply("CGAOutput", CONTENT)], buffered=False)
         self.assertEqual(events[-1].type, "done", events)
-        self.assertEqual("".join(event.text for event in events if event.type == "text"), "What does the stopping case return?")
+        self.assertEqual("".join(event.text for event in events if event.type == "text"), CONTENT["content"])
         self.assertNotIn("SECRET_PREAMBLE", "\n".join(message.content for message in history))
-        self.assertEqual(len(server.requests), 5)
-        payload = server.requests[2][1]
-        self.assertEqual(payload.get("tool_choice"), {"type": "function", "function": {"name": "task"}})
+        self.assertEqual(len(server.requests), 4, "An ungraded assessment must not add a parent rewrite")
+        first, payload = server.requests[0][1], server.requests[2][1]
+        self.assertEqual(payload.get("tool_choice"), "required")
         self.assertFalse(payload["parallel_tool_calls"])
-        self.assertEqual([tool["function"]["name"] for tool in payload["tools"]], ["task"])
-        self.assertEqual(payload["tools"][0]["function"]["parameters"]["properties"]["subagent_type"]["const"], CGA)
-        self.assertIsNone(server.requests[-1][1].get("tool_choice"))
+        self.assertEqual(payload["tools"], first["tools"], "Changing the tools discards the parent's cached prefix")
 
     async def test_ignored_tool_choice_never_reaches_public_output_or_checkpoint(self):
         for buffered in (False, True):
@@ -234,7 +245,7 @@ class ContentRoutingGraphTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(events[-1].type, "done", events)
         self.assertEqual(len(server.requests), 6)
         correction = server.requests[3][1]
-        self.assertEqual(correction["tool_choice"], {"type": "function", "function": {"name": "task"}})
+        self.assertEqual(correction["tool_choice"], "required")
         self.assertTrue(any(message["role"] == "tool" and "Invalid task description" in message["content"]
                             for message in correction["messages"]))
 
@@ -259,7 +270,7 @@ class ContentRoutingGraphTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_misrouted_stop_reaches_cga_with_stop_history_and_can_close_without_instruction(self):
         # This fixture checks routing and visibility, not the live model's semantic obedience.
-        closure = {**CONTENT, "content": "Okay, we'll stop here.", "sources": []}
+        closure = {**CONTENT, "content": "Okay, we'll stop here."}
         events, history, _, server = await self.run_turn([
             http_task(UCA, "assessment"), tool_reply("UCAOutput", ASSESSMENT), http_task(CGA, "content"),
             tool_reply("CGAOutput", closure), text_reply("Okay, we'll stop here.")], "Stop now; no more questions.")

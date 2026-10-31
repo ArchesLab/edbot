@@ -1,4 +1,5 @@
 from copy import deepcopy
+import json
 from typing import Literal
 
 from pydantic import BaseModel, TypeAdapter, ValidationError
@@ -24,9 +25,29 @@ class _ContentTask(BaseModel):
     description: CGAInput
 
 
+# QuestionLogMiddleware fills prior_questions from the log, and only when it is empty, and answer_feedback
+# from this turn's graded UCA result. Hide both from the parent so it never spends a generation copying
+# rubrics or verdicts into the CGA input, and can't supply a verdict the UCA didn't give.
+_FILLED_BY_CODE = {"prior_questions", "answer_feedback"}
+
+
+def _without_filled_fields(schema):
+    """The schema with every property named in _FILLED_BY_CODE removed, at any depth."""
+    if isinstance(schema, list):
+        return [_without_filled_fields(item) for item in schema]
+    if not isinstance(schema, dict):
+        return schema
+    result = {key: _without_filled_fields(value) for key, value in schema.items()}
+    if isinstance(result.get("properties"), dict):
+        result["properties"] = {name: value for name, value in result["properties"].items() if name not in _FILLED_BY_CODE}
+        if "required" in result:
+            result["required"] = [name for name in result["required"] if name not in _FILLED_BY_CODE]
+    return result
+
+
 # Correlate the outer role and input; an independent description union permits
 # CGA-shaped UCA calls. Public conversion inlines references for serving grammars.
-_TASK_PARAMETERS = {"anyOf": [convert_to_openai_tool(schema)["function"]["parameters"]
+_TASK_PARAMETERS = {"anyOf": [_without_filled_fields(convert_to_openai_tool(schema)["function"]["parameters"])
                               for schema in (_AssessmentTask, _ContentTask)]}
 
 # The executable task(description: str, subagent_type: str) stays unchanged.
@@ -50,11 +71,13 @@ def _check_subagent_input(request):
     description = call["args"].get("description", "")
     try:
         # Some models (e.g. qwen via Ollama) send the description as a JSON object instead of a string
-        if isinstance(description, dict):
-            validated = adapter.validate_python(description)
-        else:
-            validated = adapter.validate_json(description)
-    except ValidationError as e:
+        if isinstance(description, str):
+            description = json.loads(description)
+        if isinstance(description, dict) and call["args"].get("subagent_type") == "content-generating-agent":
+            # The legacy string schema can't hide these fields; drop them so the question log fills them
+            description = {key: value for key, value in description.items() if key not in _FILLED_BY_CODE}
+        validated = adapter.validate_python(description)
+    except (ValidationError, ValueError) as e:
         return ToolMessage(
             content=f"Invalid task description for {call['args']['subagent_type']}:\n{e}",
             tool_call_id=call["id"],
