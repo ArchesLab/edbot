@@ -174,6 +174,7 @@ async def run_profile(backend, repetitions=3, warmups=1, conversation=CONVERSATI
             "thinking": config.ENABLE_THINKING, "temperature": 0,
             "buffer_tool_responses": backend == "sglang" and config.BUFFER_TOOL_RESPONSES,
             "direct_content_delivery": config.DIRECT_CONTENT_DELIVERY,
+            "cga_answer_feedback": config.CGA_ANSWER_FEEDBACK,
             "reduced_tutor_harness": config.REDUCED_TUTOR_HARNESS,
             "reuse_course_evidence": config.REUSE_COURSE_EVIDENCE,
             "deterministic_assessment_save": config.DETERMINISTIC_ASSESSMENT_SAVE,

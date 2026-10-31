@@ -10,6 +10,7 @@ MODEL_PRESET = "flash-next"  # "flash-next" or "27b"
 ENABLE_SPECULATION = True  # Disable here for a controlled same-model baseline.
 BUFFER_TOOL_RESPONSES = True  # Use SGLang's full-response tool parser; plain text can still stream.
 DIRECT_CONTENT_DELIVERY = True  # Deliver validated CGA-only replies without a second generation.
+CGA_ANSWER_FEEDBACK = True  # Pass a graded answer's verdict to the CGA so its reply can be delivered directly.
 REDUCED_TUTOR_HARNESS = True  # Keep course reads and context recovery, omit file-editing tools/instructions.
 REUSE_COURSE_EVIDENCE = True  # Pass this turn's actual source results to children before another search.
 DETERMINISTIC_ASSESSMENT_SAVE = True  # Persist validated UCAOutput once, without a model write generation.
