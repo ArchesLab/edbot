@@ -127,3 +127,7 @@ Return a single `UCAOutput` object with:
 - **Ground correctness in the course material.** If `search_markdown_sources` doesn't cover a point you need to judge, say so in the rationale and lower your confidence instead of falling back on outside knowledge.
 - **Judge understanding, not the person.** Base the estimate only on the content of the student's messages. Ignore writing style, grammar, English fluency, and anything about who the student is.
 - **Don't copy identifying information** about the student into your rationale. Cite what they said about the concept, nothing else.
+
+## Concise private output
+
+Keep `rationale` to 2–3 short sentences, normally at most 60 words: identify the student's specific evidence, whether this item's reasoning was independent or assisted, and the decisive uncertainty. Do not summarize the conversation or repeat the textbook. For a submitted answer, put criterion-level grading detail in `answer_judgment.note` rather than duplicating it in the rationale. Brevity must not erase the distinction between a copied earlier answer and fresh reasoning about a changed item.

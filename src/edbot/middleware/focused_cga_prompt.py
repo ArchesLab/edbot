@@ -14,7 +14,7 @@ from edbot.interface_def import CGAInput
 _INPUT = TypeAdapter(CGAInput)
 _TIERS = ("Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create")
 _MODES = ("generate_question", "explain_at_tier", "probe_at_tier")
-_SHARED = ("Role", "Teaching contract", "Input", "Tools", "Output", "Constraints")
+_SHARED = ("Role", "Input", "Tools", "Output", "Constraints")
 _SECTIONS = (
     "Role", "Teaching contract", "Bloom's Taxonomy tiers", "Input", "Tools",
     *(f"Mode: `{mode}`" for mode in _MODES), "Novelty check", "Format selection", "Output", "Constraints",
@@ -78,6 +78,10 @@ def _variants(prompt: str) -> dict[tuple[str, str], str]:
             focused += sections["Novelty check"]
             if mode == "generate_question":
                 focused += "".join(line for line in format_lines if line not in bullets or line.startswith(f"- `{tier}`:"))
+            # The assistance contract constrains the mode's generic style; keep
+            # it after those suggestions so a worked-example style cannot be
+            # mistaken for permission to solve a selected Socratic exercise.
+            focused += sections["Teaching contract"]
             result[(mode, tier)] = focused
     return result
 

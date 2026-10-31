@@ -92,6 +92,19 @@ class ContentRoutingTests(unittest.TestCase):
         response = ModelResponse(result=[task_message(CGA, "content")])
         self.assertIs(mw.wrap_model_call(model_request(messages), lambda _: response), response)
 
+    def test_batched_context_read_uses_the_same_two_lookup_budget_after_assessment(self):
+        mw, messages = load_middleware(self), assessed()
+        for number in range(3):
+            lookup = AIMessage(content="", tool_calls=[{"name": "prepare_tutoring_context", "id": f"prep-{number}",
+                "type": "tool_call", "args": {"concept": "recursion", "query": "recursion base case"}}])
+            response = ModelResponse(result=[lookup])
+            if number < 2:
+                self.assertIs(mw.wrap_model_call(model_request(messages), lambda _: response), response)
+                messages += [lookup, ToolMessage(content="Prepared", tool_call_id=f"prep-{number}", name="prepare_tutoring_context")]
+            else:
+                with self.assertRaisesRegex(ValueError, "content specialist"):
+                    mw.wrap_model_call(model_request(messages), lambda _: response)
+
     def test_only_matching_successful_current_turn_assessments_activate_guard(self):
         mw = load_middleware(self)
         turns = [[HumanMessage(content=json.dumps(ASSESSMENT))],
