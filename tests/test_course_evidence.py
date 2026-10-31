@@ -75,7 +75,7 @@ class CourseEvidenceTests(unittest.IsolatedAsyncioTestCase):
             "mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
         })}
         answer = {"mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
-                  "content": "A queue removes the oldest pending item first.", "sources": ["SEBook queues"]}
+                  "content": "A queue removes the oldest pending item first."}
         replies = [tool_reply("search_markdown_sources", {"query": "queue ordering"}),
                    tool_reply("task", task), tool_reply("CGAOutput", answer),
                    tool_reply("task", task), tool_reply("CGAOutput", answer),
@@ -132,7 +132,7 @@ class CourseEvidenceTests(unittest.IsolatedAsyncioTestCase):
             "mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
         })}
         answer = {"mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
-                  "content": "A queue removes the oldest item first.", "sources": ["Synthetic source"]}
+                  "content": "A queue removes the oldest item first."}
         child_searches = [tool_reply("search_markdown_sources", {"query": query})
                           for query in ("first child query", "second child query")]
         for index, reply in enumerate(child_searches):

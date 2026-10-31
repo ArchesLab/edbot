@@ -27,11 +27,11 @@ STRUCTURED_CHECKS = (
      "Use only this evidence; select a supported tier and explain uncertainty."),
     (CGAOutput,
      "Return a CGAOutput in generate_question mode for concept 'recursion', target tier Apply, "
-     "with one short_answer question, its rubric, concept tags and sources. "
+     "with one short_answer question and concept tags. "
      "Use only this synthetic source, titled 'Synthetic recursion note': "
      "A countdown function stops at zero and otherwise calls itself with n - 1. "
      "Ask the learner to identify the base case for that function. "
-     "Keep the answer in the rubric, separate from the student-facing question."),
+     "Keep the answer out of the student-facing question."),
 )
 
 

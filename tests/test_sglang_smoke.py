@@ -48,8 +48,7 @@ class SyntheticModel:
                 else:
                     args = {"mode": "generate_question", "concept": "recursion", "target_tier": "Apply",
                             "content": "Which condition should stop counting down?", "format": "short_answer",
-                            "rubric": "Stop at zero.", "concept_tags": ["recursion"],
-                            "sources": ["Synthetic recursion note"]}
+                            "concept_tags": ["recursion"]}
                 return AIMessage(content="", tool_calls=[{"id": "synthetic", "name": name, "args": args}],
                                  response_metadata={"finish_reason": "tool_calls"})
 

@@ -11,7 +11,8 @@ from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
 
 QUESTION = "  How would changing a queue's representation affect its clients?\n"
-RUBRIC = "PRIVATE_RUBRIC: preserve the public operations and their behavior."
+# Private metadata in the CGA's result; the rubric itself is written later, outside the CGA
+PRIVATE_TAG = "private-queue-representation-tag"
 
 
 def task_message(name="content-generating-agent", call_id="cga-task", **input_changes):
@@ -26,8 +27,8 @@ def task_message(name="content-generating-agent", call_id="cga-task", **input_ch
 def output_message(**changes):
     output = {
         "mode": "generate_question", "concept": "queues", "target_tier": "Apply",
-        "content": QUESTION, "format": "short_answer", "rubric": RUBRIC,
-        "concept_tags": ["queues"], "sources": ["SEBook queues"], "coverage_gap": None,
+        "content": QUESTION, "format": "short_answer",
+        "concept_tags": ["queues", PRIVATE_TAG], "coverage_gap": None,
     }
     output.update(changes)
     return ToolMessage(content=json.dumps(output), tool_call_id="cga-task")
@@ -51,7 +52,7 @@ class DirectContentTests(unittest.TestCase):
     def setUp(self):
         self.middleware = load_middleware(self)
 
-    def test_sync_forwards_exact_content_without_rewriting_or_exposing_rubric(self):
+    def test_sync_forwards_exact_content_without_rewriting_or_exposing_metadata(self):
         messages = turn()
         original = messages[-1].content
 
@@ -62,9 +63,9 @@ class DirectContentTests(unittest.TestCase):
         self.assertIsInstance(answer, AIMessage)
         self.assertEqual(answer.content, QUESTION)
         self.assertEqual(answer.tool_calls, [])
-        self.assertNotIn(RUBRIC, answer.model_dump_json())
+        self.assertNotIn(PRIVATE_TAG, answer.model_dump_json())
         self.assertEqual(messages[-1].content, original)
-        self.assertIn(RUBRIC, messages[-1].content)
+        self.assertIn(PRIVATE_TAG, messages[-1].content)
 
     def test_disabled_optimization_retains_parent_synthesis_for_baseline_measurement(self):
         from edbot import model_config
@@ -85,6 +86,67 @@ class DirectContentTests(unittest.TestCase):
                 messages[1:1] = [task_message(name, "earlier-task"),
                                  ToolMessage(content="Assessment feedback", tool_call_id="earlier-task")]
                 self.assert_falls_back(messages)
+
+    def assessment_turn(self, output=None, status="success", **input_changes):
+        assessment = {"concept": "queues", "prior_tier": None, "tier": "Apply", "confidence": "medium",
+                      "rationale": "Private rationale."}
+        assessment.update(output or {})
+        uca = AIMessage(content="", tool_calls=[{
+            "name": "task", "id": "assess", "type": "tool_call",
+            "args": {"subagent_type": "understanding-checking-agent",
+                     "description": json.dumps({"concept": "queues", "invocation_context": "practice_request",
+                                                **input_changes})},
+        }])
+        messages = turn()
+        messages[1:1] = [uca, ToolMessage(content=json.dumps(assessment), tool_call_id="assess", status=status)]
+        return messages
+
+    def test_ungraded_assessment_before_content_is_delivered_directly(self):
+        result = self.middleware.wrap_model_call(request_for(self.assessment_turn()), lambda request: None)
+        self.assertIsInstance(result, AIMessage)
+        self.assertEqual(result.content, QUESTION)
+
+    def test_graded_or_failed_assessment_keeps_parent_synthesis(self):
+        # The CGA never sees the UCA's verdict, so feedback on a graded answer needs the parent
+        graded = {"answer_judgment": {"verdict": "incorrect", "note": "Missed the interface."}}
+        cases = [self.assessment_turn(graded),
+                 self.assessment_turn(question_id="q1", student_answer="My answer"),
+                 self.assessment_turn(status="error")]
+        for index, messages in enumerate(cases):
+            with self.subTest(case=index):
+                self.assert_falls_back(messages)
+
+    def graded_turn(self, verdict="incorrect", **output_changes):
+        messages = self.assessment_turn({"answer_judgment": {"verdict": verdict, "note": "Missed the interface."}},
+                                        question_id="q1", student_answer="My answer")
+        messages[-1] = output_message(**output_changes)
+        return messages
+
+    def test_graded_assessment_is_delivered_directly_when_the_content_addresses_its_verdict(self):
+        result = self.middleware.wrap_model_call(
+            request_for(self.graded_turn(feedback_verdict="incorrect")), lambda request: None)
+        self.assertIsInstance(result, AIMessage)
+        self.assertEqual(result.content, QUESTION)
+
+    def test_graded_assessment_falls_back_without_a_matching_verdict(self):
+        cases = {"missing": self.graded_turn(),
+                 "mismatched": self.graded_turn(feedback_verdict="correct")}
+        for name, messages in cases.items():
+            with self.subTest(case=name):
+                self.assert_falls_back(messages)
+
+    def test_graded_assessment_keeps_parent_synthesis_when_feedback_is_disabled(self):
+        from edbot import model_config
+
+        with patch.object(model_config, "CGA_ANSWER_FEEDBACK", False):
+            self.assert_falls_back(self.graded_turn(feedback_verdict="incorrect"))
+
+    def test_a_verdict_without_a_graded_assessment_falls_back(self):
+        # The CGA can only have received a verdict from a graded UCA this turn
+        self.assert_falls_back(turn(feedback_verdict="correct"))
+        ungraded = self.assessment_turn()
+        ungraded[-1] = output_message(feedback_verdict="correct")
+        self.assert_falls_back(ungraded)
 
     def test_previous_turn_assessment_does_not_block_a_new_independent_question(self):
         messages = [HumanMessage(content="My answer"),
@@ -129,10 +191,11 @@ class DirectContentTests(unittest.TestCase):
     def test_output_contract_mismatches_and_missing_metadata_fall_back(self):
         cases = [
             {"mode": "probe_at_tier"}, {"concept": "stacks"}, {"target_tier": "Remember"},
-            {"content": " \n"}, {"format": None}, {"rubric": None}, {"rubric": " "},
-            {"concept_tags": None}, {"concept_tags": ["stacks"]},
-            {"sources": []}, {"sources": [" "]}, {"coverage_gap": "Source does not cover queues"},
+            {"content": " \n"}, {"format": None},
+            {"concept_tags": None}, {"concept_tags": ["stacks"]}, {"coverage_gap": "Source does not cover queues"},
             {"unknown_output": "Do not silently accept this"},
+            # Removed from CGAOutput: the rubric is written in the background, and nothing read sources
+            {"rubric": "An answer key"}, {"sources": ["SEBook queues"]},
         ]
         for change in cases:
             with self.subTest(change=change):
@@ -144,7 +207,7 @@ class DirectContentTests(unittest.TestCase):
     def test_explanations_and_probes_require_their_own_metadata_contract(self):
         for mode in ("explain_at_tier", "probe_at_tier"):
             with self.subTest(mode=mode):
-                messages = turn(mode=mode, format=None, rubric=None, concept_tags=None)
+                messages = turn(mode=mode, format=None, concept_tags=None)
                 messages[1] = task_message(mode=mode)
                 answer = self.middleware.wrap_model_call(request_for(messages), lambda request: None)
                 self.assertIsInstance(answer, AIMessage)
@@ -168,7 +231,7 @@ class AsyncDirectContentTests(unittest.IsolatedAsyncioTestCase):
         fallback = await middleware.awrap_model_call(request_for(turn(coverage_gap="Missing material")), handler)
         self.assertEqual(fallback.content, "Parent synthesis retained")
 
-    async def test_real_graph_streams_and_checkpoints_exact_content_and_retains_rubric(self):
+    async def test_real_graph_streams_and_checkpoints_exact_content_and_retains_private_result(self):
         asyncio.get_running_loop().set_debug(False)
         middleware = load_middleware(self)
         from deepagents import create_deep_agent
@@ -217,10 +280,10 @@ class AsyncDirectContentTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(state.values["messages"][-1].content, QUESTION)
         self.assertEqual(extract_conversation(state.values["messages"])[-1].content, QUESTION)
         private_results = [message for message in state.values["messages"] if isinstance(message, ToolMessage)]
-        self.assertIn(RUBRIC, private_results[-1].content)
+        self.assertIn(PRIVATE_TAG, private_results[-1].content)
         await agent.ainvoke({"messages": [HumanMessage(content="My proposed answer")]}, config)
         self.assertEqual(len(model.seen_inputs), 3)
-        self.assertTrue(any(isinstance(message, ToolMessage) and RUBRIC in message.content
+        self.assertTrue(any(isinstance(message, ToolMessage) and PRIVATE_TAG in message.content
                             for message in model.seen_inputs[-1]))
 
 

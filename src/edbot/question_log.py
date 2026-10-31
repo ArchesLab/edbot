@@ -11,9 +11,9 @@ def namespace(student_id: str) -> tuple[str, str, str]:
 
 async def save_question(store: BaseStore, student_id: str, output: CGAOutput, turn: int) -> QuestionLogEntry:
     """Log a question the CGA generated. Returns the new entry, with its generated question_id."""
-    # format and rubric are only set in generate_question mode
-    if output.mode != "generate_question" or output.format is None or output.rubric is None:
-        raise ValueError(f"Only generate_question output with a format and rubric can be logged, got mode={output.mode}")
+    # format is only set in generate_question mode. The rubric is written later, by rubric_writer
+    if output.mode != "generate_question" or output.format is None:
+        raise ValueError(f"Only generate_question output with a format can be logged, got mode={output.mode}")
     
     entry = QuestionLogEntry(
         question_id = f"q-{uuid.uuid4().hex[:8]}",
@@ -21,7 +21,6 @@ async def save_question(store: BaseStore, student_id: str, output: CGAOutput, tu
         tier = output.target_tier,
         format = output.format,
         question_text = output.content,
-        rubric=output.rubric,
         concept_tags=output.concept_tags or [],
         asked_at=datetime.now(timezone.utc),
         asked_at_turn=turn,
@@ -33,6 +32,15 @@ async def load_question(store: BaseStore, student_id: str, question_id: str) -> 
     """One logged question, or None if this student has no question with that ID."""
     item = await store.aget(namespace(student_id), question_id)
     return QuestionLogEntry.model_validate(item.value) if item else None
+
+async def save_rubric(store: BaseStore, student_id: str, question_id: str, rubric: str) -> QuestionLogEntry | None:
+    """Attach a rubric to a logged question. Returns the updated entry, or None if there's no such question."""
+    entry = await load_question(store, student_id, question_id)
+    if entry is None:
+        return None
+    updated = entry.model_copy(update={"rubric": rubric})
+    await store.aput(namespace(student_id), question_id, updated.model_dump(mode="json"))
+    return updated
 
 async def record_answer(store: BaseStore, student_id: str, question_id: str, student_answer: str, judgment: AnswerJudgment, turn: int) -> QuestionLogEntry | None:
     """Attach the student's answer and the UCA's verdict to a logged question.

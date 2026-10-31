@@ -15,7 +15,7 @@ class ContentDeferralTests(unittest.TestCase):
         from edbot.middleware.direct_content import CompleteContentMiddleware
 
         output = CGAOutput(mode="explain_at_tier", concept="queues", target_tier="Apply",
-                           content="Premature LIFO claim", sources=["Unseen source"])
+                           content="Premature LIFO claim")
         calls = [
             {"name": "search_markdown_sources", "args": {"query": "queues"}, "id": "search", "type": "tool_call"},
             {"name": "CGAOutput", "args": output.model_dump(), "id": "premature", "type": "tool_call"},
@@ -69,7 +69,7 @@ class ContentContractTests(unittest.IsolatedAsyncioTestCase):
             "mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
         })}
         output = {"mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
-                  "content": "PREMATURE: A queue is LIFO.", "sources": ["Unread synthetic source"]}
+                  "content": "PREMATURE: A queue is LIFO."}
         invalid = {"finish_reason": "tool_calls", "deltas": [{"role": "assistant", "content": "",
                    "tool_calls": [
                        {"index": 0, "id": "bad-search", "type": "function", "function": {
@@ -112,7 +112,7 @@ class ContentContractTests(unittest.IsolatedAsyncioTestCase):
             "mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
         })}
         premature = {"mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
-                     "content": "PREMATURE: A queue is LIFO.", "sources": ["Synthetic source"]}
+                     "content": "PREMATURE: A queue is LIFO."}
         mixed = {"finish_reason": "tool_calls", "deltas": [{"role": "assistant", "content": "Premature LIFO preamble",
                   "tool_calls": [
                       {"index": i, "id": name + str(i), "type": "function",
@@ -156,7 +156,7 @@ class ContentContractTests(unittest.IsolatedAsyncioTestCase):
         output = {
             "mode": "generate_question", "concept": "queues", "target_tier": "Apply",
             "content": "UNFINISHED_QUESTION must not be shown.", "format": "short_answer",
-            "rubric": "Private key", "concept_tags": ["queues"], "sources": ["Synthetic source"],
+            "concept_tags": ["queues"],
         }
         truncated = tool_reply("CGAOutput", output)
         truncated["finish_reason"] = "length"
@@ -180,8 +180,7 @@ class ContentContractTests(unittest.IsolatedAsyncioTestCase):
         })}
         output = {
             "mode": "explain_at_tier", "concept": "information-hiding", "target_tier": "Apply",
-            "content": "I need the module's documented contract to answer this.",
-            "sources": [], "coverage_gap": gap,
+            "content": "I need the module's documented contract to answer this.", "coverage_gap": gap,
         }
         final = "Please share the module's documented interface so we can check that claim."
         with ScriptedServer([tool_reply("task", task), tool_reply("CGAOutput", output),

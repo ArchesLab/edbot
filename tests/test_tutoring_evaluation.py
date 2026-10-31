@@ -91,14 +91,13 @@ class EvidenceTests(unittest.IsolatedAsyncioTestCase):
         evaluator, profiler = load_evaluator(self), load_profiler(self)
         from edbot import edbot_agent, service
 
-        private_rubric = "SYNTHETIC_PRIVATE_RUBRIC: preserve public behavior."
+        private_tag = "synthetic-private-tag"
         task = {"subagent_type": "content-generating-agent", "description": json.dumps({
             "mode": "generate_question", "concept": "information-hiding", "target_tier": "Apply",
         })}
         generated = {"mode": "generate_question", "concept": "information-hiding", "target_tier": "Apply",
                      "content": "Which client assumption would you test?", "format": "short_answer",
-                     "rubric": private_rubric, "concept_tags": ["information-hiding"],
-                     "sources": ["Synthetic source used only by the test"]}
+                     "concept_tags": ["information-hiding", private_tag]}
         original_paths = (service.CHECKPOINT_PATH, service.STORE_PATH)
         observed_paths = []
         original_build = service.create_edbot_agent
@@ -109,8 +108,10 @@ class EvidenceTests(unittest.IsolatedAsyncioTestCase):
             self.assertNotIn(service.STORE_PATH, original_paths)
             return original_build(*args)
 
+        from edbot import rubric_writer
         with ScriptedServer([tool_reply("task", task), tool_reply("CGAOutput", generated)]), \
                 patch.object(edbot_agent, "load_sebook_store"), \
+                patch.object(rubric_writer, "start"), \
                 patch.object(service, "create_edbot_agent", side_effect=build):
             report = await evaluator.run_evaluation([case()], profile_module=profiler)
         self.assertEqual(report["execution"], "completed")
@@ -118,8 +119,8 @@ class EvidenceTests(unittest.IsolatedAsyncioTestCase):
         episode = report["cases"][0]
         self.assertEqual(episode["quality"], "not_reviewed")
         self.assertEqual(episode["profile"]["turns"][0]["response"], generated["content"])
-        self.assertIn(private_rubric, json.dumps(episode["observations"]))
-        self.assertIn("Synthetic source", json.dumps(episode["profile"]["turns"][0]["metrics"]["tools"]))
+        self.assertIn(private_tag, json.dumps(episode["observations"]))
+        self.assertIn(private_tag, json.dumps(episode["profile"]["turns"][0]["metrics"]["tools"]))
         self.assertEqual(episode["observations"][0]["assessment_state"], {})
         model_calls = episode["profile"]["turns"][0]["metrics"]["model_calls"]
         self.assertTrue(all(len(call["request_sha256"]) == 64 for call in model_calls))
@@ -162,7 +163,7 @@ class EvidenceTests(unittest.IsolatedAsyncioTestCase):
         })}
         result = {**assessment, "prior_tier": None, "answer_judgment": None, "next_probe_tier": None}
         content = {"mode": "explain_at_tier", "concept": "information-hiding", "target_tier": "Understand",
-                   "content": "Which public guarantee must stay stable?", "sources": ["Synthetic course source"]}
+                   "content": "Which public guarantee must stay stable?"}
         content_task = tool_reply("task", {"subagent_type": "content-generating-agent", "description": json.dumps({
             key: content[key] for key in ("mode", "concept", "target_tier")})})
         content_task["deltas"][1]["tool_calls"][0]["id"] = "content-after-assessment"

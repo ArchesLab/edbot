@@ -221,8 +221,8 @@ class SGLangIntegrationTests(unittest.IsolatedAsyncioTestCase):
                                   model.request_timeout.pool), (120, 120, 120))
 
     async def test_subagent_structured_output_remains_private_in_student_stream(self):
-        """Catch child backend divergence, required-tool incompatibility, and rubric leakage."""
-        private_rubric = "PRIVATE_RUBRIC_723: the correct answer is hidden"
+        """Catch child backend divergence, required-tool incompatibility, and metadata leakage."""
+        private_tag = "private-tag-723"
         question = "Explain how a queue could represent pending requests."
         task = {
             "subagent_type": "content-generating-agent",
@@ -231,32 +231,37 @@ class SGLangIntegrationTests(unittest.IsolatedAsyncioTestCase):
         }
         cga_output = {
             "mode": "generate_question", "concept": "queues", "target_tier": "Apply",
-            "content": question, "format": "short_answer", "rubric": private_rubric,
-            "concept_tags": ["queues"], "sources": ["SEBook queues"],
+            "content": question, "format": "short_answer", "concept_tags": ["queues", private_tag],
         }
-        with ScriptedServer([tool_reply("task", task), tool_reply("CGAOutput", cga_output)]) as server:
+        from edbot import rubric_writer
+        # The background rubric call is covered in test_rubric_writer; here it would consume a scripted reply
+        with ScriptedServer([tool_reply("task", task), tool_reply("CGAOutput", cga_output)]) as server, \
+                patch.object(rubric_writer, "start") as start_rubric:
             agent = self.build_agent()
             events = await self.events_for(agent)
             self.assertEqual([event.type for event in events if event.type in {"done", "error"}], ["done"])
             self.assertEqual("".join(event.text for event in events if event.type == "text"), question)
-            self.assertNotIn(private_rubric, "".join(event.model_dump_json() for event in events))
+            self.assertNotIn(private_tag, "".join(event.model_dump_json() for event in events))
+            # The logged question gets its rubric written off the critical path
+            start_rubric.assert_called_once()
+            self.assertEqual(start_rubric.call_args.args[2].question_text, question)
             self.assert_chat_requests(server, 2)
             child = server.requests[1][1]
             self.assertEqual(child["tool_choice"], "required")
             self.assertIn("CGAOutput", [tool["function"]["name"] for tool in child["tools"]])
-            # Skipping the rewrite must not lose the question or its private key
+            # Skipping the rewrite must not lose the question or its private result
             # when the student returns to submit an answer.
             from edbot import service
             with patch.object(service, "_agent", agent):
                 history = await service.get_history("sglang-contract-test")
                 self.assertEqual(history[-1].content, question)
-                self.assertNotIn(private_rubric, str(history))
+                self.assertNotIn(private_tag, str(history))
                 server.replies.append(text_reply("Which behavior would that preserve?"))
                 followup = [event async for event in service.chat_turn(
                     "sglang-contract-test", "I would handle the oldest request first.")]
             self.assertEqual(followup[-1].type, "done")
             self.assert_chat_requests(server, 3)
-            self.assertIn(private_rubric, json.dumps(server.requests[-1][1]["messages"]))
+            self.assertIn(private_tag, json.dumps(server.requests[-1][1]["messages"]))
 
     async def test_long_response_is_delivered_and_server_error_is_sanitized(self):
         """Exercise complete reply delivery and provider-error handling."""
@@ -291,7 +296,7 @@ class SGLangIntegrationTests(unittest.IsolatedAsyncioTestCase):
                                 {"content": "More private routing notes before the task."}]
         final = "A queue removes the oldest pending item first."
         output = {"mode": "explain_at_tier", "concept": "queues", "target_tier": "Apply",
-                  "content": final, "sources": ["Synthetic source"]}
+                  "content": final}
         with ScriptedServer([late, tool_reply("CGAOutput", output)]) as server:
             agent = self.build_agent()
             events = await self.events_for(agent)
