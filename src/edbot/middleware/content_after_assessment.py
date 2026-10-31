@@ -25,7 +25,7 @@ _UCA, _CGA = "understanding-checking-agent", "content-generating-agent"
 _INPUTS = {_UCA: TypeAdapter(UCAInput), _CGA: TypeAdapter(CGAInput)}
 # "required" admits any advertised tool. Lookups are harmless before routing, so let a
 # bounded number through; the guard applies again to the following generation.
-_LOOKUPS = {"search_markdown_sources", "fetch_student_data", "fetch_recent_questions"}
+_LOOKUPS = {"search_markdown_sources", "fetch_student_data", "fetch_recent_questions", "prepare_tutoring_context"}
 _MAX_LOOKUPS = 2
 
 

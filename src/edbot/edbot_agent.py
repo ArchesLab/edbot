@@ -19,6 +19,7 @@ from edbot.middleware.assessment_prior import PrefetchAssessmentPrior
 from edbot.middleware.content_after_assessment import RequireContentAfterAssessment
 from edbot.middleware.course_evidence import CaptureCourseEvidence
 from edbot.middleware.focused_cga_prompt import FocusedCGAPrompt
+from edbot.middleware.retrieval_progress import RetrievalProgress
 from edbot.tutor_harness import tutor_middleware
 from langchain.agents.structured_output import ToolStrategy
 
@@ -68,7 +69,7 @@ def load_subagents(config_path: Path) -> list:
         if name == "content-generating-agent":
             if model_config.REDUCED_TUTOR_HARNESS:
                 subagent["middleware"].insert(0, FocusedCGAPrompt(subagent["system_prompt"]))
-            subagent["middleware"].append(CompleteContentMiddleware())
+            subagent["middleware"].extend([RetrievalProgress(), CompleteContentMiddleware()])
         elif name == "understanding-checking-agent" and model_config.DETERMINISTIC_ASSESSMENT_SAVE:
             subagent["tools"] = [tool for tool in subagent["tools"] if tool.name != "update_student_model"]
             subagent["system_prompt"] = assessment_prompt(subagent["system_prompt"])
@@ -98,7 +99,7 @@ def create_edbot_agent(checkpointer=None, store=None):
         subagents=load_subagents(ROOT_DIR / "subagents.yaml"),
         backend=backend,
         # The orchestrator reads the student model and question log but never writes them
-        tools=[tools.search_markdown_sources, tools.fetch_student_data, tools.fetch_recent_questions],
+        tools=[tools.prepare_tutoring_context, tools.search_markdown_sources, tools.fetch_student_data, tools.fetch_recent_questions],
         system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
         middleware=[*(tutor_middleware(backend, include_memory=True) if model_config.REDUCED_TUTOR_HARNESS else []),
                     middleware.ConversationMiddleware(), CaptureCourseEvidence(), middleware.log_subagent_calls,
