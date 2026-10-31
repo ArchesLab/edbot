@@ -4,7 +4,7 @@
 from langchain.tools import tool, ToolRuntime
 
 from edbot.interface_def import BloomTier, Confidence
-from edbot import student_model
+from edbot import student_model, turn_count
 
 def _student_id(runtime: ToolRuntime) -> str:
     """The current turn's student. Fails loudly rather than reading or writing a shared namespace."""
@@ -14,9 +14,8 @@ def _student_id(runtime: ToolRuntime) -> str:
     return student_id
 
 def _student_turn(runtime: ToolRuntime) -> int:
-    """How many messages the student has sent so far, from the conversation passed down in state."""
-    conversation = runtime.state.get("conversation", [])
-    return sum(1 for message in conversation if getattr(message, "role", None) == "student")
+    """How many messages the student has sent so far, across every chat."""
+    return turn_count.current_turn(runtime.context, runtime.state.get("conversation", []))
 
 @tool(parse_docstring=True)
 async def fetch_student_data(concept: str, runtime: ToolRuntime) -> str:
@@ -27,12 +26,14 @@ async def fetch_student_data(concept: str, runtime: ToolRuntime) -> str:
 
     Returns:
         The saved assessment (tier, confidence, rationale, when it was assessed), or a note
-        that the concept has never been assessed for this student.
+        that the concept has never been assessed for this student, followed by the current turn.
     """
     entry = await student_model.load_entry(runtime.store, _student_id(runtime), concept)
+    # The current turn is on the same scale as assessed_at_turn, for the cadence backstop
+    turn = f"Current turn: {_student_turn(runtime)}."
     if entry is None:
-        return f"No prior assessment for '{student_model.normalize_concept(concept)}'."
-    return entry.model_dump_json()
+        return f"No prior assessment for '{student_model.normalize_concept(concept)}'. {turn}"
+    return f"{entry.model_dump_json()}\n{turn}"
 
 @tool(parse_docstring=True)
 async def update_student_model(

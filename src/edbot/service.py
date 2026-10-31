@@ -9,14 +9,14 @@ from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.store.sqlite.aio import AsyncSqliteStore
 
-from edbot import interface_def, student_model
+from edbot import interface_def, student_model, turn_count
 from edbot.interface_def import EdbotContext, Message, StudentModelEntry, Status, TextDelta, Done, Error, TurnEvent
 from edbot.middleware.conversation_history import extract_conversation
 from edbot.edbot_agent import ROOT_DIR, create_edbot_agent
 
 logger = logging.getLogger(__name__)
 
-# Saved conversations, one thread per student. src/.cache/ is gitignored
+# Saved conversations, one thread per chat (by default, one per student). src/.cache/ is gitignored
 CHECKPOINT_PATH = ROOT_DIR.parent / ".cache" / "checkpoints.sqlite"
 # The store: the student model, one entry per student per concept (see student_model.py)
 STORE_PATH = ROOT_DIR.parent / ".cache" / "student_model.sqlite"
@@ -64,23 +64,27 @@ async def close():
             await conn.close()
     _agent = _conn = _store_conn = _store = None
 
-def config_for(student_id: str) -> dict:
-    """Each student has one ongoing conversation, so the student ID is the thread ID."""
-    return {"configurable": {"thread_id": student_id}}
+def config_for(thread_id: str) -> dict:
+    """The checkpointer config for one conversation thread.
 
-async def saved_message_count(student_id: str) -> int:
-    """How many messages are saved in this student's conversation (0 for a new student)."""
+    Callers that pass no thread_id use the student ID, giving each student one ongoing conversation.
+    The student model and question log are keyed by student ID, so they carry over between threads.
+    """
+    return {"configurable": {"thread_id": thread_id}}
+
+async def saved_message_count(student_id: str, thread_id: str | None = None) -> int:
+    """How many messages are saved in this conversation (0 for a new one)."""
     agent = await get_agent()
-    state = await agent.aget_state(config_for(student_id)) # loads latest checkpoint for that thread
+    state = await agent.aget_state(config_for(thread_id or student_id)) # loads latest checkpoint for that thread
     return len(state.values.get("messages", [])) # state.values is the saved state dict
 
-async def get_history(student_id: str) -> list[Message]:
-    """The student's saved conversation as they saw it: their messages and edbot's final replies.
+async def get_history(student_id: str, thread_id: str | None = None) -> list[Message]:
+    """The saved conversation as the student saw it: their messages and edbot's final replies.
 
     Tool calls, tool results, and subagent output are dropped, same as in chat_turn().
     """
     agent = await get_agent()
-    state = await agent.aget_state(config_for(student_id))
+    state = await agent.aget_state(config_for(thread_id or student_id))
     return extract_conversation(state.values.get("messages", []))
 
 async def get_student_model(student_id: str) -> dict[str, StudentModelEntry]:
@@ -102,7 +106,7 @@ TURN_TIMEOUT_SECONDS = 600 # a hung Ollama otherwise blocks the turn forever
 
 ERROR_MESSAGE = "Sorry, something went wrong on my end. Please try sending your message again."
 
-_turn_locks: dict[str, asyncio.Lock] = {} # one per student ID, created on their first turn
+_turn_locks: dict[str, asyncio.Lock] = {} # one per thread ID, created on its first turn
 
 def _is_orchestrator_output(chunk, metadata) -> bool:
     """Only the orchestrator's own model output can reach the student.
@@ -116,13 +120,15 @@ def _is_orchestrator_output(chunk, metadata) -> bool:
         and "|" not in (metadata.get("langgraph_checkpoint_ns") or "")
     )
 
-async def chat_turn(student_id: str, message: str) -> AsyncIterator[TurnEvent]:
+async def chat_turn(student_id: str, message: str, thread_id: str | None = None) -> AsyncIterator[TurnEvent]:
     """Run one turn for one student, yielding only what the student should see.
 
+    thread_id picks the conversation; leave it out to continue the student's one ongoing conversation.
     Yields Status events while tools run, TextDelta pieces of the final reply, then Done,
     or Error if the turn fails. Every interface (CLI, Chainlit, FastAPI) goes through this.
     """
     agent = await get_agent()
+    thread_id = thread_id or student_id
     last_status = DEFAULT_STATUS
     yield Status(text=last_status)
 
@@ -133,13 +139,15 @@ async def chat_turn(student_id: str, message: str) -> AsyncIterator[TurnEvent]:
     try:
         # One turn at a time per student (two tabs, a double-send): concurrent turns on the same
         # thread would both write checkpoints. A second message waits here, showing "Thinking…"
-        async with asyncio.timeout(TURN_TIMEOUT_SECONDS), _turn_locks.setdefault(student_id, asyncio.Lock()):
-            # Only the new message: the checkpointer loads the rest of this student's conversation
+        async with asyncio.timeout(TURN_TIMEOUT_SECONDS), _turn_locks.setdefault(thread_id, asyncio.Lock()):
+            # Counted across every chat, so a new chat doesn't restart the turn fields at 1
+            student_turn = await turn_count.next_turn(agent.store, student_id)
+            # Only the new message: the checkpointer loads the rest of this thread's conversation
             async for chunk, metadata in agent.astream(
                 {"messages": [{"role": "user", "content": message}]},
-                config=config_for(student_id),
+                config=config_for(thread_id),
                 # The one place the student ID enters a run: tools read it as runtime.context.student_id
-                context=EdbotContext(student_id=student_id),
+                context=EdbotContext(student_id=student_id, student_turn=student_turn),
                 stream_mode="messages",
             ):
                 if not _is_orchestrator_output(chunk, metadata):

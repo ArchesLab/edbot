@@ -130,7 +130,7 @@ Output
 * Confidence score  
 * Brief evidence rationale  
 * Updated student-model entry for the concept  
-* A correctness/quality judgement against the rubric (optional, if answer was submitted)
+* A correctness/quality judgment against the rubric (optional, if answer was submitted)
 
 **Content-Generating Subagent**  
 Purpose
@@ -214,7 +214,7 @@ We adhere to the Information Hiding Principle by allowing only one writer to eac
 
 #### Orchestrator Agent
 
-The orchestrator’s skills are deliberately kept to pattern-matching: classifying the intent of the student (new-concept inquiry, practice request, etc) and extracting the CS concept being discussed in the conversation, passing any judgement-related decisions to the subagent. An alternative would have been to allow the orchestrator to make lightweight understanding judgements itself, which would have saved the cost and latency of spawning a new subagent for this purpose. However, this would blur the boundary that makes the UCA reusable and keeps the control condition cleanly decoupled, maintaining a modular structure that’s necessary for the research study. 
+The orchestrator’s skills are deliberately kept to pattern-matching: classifying the intent of the student (new-concept inquiry, practice request, etc) and extracting the CS concept being discussed in the conversation, passing any judgment-related decisions to the subagent. An alternative would have been to allow the orchestrator to make lightweight understanding judgments itself, which would have saved the cost and latency of spawning a new subagent for this purpose. However, this would blur the boundary that makes the UCA reusable and keeps the control condition cleanly decoupled, maintaining a modular structure that’s necessary for the research study. 
 
 The decision whether to invoke the UCA to re-assess a concept or trust the tier already in the student model is implemented as three, independent mechanisms (deterministic intent-based hard triggers, a model-judged flag, and a cadence-based evaluator) rather than a single unified check. This trades added latency against a more valuable signal for the research study. The layered design requires deeper thinking where escalation could be triggered, which costs more than one consolidated check. However, because each mechanism is distinct and independently identifiable, the escalation event can be logged and fine-tuned for the study. This is valuable for both debugging the system during deployment and for research data, letting us ask questions like how often re-assessment was driven by explicit student messages versus signs of growth during a conversation. The alternative was a single, simpler check that bundles triggers like topic switching, wrong answers, and number of turns elapsed into one judgment. Though this approach requires a single check, it does not produce useful information on how the agent made its triggering decision. The layered design keeps this separation as part of the architecture, encouraging it to further weigh its options and explicitly output its decision before returning.
 

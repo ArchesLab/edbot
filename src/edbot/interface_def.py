@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from pydantic import BaseModel, Field, ConfigDict, model_validator
+from pydantic import BaseModel, Field, ConfigDict, model_serializer, model_validator
 from typing import Literal, Optional, Union
 
 BloomTier = Literal["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"]
@@ -16,6 +16,7 @@ Confidence = Literal["high", "medium", "low"]
 @dataclass(frozen=True) # object is read-only, not a Pydantic type, not saved in context
 class EdbotContext:
     student_id: str # whose turn this is; tools use it to pick the student's namespace in the store
+    student_turn: int | None = None # the student's message count across every chat (see turn_count.py)
 
 class StudentModelEntry(BaseModel):
     """One student's assessment for one concept. Written only by the UCA's update_student_model tool."""
@@ -40,7 +41,7 @@ class QuestionLogEntry(BaseModel):
     tier: BloomTier
     format: QuestionFormat
     question_text: str          # what the student saw
-    rubric: str
+    rubric: Optional[str] = None  # written in the background after the question is logged (see rubric_writer.py)
     concept_tags: list[str] = []
     asked_at: datetime
     asked_at_turn: int
@@ -123,6 +124,16 @@ class CGABase(BaseModel):
 
     concept: str
     target_tier: BloomTier
+    # Filled by QuestionLogMiddleware from this turn's graded UCA result; hidden from the parent
+    answer_feedback: Optional[AnswerJudgment] = None
+
+    @model_serializer(mode="wrap")
+    def _omit_empty_feedback(self, handler):
+        # Leave answer_feedback out of the CGA's input on the ungraded turns, which are most of them
+        data = handler(self)
+        if data.get("answer_feedback") is None:
+            data.pop("answer_feedback", None)
+        return data
 
 class GenerateQuestionInput(CGABase):
     mode: Literal["generate_question"] = "generate_question"
@@ -150,23 +161,22 @@ class CGAOutput(BaseModel):
     mode: Literal["generate_question", "explain_at_tier", "probe_at_tier"]
     concept: str
     target_tier: BloomTier
-    content: str = Field(description="Student-facing text; keep rubrics private. When generating a question or probe, withhold its answer. Preserve any selected no-answer contract.")
+    content: str = Field(description="Student-facing text. When generating a question or probe, withhold its answer. Preserve any selected no-answer contract.")
     format: Optional[QuestionFormat] = Field(
         default=None,
         description="Set only for generate_question"
-    )
-    rubric: Optional[str] = Field(
-        default=None,
-        description="Set only for generate_question: answer key and grading criteria for the UCA"
     )
     concept_tags: Optional[list[str]] = Field(
         default=None,
         description="Set only for generate_question: the concept ID plus related sub-concepts the question tests"
     )
-    sources: list[str] = Field(description="SEBook page titles (and URLs, when returned) the content is based on")
     coverage_gap: Optional[str] = Field(
         default=None,
         description="Missing course evidence that prevents a complete grounded response; otherwise null",
+    )
+    feedback_verdict: Optional[Literal["correct", "partially_correct", "incorrect"]] = Field(
+        default=None,
+        description="Set only when the input had answer_feedback: the verdict your reply addressed",
     )
 
 # Events chat_turn() yields to an interface (CLI, Chainlit, later FastAPI). Only these reach the

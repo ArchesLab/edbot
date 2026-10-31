@@ -5,6 +5,7 @@
 #   uv run chainlit run src/edbot/ui/chainlit_app.py --host 0.0.0.0 --port 8000
 import hmac
 import os
+import uuid
 import chainlit as cl
 
 from edbot import service
@@ -20,7 +21,7 @@ def _test_accounts() -> dict[str, str]:
     return accounts
 
 def _student_id() -> str:
-    """The logged-in tester's username doubles as their student ID (one conversation each)."""
+    """The logged-in tester's username doubles as their student ID."""
     return cl.user_session.get("user").identifier
 
 @cl.on_app_startup
@@ -42,14 +43,18 @@ def login(username: str, password: str) -> cl.User | None:
         return cl.User(identifier=username)
     return None
 
+def _thread_id() -> str:
+    """This chat's conversation thread, set in start()."""
+    return cl.user_session.get("thread_id")
+
 @cl.on_chat_start
 async def start():
-    """Show the student's saved conversation, so every visit continues the same chat."""
-    for message in await service.get_history(_student_id()):
-        await cl.Message(
-            content=message.content,
-            type="user_message" if message.role == "student" else "assistant_message",
-        ).send()
+    """Start a fresh conversation thread. Chainlit runs this for New Chat and for a page reload alike.
+
+    Only the conversation resets: the student model and question log are keyed by the student ID,
+    so they carry over into every new chat.
+    """
+    cl.user_session.set("thread_id", f"{_student_id()}:{uuid.uuid4().hex}")
 
 @cl.on_message
 async def on_message(message: cl.Message):
@@ -58,7 +63,7 @@ async def on_message(message: cl.Message):
     reply = cl.Message(content="")
     await status.send()
 
-    async for event in service.chat_turn(_student_id(), message.content):
+    async for event in service.chat_turn(_student_id(), message.content, thread_id=_thread_id()):
         if event.type in ("text", "error") and status_shown:
             await status.remove()
             status_shown = False

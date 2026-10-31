@@ -19,7 +19,7 @@ from langchain_core.messages import HumanMessage, ToolMessage
 from langgraph.store.base import PutOp
 from langgraph.types import Command
 
-from edbot import model_config, student_model
+from edbot import model_config, student_model, turn_count
 from edbot.interface_def import Message, StudentModelEntry, UCAInput, UCAOutput
 
 _UCA = "understanding-checking-agent"
@@ -76,9 +76,10 @@ class AssessmentResultMiddleware(AgentMiddleware):
         if not concept:
             raise ValueError("Assessment concept must not be empty")
         conversation = [Message.model_validate(message) for message in request.state.get("conversation", [])]
-        turn = sum(message.role == "student" for message in conversation)
-        if not turn:
+        if not any(message.role == "student" for message in conversation):
             raise ValueError("Assessment requires the current student conversation")
+        # Across every chat, so a new chat's turns never look older than a saved assessment
+        turn = turn_count.current_turn(runtime.context, conversation)
         latest = next((message for message in reversed(request.state.get("messages", []))
                        if isinstance(message, HumanMessage)), None)
         fingerprint = _digest({"input": task.model_dump(mode="json"),
