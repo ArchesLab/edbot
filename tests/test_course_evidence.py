@@ -57,7 +57,7 @@ class CourseEvidenceTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         asyncio.get_running_loop().set_debug(False)
 
-    async def test_child_receives_actual_parent_passages_but_not_on_a_later_turn_or_student(self):
+    async def test_child_receives_parent_passages_again_on_a_same_concept_turn_but_not_for_another_student(self):
         from langgraph.checkpoint.memory import InMemorySaver
         from langgraph.store.memory import InMemoryStore
         from langchain_core.tools import tool
@@ -99,12 +99,13 @@ class CourseEvidenceTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(json.loads(first_messages[-1]["content"]), json.loads(task["description"]))
                 self.assertNotIn("SOURCE_ONLY_724", first_messages[0]["content"])
 
+                # Same concept on a later turn: the carried passage is supplied again, without a new search
                 second = [event async for event in service.chat_turn("evidence-student-a", "Explain again.")]
                 self.assertEqual(second[-1].type, "done")
-                self.assertNotIn("SOURCE_ONLY_724", json.dumps(server.requests[4][1]["messages"]))
                 second_messages = server.requests[4][1]["messages"]
                 self.assertEqual([message["role"] for message in second_messages],
-                                 ["system", "user", "assistant", "user", "user"])
+                                 ["system", "user", "assistant", "user", "user", "user"])
+                self.assertEqual(json.loads(second_messages[4]["content"])["course_evidence"][0]["content"], passage)
                 self.assertEqual(second_messages[0], first_messages[0])
                 self.assertEqual(second_messages[2]["content"], answer["content"])
                 self.assertEqual(second_messages[3]["content"], "Explain again.")

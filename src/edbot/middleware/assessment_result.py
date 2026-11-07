@@ -21,6 +21,7 @@ from langgraph.types import Command
 
 from edbot import model_config, student_model, turn_count
 from edbot.interface_def import Message, StudentModelEntry, UCAInput, UCAOutput
+from edbot.middleware.assessment_prior import tool_prior_prompt
 
 _UCA = "understanding-checking-agent"
 # Weak store keys keep disposable evaluation stores from accumulating here.
@@ -142,22 +143,30 @@ class AssessmentResultMiddleware(AgentMiddleware):
             return replace(result, update={**result.update, "messages": [canonical]}) if isinstance(result, Command) else canonical
 
 
+# uca_prompt.md is written for code-owned saving (the default); with the flag off, assessment_prompt
+# restores the UCA's own update_student_model instructions.
+_SAVE_REPLACEMENTS = {
+    '- **`update_student_model(concept, tier, confidence, rationale)`** — saves your assessment, replacing the previous entry. Pass the same `tier`, `confidence`, and `rationale` you return in your output. The time and turn are recorded automatically.':
+    'Your validated final `UCAOutput` is saved by application code. There is no write tool; return the assessment once.',
+    'You are the **only** agent that writes to the student model. Call `update_student_model` exactly once per assessment, after you decide on an estimate. If the tier and confidence are unchanged, still call it: that records the new assessment turn.':
+    'You are the sole assessment author. Code saves the exact final tier, confidence and rationale, including unchanged estimates, and records the time and turn.',
+    '8. **Write the student model** by calling `update_student_model`, then return your output.':
+    '8. **Return your assessment** as one final `UCAOutput` after all evidence tools finish. Application code validates and saves it.',
+    '- While probing, still call `update_student_model` with a provisional entry and confidence `low`.':
+    '- While probing, return a provisional estimate with confidence `low`; application code saves it.',
+}
+
+
 def assessment_prompt(prompt):
-    """Keep the baseline prompt exactly intact while the comparison flag is off."""
-    if not model_config.DETERMINISTIC_ASSESSMENT_SAVE:
+    """The UCA's registered prompt: the prior read by tool, and saving as the flag says.
+
+    PrefetchAssessmentPrior swaps the prior wording back per request when code supplies the prior.
+    """
+    prompt = tool_prior_prompt(prompt)
+    if model_config.DETERMINISTIC_ASSESSMENT_SAVE:
         return prompt
-    replacements = {
-        '- **`update_student_model(concept, tier, confidence, rationale)`** — saves your assessment, replacing the previous entry. Pass the same `tier`, `confidence`, and `rationale` you return in your output. The time and turn are recorded automatically.':
-        'Your validated final `UCAOutput` is saved by application code. There is no write tool; return the assessment once.',
-        'You are the **only** agent that writes to the student model. Call `update_student_model` exactly once per assessment, after you decide on an estimate. If the tier and confidence are unchanged, still call it: that records the new assessment turn.':
-        'You are the sole assessment author. Code saves the exact final tier, confidence and rationale, including unchanged estimates, and records the time and turn.',
-        '8. **Write the student model** by calling `update_student_model`, then return your output.':
-        '8. **Return your assessment** as one final `UCAOutput` after all evidence tools finish. Application code validates and saves it.',
-        '- While probing, still call `update_student_model` with a provisional entry and confidence `low`.':
-        '- While probing, return a provisional estimate with confidence `low`; application code saves it.',
-    }
-    for old, new in replacements.items():
-        if prompt.count(old) != 1:
+    for tool_saves, code_saves in _SAVE_REPLACEMENTS.items():
+        if prompt.count(code_saves) != 1:
             raise ValueError("UCA persistence prompt changed; update its deterministic-save instruction mapping")
-        prompt = prompt.replace(old, new)
+        prompt = prompt.replace(code_saves, tool_saves)
     return prompt

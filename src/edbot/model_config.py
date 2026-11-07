@@ -13,8 +13,10 @@ DIRECT_CONTENT_DELIVERY = True  # Deliver validated CGA-only replies without a s
 CGA_ANSWER_FEEDBACK = True  # Pass a graded answer's verdict to the CGA so its reply can be delivered directly.
 REDUCED_TUTOR_HARNESS = True  # Keep course reads and context recovery, omit file-editing tools/instructions.
 REUSE_COURSE_EVIDENCE = True  # Pass this turn's actual source results to children before another search.
+PREFETCH_COURSE_EVIDENCE = True  # Code searches before each child task and keeps a concept's passages across turns.
+LIMIT_CHILD_SEARCHES = True  # A child given course evidence may search once more.
 DETERMINISTIC_ASSESSMENT_SAVE = True  # Persist validated UCAOutput once, without a model write generation.
-PREFETCH_ASSESSMENT_PRIOR = False  # Experiment: fresh code-owned UCA prior read before generation.
+PREFETCH_ASSESSMENT_PRIOR = True  # Fresh code-owned UCA prior read before generation.
 REQUIRE_CONTENT_AFTER_ASSESSMENT = True  # A completed assessment must route through CGA before the parent can reply.
 SERIAL_CHILD_TOOL_CALLS = True  # CGA and code-persisted UCA: one tool per generation, including searches.
 

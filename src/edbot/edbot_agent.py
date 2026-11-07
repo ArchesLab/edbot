@@ -17,7 +17,7 @@ from edbot.middleware.direct_content import CompleteContentMiddleware, DirectCon
 from edbot.middleware.assessment_result import AssessmentResultMiddleware, assessment_prompt
 from edbot.middleware.assessment_prior import PrefetchAssessmentPrior
 from edbot.middleware.content_after_assessment import RequireContentAfterAssessment
-from edbot.middleware.course_evidence import CaptureCourseEvidence
+from edbot.middleware.course_evidence import CaptureCourseEvidence, LimitChildSearches, PrefetchCourseEvidence
 from edbot.middleware.focused_cga_prompt import FocusedCGAPrompt
 from edbot.tutor_harness import tutor_middleware
 from langchain.agents.structured_output import ToolStrategy
@@ -56,7 +56,7 @@ def load_subagents(config_path: Path) -> list:
             "system_prompt": (ROOT_DIR / spec["system_prompt_path"]).read_text(),
             "response_format": ToolStrategy(schemas[spec["response_format"]]),
             # Shows the subagent the student conversation passed down from the orchestrator
-            "middleware": [middleware.InjectConversationMiddleware(),
+            "middleware": [middleware.InjectConversationMiddleware(), LimitChildSearches(),
                            *(tutor_middleware(backend) if model_config.REDUCED_TUTOR_HARNESS else [])]
         }
 
@@ -69,12 +69,14 @@ def load_subagents(config_path: Path) -> list:
             if model_config.REDUCED_TUTOR_HARNESS:
                 subagent["middleware"].insert(0, FocusedCGAPrompt(subagent["system_prompt"]))
             subagent["middleware"].append(CompleteContentMiddleware())
-        elif name == "understanding-checking-agent" and model_config.DETERMINISTIC_ASSESSMENT_SAVE:
-            subagent["tools"] = [tool for tool in subagent["tools"] if tool.name != "update_student_model"]
+        elif name == "understanding-checking-agent":
+            # uca_prompt.md describes the default flags; this rewrites it for the flags actually set
             subagent["system_prompt"] = assessment_prompt(subagent["system_prompt"])
-            if model_config.PREFETCH_ASSESSMENT_PRIOR:
-                subagent["middleware"][0] = PrefetchAssessmentPrior(subagent["system_prompt"])
-            subagent["middleware"].append(CompleteContentMiddleware(output_tool="UCAOutput", reject_tool_errors=True))
+            if model_config.DETERMINISTIC_ASSESSMENT_SAVE:
+                subagent["tools"] = [tool for tool in subagent["tools"] if tool.name != "update_student_model"]
+                if model_config.PREFETCH_ASSESSMENT_PRIOR:
+                    subagent["middleware"][0] = PrefetchAssessmentPrior(subagent["system_prompt"])
+                subagent["middleware"].append(CompleteContentMiddleware(output_tool="UCAOutput", reject_tool_errors=True))
 
         subagents.append(subagent)
     return subagents
@@ -102,7 +104,8 @@ def create_edbot_agent(checkpointer=None, store=None):
         system_prompt=(ROOT_DIR / "prompts" / "orchestrator_prompt.md").read_text(), # switch to orchestrator prompt later
         middleware=[*(tutor_middleware(backend, include_memory=True) if model_config.REDUCED_TUTOR_HARNESS else []),
                     middleware.ConversationMiddleware(), CaptureCourseEvidence(), middleware.log_subagent_calls,
-                    middleware.validate_subagent_input, middleware.question_log_middleware, AssessmentResultMiddleware(),
+                    middleware.validate_subagent_input, PrefetchCourseEvidence(load_sebook_store), middleware.question_log_middleware,
+                    AssessmentResultMiddleware(),
                     RequireContentAfterAssessment(), DirectContentMiddleware()],
         model=model,
         checkpointer=checkpointer,
